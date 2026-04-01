@@ -1,0 +1,22 @@
+{
+  "name": "mgc-webhook-server",
+  "version": "1.0.0",
+  "description": "MGC Global Consulting — Master Automation Webhook Server",
+  "main": "webhooks/server.js",
+  "scripts": {
+    "start": "node webhooks/server.js",
+    "dev": "nodemon webhooks/server.js",
+    "test": "node test/test-all-routes.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "MGC Global Consulting LLC — Mark G. Cartwright",
+  "license": "UNLICENSED"
+}

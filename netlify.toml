@@ -1,0 +1,70 @@
+[build]
+  publish  = "."
+  command  = ""
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# ── Redirects ──────────────────────────────────────────────────────────
+[[redirects]]
+  from   = "/checkout"
+  to     = "/checkout.html"
+  status = 200
+
+[[redirects]]
+  from   = "/thank-you"
+  to     = "/thank-you.html"
+  status = 200
+
+[[redirects]]
+  from   = "/membership"
+  to     = "/membership.html"
+  status = 200
+
+[[redirects]]
+  from   = "/services"
+  to     = "/services.html"
+  status = 200
+
+[[redirects]]
+  from   = "/dashboard"
+  to     = "/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from   = "/404"
+  to     = "/404.html"
+  status = 404
+
+[[redirects]]
+  from   = "/403"
+  to     = "/403.html"
+  status = 403
+
+# ── Security headers ───────────────────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options          = "SAMEORIGIN"
+    X-Content-Type-Options   = "nosniff"
+    Referrer-Policy          = "strict-origin-when-cross-origin"
+    Permissions-Policy       = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
+
+[[headers]]
+  for = "/hs-breeze-bridge.js"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin  = "https://www.mgcglobalconsulting.com"
+    Access-Control-Allow-Methods = "POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"

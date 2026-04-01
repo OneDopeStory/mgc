@@ -1,0 +1,15 @@
+node_modules
+.env*
+.DS_Store
+.claude
+
+*.mp4
+*.mov
+*.webm
+
+# Large binary assets (serve via CDN)
+*.png
+*.jpeg
+*.jpg
+*.gif
+*.webp

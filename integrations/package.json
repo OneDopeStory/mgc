@@ -1,0 +1,23 @@
+{
+  "name": "mgc-payment-hub",
+  "version": "1.0.0",
+  "description": "MGC Global Consulting — Central Payment Integration Hub",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test:webhook": "node scripts/test-webhook.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1",
+    "axios": "^1.6.0",
+    "googleapis": "^144.0.0",
+    "twilio": "^4.19.0",
+    "@notionhq/client": "^2.2.14",
+    "crypto": "^1.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAIC — Slack Central Intelligence Hub | MGC Global Consulting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --deep-blue: #0A2E6F;
+  --cyan: #00D9FF;
+  --navy: #0F192D;
+  --cyan-dim: rgba(0,217,255,0.12);
+  --cyan-glow: rgba(0,217,255,0.35);
+  --white: #FFFFFF;
+  --text-muted: rgba(255,255,255,0.55);
+  --text-dim: rgba(255,255,255,0.3);
+  --card-bg: rgba(255,255,255,0.04);
+  --card-border: rgba(0,217,255,0.15);
+  --grid-line: rgba(0,217,255,0.06);
+  --slack-purple: #4A154B;
+  --green: #00E5A0;
+  --amber: #FFB547;
+  --red: #FF4D6A;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--navy);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Background Grid ──────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Glow Orbs ──────────────────────────────────── */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+}
+.orb-1 { width: 600px; height: 600px; background: rgba(10,46,111,0.5); top: -200px; right: -200px; }
+.orb-2 { width: 400px; height: 400px; background: rgba(0,217,255,0.06); bottom: 100px; left: -100px; }
+
+/* ── Main Container ─────────────────────────────── */
+.container { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 32px 80px; }
+
+/* ── Header ─────────────────────────────────────── */
+header {
+  padding: 48px 0 40px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--card-border);
+  margin-bottom: 48px;
+}
+
+.header-left {}
+
+.brand-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--cyan-dim);
+  border: 1px solid var(--card-border);
+  border-radius: 100px;
+  padding: 4px 14px 4px 4px;
+  margin-bottom: 20px;
+}
+
+.brand-tag-dot {
+  width: 24px; height: 24px;
+  background: linear-gradient(135deg, var(--cyan), #0099bb);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+}
+
+.brand-tag span { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--cyan); text-transform: uppercase; }
+
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+h1 .highlight {
+  color: var(--cyan);
+  position: relative;
+}
+
+.subtitle {
+  margin-top: 12px;
+  font-size: 15px;
+  color: var(--text-muted);
+  font-weight: 400;
+  max-width: 480px;
+  line-height: 1.6;
+}
+
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.status-badge {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(0,229,160,0.1);
+  border: 1px solid rgba(0,229,160,0.25);
+  border-radius: 100px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.status-badge::before {
+  content: '';
+  width: 7px; height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse-green 2s ease-in-out infinite;
+}
+
+@keyframes pulse-green {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+.version-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+
+/* ── Metrics Strip ──────────────────────────────── */
+.metrics-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--card-border);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+
+.metric {
+  background: var(--card-bg);
+  padding: 24px;
+  backdrop-filter: blur(8px);
+  transition: background 0.2s;
+}
+.metric:hover { background: rgba(0,217,255,0.06); }
+
+.metric-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+
+.metric-value {
+  font-family: 'Syne', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1;
+}
+
+.metric-value.cyan { color: var(--cyan); }
+.metric-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+/* ── Section Header ─────────────────────────────── */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.section-number {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--cyan);
+  background: var(--cyan-dim);
+  border: 1px solid var(--card-border);
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ── Template Cards Grid ────────────────────────── */
+.templates-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 48px;
+}
+
+/* Hero card (Marketing) */
+.template-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.template-card:hover {
+  border-color: var(--cyan);
+  background: rgba(0,217,255,0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px var(--cyan-glow);
+}
+
+/* Accent stripe */
+.template-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--card-border);
+  transition: background 0.3s;
+}
+.template-card:hover::before { background: linear-gradient(90deg, var(--cyan), transparent); }
+
+.template-card.featured {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(10,46,111,0.4), rgba(0,217,255,0.05));
+}
+
+.template-card.featured::before {
+  background: linear-gradient(90deg, var(--cyan), var(--deep-blue), transparent);
+}
+
+.card-icon {
+  width: 48px; height: 48px;
+  background: var(--cyan-dim);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  margin-bottom: 16px;
+  transition: all 0.3s;
+}
+
+.template-card:hover .card-icon {
+  background: rgba(0,217,255,0.15);
+  border-color: var(--cyan);
+}
+
+.card-number {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; }
+
+.card-channel {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--cyan);
+  background: var(--cyan-dim);
+  border: 1px solid rgba(0,217,255,0.2);
+  border-radius: 6px;
+  padding: 4px 10px;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.triggers-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.trigger-pill {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: 'Space Mono', monospace;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.card-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.card-badge.auto { background: rgba(0,229,160,0.12); color: var(--green); border: 1px solid rgba(0,229,160,0.2); }
+.card-badge.manual { background: rgba(255,181,71,0.12); color: var(--amber); border: 1px solid rgba(255,181,71,0.2); }
+.card-badge.hybrid { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(0,217,255,0.2); }
+
+.card-arrow {
+  width: 32px; height: 32px;
+  background: var(--cyan-dim);
+  border: 1px solid var(--card-border);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+.template-card:hover .card-arrow { background: var(--cyan); color: var(--navy); border-color: var(--cyan); }
+
+/* Featured card specifics */
+.featured-left {}
+.featured-right {}
+
+.featured-visual {
+  background: rgba(0,217,255,0.04);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 20px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 2;
+}
+
+.featured-visual .line { display: flex; align-items: center; gap: 8px; }
+.featured-visual .line-key { color: var(--cyan); min-width: 140px; }
+.featured-visual .line-val { color: rgba(255,255,255,0.8); }
+.featured-visual .divider { height: 1px; background: var(--card-border); margin: 8px 0; }
+
+/* ── Workflow Map ────────────────────────────────── */
+.workflow-section { margin-bottom: 48px; }
+
+.workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.workflow-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s;
+}
+.workflow-card:hover { border-color: rgba(0,217,255,0.3); background: rgba(0,217,255,0.04); }
+
+.workflow-trigger {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 12px;
+}
+
+.trigger-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.trigger-icon.hs { background: rgba(255,126,50,0.15); }
+.trigger-icon.zap { background: rgba(255,80,80,0.12); }
+.trigger-icon.slack { background: rgba(74,21,75,0.3); }
+.trigger-icon.cal { background: rgba(0,217,255,0.1); }
+
+.workflow-name { font-size: 13px; font-weight: 600; }
+.workflow-arrow { color: var(--cyan); font-size: 11px; font-family: 'Space Mono', monospace; margin: 8px 0; }
+.workflow-result { font-size: 12px; color: var(--text-muted); }
+
+/* ── Channel Architecture ───────────────────────── */
+.channels-section { margin-bottom: 48px; }
+
+.channels-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.channel-group {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.channel-group-header {
+  padding: 12px 16px;
+  background: rgba(0,217,255,0.06);
+  border-bottom: 1px solid var(--card-border);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.channel-list { padding: 12px; }
+.channel-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: 'Space Mono', monospace;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.channel-item:hover { background: rgba(0,217,255,0.06); color: var(--white); }
+.channel-item .hash { color: var(--text-dim); }
+.channel-item.active .hash { color: var(--cyan); }
+.channel-item.active { color: var(--white); }
+
+/* ── Master Prompt Section ──────────────────────── */
+.prompt-section { margin-bottom: 48px; }
+
+.prompt-box {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.prompt-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px;
+  background: rgba(0,217,255,0.04);
+  border-bottom: 1px solid var(--card-border);
+}
+
+.prompt-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.prompt-dots { display: flex; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot.r { background: #FF5F57; }
+.dot.y { background: #FFBD2E; }
+.dot.g { background: #28C840; }
+
+.copy-btn {
+  background: var(--cyan-dim);
+  border: 1px solid var(--card-border);
+  color: var(--cyan);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.04em;
+}
+.copy-btn:hover { background: var(--cyan); color: var(--navy); }
+.copy-btn.copied { background: rgba(0,229,160,0.15); color: var(--green); border-color: rgba(0,229,160,0.3); }
+
+.prompt-content {
+  padding: 24px;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  line-height: 2;
+  color: rgba(255,255,255,0.7);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.prompt-content::-webkit-scrollbar { width: 3px; }
+.prompt-content::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 2px; }
+
+.code-key { color: var(--cyan); }
+.code-str { color: #98D982; }
+.code-comment { color: var(--text-dim); font-style: italic; }
+.code-heading { color: #E5C07B; font-weight: 700; }
+
+/* ── CTA Banner ─────────────────────────────────── */
+.cta-banner {
+  background: linear-gradient(135deg, rgba(10,46,111,0.6), rgba(0,217,255,0.08));
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-banner::after {
+  content: '';
+  position: absolute;
+  right: -60px; top: -60px;
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, rgba(0,217,255,0.08), transparent 70%);
+  pointer-events: none;
+}
+
+.cta-text h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.cta-text p { font-size: 14px; color: var(--text-muted); max-width: 480px; line-height: 1.6; }
+
+.cta-actions { display: flex; gap: 12px; flex-shrink: 0; }
+
+.btn-primary {
+  background: var(--cyan);
+  color: var(--navy);
+  border: none;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: 'Inter', sans-serif;
+}
+.btn-primary:hover { background: var(--cyan-light, #33e4ff); transform: translateY(-1px); }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--white);
+  border: 1px solid var(--card-border);
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: 'Inter', sans-serif;
+}
+.btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .templates-grid { grid-template-columns: 1fr; }
+  .template-card.featured { grid-column: span 1; grid-template-columns: 1fr; }
+  .featured-right { display: none; }
+  .metrics-strip { grid-template-columns: repeat(2, 1fr); }
+  .workflow-grid { grid-template-columns: repeat(2, 1fr); }
+  .channels-grid { grid-template-columns: repeat(2, 1fr); }
+  .cta-banner { flex-direction: column; }
+  header { flex-direction: column; gap: 20px; }
+  .header-right { align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="container">
+
+  <!-- ── Header ──────────────────────────────────── -->
+  <header>
+    <div class="header-left">
+      <div class="brand-tag">
+        <div class="brand-tag-dot">M</div>
+        <span>MGC Global Consulting</span>
+      </div>
+      <h1>
+        Slack <span class="highlight">Central</span><br>
+        Intelligence Hub
+      </h1>
+      <p class="subtitle">True Assist Intelligence Core — 5 integrated AI templates powering your entire agency ecosystem on Slack.</p>
+    </div>
+    <div class="header-right">
+      <div class="status-badge">TAIC Operational</div>
+      <div class="version-tag">v2.0 · Feb 2026 · MGC Global</div>
+    </div>
+  </header>
+
+  <!-- ── Metrics ─────────────────────────────────── -->
+  <div class="metrics-strip">
+    <div class="metric">
+      <div class="metric-label">AI Templates</div>
+      <div class="metric-value cyan">5</div>
+      <div class="metric-sub">Fully integrated</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Zapier Zaps</div>
+      <div class="metric-value">8</div>
+      <div class="metric-sub">Auto-triggered</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Slack Channels</div>
+      <div class="metric-value">14</div>
+      <div class="metric-sub">Recommended architecture</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Stack Connected</div>
+      <div class="metric-value cyan">6</div>
+      <div class="metric-sub">HubSpot · Notion · Gmail · Sheets · Zapier · Claude</div>
+    </div>
+  </div>
+
+  <!-- ── Template Cards ──────────────────────────── -->
+  <div class="section-header">
+    <span class="section-number">01</span>
+    <h2 class="section-title">5 AI-Powered Slack Templates</h2>
+  </div>
+
+  <div class="templates-grid">
+
+    <!-- Featured: Marketing -->
+    <div class="template-card featured">
+      <div class="featured-left">
+        <div class="card-number">TEMPLATE 01</div>
+        <div class="card-icon">📣</div>
+        <h3 class="card-title">Marketing Project Outline</h3>
+        <p class="card-desc">TAIC auto-generates strategic campaign briefs from a single command. Covers objectives, ICP, messaging pillars, deliverables, KPIs, and system integration touchpoints.</p>
+        <div class="card-channel">#marketing-ops</div>
+        <div class="triggers-list">
+          <span class="trigger-pill">"Create marketing outline for…"</span>
+          <span class="trigger-pill">"Build campaign brief for…"</span>
+          <span class="trigger-pill">"CHNS marketing plan for…"</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-badge hybrid">AI + Manual</span>
+          <div class="card-arrow">↗</div>
+        </div>
+      </div>
+      <div class="featured-right">
+        <div class="featured-visual">
+          <div class="line"><span class="line-key">📌 PROJECT BRIEF</span></div>
+          <div class="divider"></div>
+          <div class="line"><span class="line-key">Campaign:</span><span class="line-val">Q2 AI Awareness Push</span></div>
+          <div class="line"><span class="line-key">ICP:</span><span class="line-val">CEOs / COOs, 50-500 employees</span></div>
+          <div class="line"><span class="line-key">Budget:</span><span class="line-val">$8,500 allocated</span></div>
+          <div class="line"><span class="line-key">Primary KPI:</span><span class="line-val">12 discovery calls</span></div>
+          <div class="divider"></div>
+          <div class="line"><span class="line-key">🔗 HubSpot</span><span class="line-val">✅ Connected</span></div>
+          <div class="line"><span class="line-key">🔗 Notion</span><span class="line-val">✅ Syncing</span></div>
+          <div class="line"><span class="line-key">🔗 Zapier</span><span class="line-val">✅ 3 Zaps active</span></div>
+          <div class="divider"></div>
+          <div class="line"><span class="line-key">⚡ NEXT ACTION</span><span class="line-val">Review messaging pillar 2 →</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sales Enablement -->
+    <div class="template-card">
+      <div class="card-number">TEMPLATE 02</div>
+      <div class="card-icon">🏆</div>
+      <h3 class="card-title">Sales Enablement Hub</h3>
+      <p class="card-desc">Living Slack canvas that serves battle cards, objection handlers, proposal hooks, and email sequences on demand. The team's always-on sales co-pilot.</p>
+      <div class="card-channel">#sales-team</div>
+      <div class="triggers-list">
+        <span class="trigger-pill">"Battle card vs…"</span>
+        <span class="trigger-pill">"Handle objection:…"</span>
+        <span class="trigger-pill">"Proposal hook for…"</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-badge auto">Always On</span>
+        <div class="card-arrow">↗</div>
+      </div>
+    </div>
+
+    <!-- Opportunity Plan -->
+    <div class="template-card">
+      <div class="card-number">TEMPLATE 03</div>
+      <div class="card-icon">🎯</div>
+      <h3 class="card-title">Opportunity Plan</h3>
+      <p class="card-desc">Single source of truth per deal. TAIC auto-creates from HubSpot triggers — stakeholder maps, risk assessment, timeline, deal health score, and next best action.</p>
+      <div class="card-channel">#deals</div>
+      <div class="triggers-list">
+        <span class="trigger-pill">"New opportunity:…"</span>
+        <span class="trigger-pill">"Create deal plan for…"</span>
+        <span class="trigger-pill">"Risk assessment for…"</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-badge auto">HubSpot Auto-Triggered</span>
+        <div class="card-arrow">↗</div>
+      </div>
+    </div>
+
+    <!-- Deal Win Review -->
+    <div class="template-card">
+      <div class="card-number">TEMPLATE 04</div>
+      <div class="card-icon">🎉</div>
+      <h3 class="card-title">Deal Win Review</h3>
+      <p class="card-desc">Fires automatically when HubSpot marks a deal "Closed Won." Captures why you won, triggers full client onboarding, and feeds the institutional knowledge base.</p>
+      <div class="card-channel">#wins</div>
+      <div class="triggers-list">
+        <span class="trigger-pill">"Log win:…"</span>
+        <span class="trigger-pill">Auto: HubSpot stage = closedwon</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-badge auto">Fully Automated</span>
+        <div class="card-arrow">↗</div>
+      </div>
+    </div>
+
+    <!-- Discovery Notes -->
+    <div class="template-card">
+      <div class="card-number">TEMPLATE 05</div>
+      <div class="card-icon">📞</div>
+      <h3 class="card-title">Discovery Notes</h3>
+      <p class="card-desc">Paste raw call notes in any format. TAIC structures them instantly — pain analysis, qualification scorecard, red flags, and a ready-to-approve proposal brief.</p>
+      <div class="card-channel">#deals (per thread)</div>
+      <div class="triggers-list">
+        <span class="trigger-pill">"Process discovery notes:…"</span>
+        <span class="trigger-pill">"Score this discovery call:…"</span>
+        <span class="trigger-pill">"@TAIC discovery:…"</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-badge hybrid">Paste → AI Structures</span>
+        <div class="card-arrow">↗</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Workflow Map ──────────────────────────────── -->
+  <div class="workflow-section">
+    <div class="section-header">
+      <span class="section-number">02</span>
+      <h2 class="section-title">Automation Workflow Map</h2>
+    </div>
+    <div class="workflow-grid">
+      <div class="workflow-card">
+        <div class="workflow-trigger">
+          <div class="trigger-icon hs">🟠</div>
+          <span class="workflow-name">HubSpot: Deal Created</span>
+        </div>
+        <div class="workflow-arrow">→ Zapier → Slack</div>
+        <div class="workflow-result">#deals post + Opportunity Plan canvas auto-generated</div>
+      </div>
+      <div class="workflow-card">
+        <div class="workflow-trigger">
+          <div class="trigger-icon hs">🟠</div>
+          <span class="workflow-name">Deal Closed Won</span>
+        </div>
+        <div class="workflow-arrow">→ Zapier → Slack + Notion</div>
+        <div class="workflow-result">#wins announcement + Win Review + onboarding kickoff</div>
+      </div>
+      <div class="workflow-card">
+        <div class="workflow-trigger">
+          <div class="trigger-icon cal">🔵</div>
+          <span class="workflow-name">Calendly: Call Booked</span>
+        </div>
+        <div class="workflow-arrow">→ Zapier → Slack</div>
+        <div class="workflow-result">#deals reminder + Discovery Notes canvas pre-populated</div>
+      </div>
+      <div class="workflow-card">
+        <div class="workflow-trigger">
+          <div class="trigger-icon zap">⚡</div>
+          <span class="workflow-name">Form Submission</span>
+        </div>
+        <div class="workflow-arrow">→ TAIC → All Systems</div>
+        <div class="workflow-result">#deals new lead alert + HubSpot + Notion + Gmail</div>
+      </div>
+      <div class="workflow-card">
+        <div class="workflow-trigger">
+          <div class="trigger-icon slack">🟣</div>
+          <span class="workflow-name">Monday 8:00 AM</span>
+        </div>
+        <div class="workflow-arrow">→ TAIC → #pipeline-review</div>
+        <div class="workflow-result">Weekly pipeline digest pulled from HubSpot + Notion</div>
+      </div>
+      <div class="workflow-card">
+        <div class="workflow-trigger">
+          <div class="trigger-icon slack">🟣</div>
+          <span class="workflow-name">@TAIC Mention</span>
+        </div>
+        <div class="workflow-arrow">→ AI Response (any channel)</div>
+        <div class="workflow-result">Context-aware response using full MGC knowledge base</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Channel Architecture ────────────────────── -->
+  <div class="channels-section">
+    <div class="section-header">
+      <span class="section-number">03</span>
+      <h2 class="section-title">Recommended Channel Architecture</h2>
+    </div>
+    <div class="channels-grid">
+      <div class="channel-group">
+        <div class="channel-group-header">Agency Ops</div>
+        <div class="channel-list">
+          <div class="channel-item active"><span class="hash">#</span>taic-hub</div>
+          <div class="channel-item"><span class="hash">#</span>announcements</div>
+          <div class="channel-item"><span class="hash">#</span>team-general</div>
+        </div>
+      </div>
+      <div class="channel-group">
+        <div class="channel-group-header">Sales & Revenue</div>
+        <div class="channel-list">
+          <div class="channel-item active"><span class="hash">#</span>deals</div>
+          <div class="channel-item active"><span class="hash">#</span>wins</div>
+          <div class="channel-item"><span class="hash">#</span>pipeline-review</div>
+          <div class="channel-item"><span class="hash">#</span>sales-team</div>
+        </div>
+      </div>
+      <div class="channel-group">
+        <div class="channel-group-header">Marketing</div>
+        <div class="channel-list">
+          <div class="channel-item active"><span class="hash">#</span>marketing-ops</div>
+          <div class="channel-item"><span class="hash">#</span>content-calendar</div>
+          <div class="channel-item"><span class="hash">#</span>chns-marketing</div>
+        </div>
+      </div>
+      <div class="channel-group">
+        <div class="channel-group-header">Intelligence</div>
+        <div class="channel-list">
+          <div class="channel-item active"><span class="hash">#</span>ai-intelligence</div>
+          <div class="channel-item"><span class="hash">#</span>knowledge-base</div>
+          <div class="channel-item"><span class="hash">#</span>competitor-watch</div>
+          <div class="channel-item"><span class="hash">#</span>taic-logs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Master Prompt Preview ──────────────────── -->
+  <div class="prompt-section">
+    <div class="section-header">
+      <span class="section-number">04</span>
+      <h2 class="section-title">Master TAIC Identity Prompt</h2>
+    </div>
+    <div class="prompt-box">
+      <div class="prompt-header">
+        <div class="prompt-title">
+          <div class="prompt-dots">
+            <div class="dot r"></div>
+            <div class="dot y"></div>
+            <div class="dot g"></div>
+          </div>
+          Paste this into every Slack AI Agent Description
+        </div>
+        <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">Copy Prompt</button>
+      </div>
+      <div class="prompt-content" id="promptContent">
+<span class="code-comment">// TAIC — SLACK AGENT IDENTITY — Paste into Agent Description</span>
+
+<span class="code-heading">You are TAIC — the True Assist Intelligence Core</span>
+<span class="code-key">Company:</span> <span class="code-str">MGC Global Consulting LLC</span>
+<span class="code-key">Founder:</span> <span class="code-str">Mark G. Cartwright, Owings Mills MD</span>
+<span class="code-key">Website:</span> <span class="code-str">mgcglobalconsulting.com</span>
+<span class="code-key">Brand Promise:</span> <span class="code-str">AI-Powered Strategy. Operational Excellence. Scalable Results.</span>
+
+<span class="code-comment">// BEHAVIORAL RULES</span>
+<span class="code-key">Rule 1:</span> Speak as a senior strategic advisor — authoritative, warm, precise
+<span class="code-key">Rule 2:</span> Push for specificity. Vague input → ask 1 clarifying question
+<span class="code-key">Rule 3:</span> Prioritize revenue-generating, client-facing quality
+<span class="code-key">Rule 4:</span> Flag risks proactively without being asked
+<span class="code-key">Rule 5:</span> Always end with a clear "Next Step"
+
+<span class="code-comment">// SERVICES CONTEXT</span>
+<span class="code-key">Services:</span> <span class="code-str">AI Strategy | Automation | Ops Optimization | Fractional CTO | Training</span>
+<span class="code-key">Stack:</span> <span class="code-str">HubSpot · Notion · Zapier · Gmail · Slack · Claude AI</span>
+<span class="code-key">Also serves:</span> <span class="code-str">CHNS — Certified Home Nursing Solutions (Healthcare)</span>
+
+<span class="code-comment">// OUTPUT STANDARD</span>
+<span class="code-key">Tone:</span> <span class="code-str">Strategic consultant, not chatbot</span>
+<span class="code-key">Format:</span> <span class="code-str">Structured, scannable, action-oriented</span>
+<span class="code-key">Close:</span> <span class="code-str">Every response ends with ⚡ NEXT STEP</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CTA Banner ──────────────────────────────── -->
+  <div class="cta-banner">
+    <div class="cta-text">
+      <h2>Your TAIC Hub is ready to deploy.</h2>
+      <p>Open <strong>TAIC-MASTER-SLACK-PROMPT.txt</strong> to access all 5 full AI prompts with Slack setup instructions, Zapier workflow maps, and canvas templates. Copy each section directly into Slack Workflow Builder.</p>
+    </div>
+    <div class="cta-actions">
+      <button class="btn-secondary">View Setup Guide</button>
+      <button class="btn-primary">Download All Files →</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function copyPrompt() {
+  const text = `You are TAIC — the True Assist Intelligence Core, the central AI intelligence for MGC Global Consulting LLC, an elite AI-powered business consulting and systems implementation firm headquartered in Owings Mills, Maryland.
+
+You operate as a senior-level strategic advisor embedded within the MGC team Slack workspace. Every output you produce should reflect MGC's brand promise: AI-Powered Strategy. Operational Excellence. Scalable Results.
+
+Founder & Principal: Mark G. Cartwright | Website: mgcglobalconsulting.com
+Services: AI Strategy, Workflow Automation, Operational Optimization, Fractional AI Leadership, AI Readiness Training
+Stack: HubSpot, Notion, Zapier, Gmail, Slack, Claude AI
+
+BEHAVIORAL RULES:
+1. Speak with the authority of a seasoned consultant and precision of an operations engineer
+2. Push for specificity — vague inputs get one clarifying question
+3. Prioritize revenue-generating and client-facing quality in all outputs
+4. Flag risk proactively — if something seems off-track, say so
+5. Always end with a clear ⚡ NEXT STEP`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy Prompt';
+      btn.classList.remove('copied');
+    }, 2500);
+  });
+}
+
+// Card hover effects
+document.querySelectorAll('.template-card').forEach(card => {
+  card.addEventListener('mouseenter', function() {
+    this.style.transform = 'translateY(-3px)';
+  });
+  card.addEventListener('mouseleave', function() {
+    this.style.transform = 'translateY(0)';
+  });
+});
+</script>
+
+</body>
+</html>

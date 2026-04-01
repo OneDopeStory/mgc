@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>You're In — MGC Global Consulting</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:       #0f1c3f;
+      --navy-mid:   #1a2f5e;
+      --gold:       #c8a96e;
+      --gold-light: #e8c98a;
+      --white:      #ffffff;
+      --off-white:  #f7f8fc;
+      --text-muted: #7a8499;
+      --border:     rgba(200,169,110,0.2);
+      --radius:     14px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(15,28,63,0.95);
+      backdrop-filter: blur(10px);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem; color: var(--gold); text-decoration: none;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .nav-logo span { color: var(--white); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: #9ba8c4; text-decoration: none; font-size: .875rem; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    .hero {
+      flex: 1;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 4rem 1.5rem;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(200,169,110,0.12);
+      border: 1px solid var(--border);
+      color: var(--gold); font-size: .8rem; font-weight: 600;
+      padding: .45rem 1rem; border-radius: 100px;
+      letter-spacing: .04em; text-transform: uppercase;
+      margin-bottom: 1.75rem;
+    }
+    .badge svg { width: 14px; height: 14px; }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      line-height: 1.15; max-width: 640px;
+      margin-bottom: 1.25rem;
+    }
+    h1 em { color: var(--gold); font-style: normal; }
+    .sub {
+      font-size: 1.05rem; color: #9ba8c4; max-width: 520px;
+      line-height: 1.7; margin-bottom: 2.5rem;
+    }
+    .body-copy {
+      font-size: .95rem; color: #c0cae0; max-width: 480px;
+      line-height: 1.75; margin-bottom: 3rem;
+    }
+
+    /* ── BUTTONS ── */
+    .btn-primary {
+      display: inline-block; padding: .9rem 2.2rem;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--navy); font-weight: 700; font-size: .95rem;
+      border-radius: var(--radius); text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 20px rgba(200,169,110,0.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(200,169,110,0.5); }
+    .btn-secondary {
+      display: inline-block; padding: .85rem 2rem;
+      border: 1.5px solid var(--border); color: #9ba8c4;
+      font-weight: 500; font-size: .9rem; border-radius: var(--radius);
+      text-decoration: none; margin-left: 1rem;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── STEPS ── */
+    .steps {
+      display: flex; gap: 1.25rem; margin-top: 4rem; flex-wrap: wrap; justify-content: center;
+    }
+    .step {
+      background: var(--navy-mid); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem; text-align: left;
+      max-width: 200px; flex: 1 1 160px;
+    }
+    .step-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(200,169,110,.15); border: 1px solid var(--gold);
+      color: var(--gold); font-size: .8rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: .75rem;
+    }
+    .step h4 { font-size: .85rem; font-weight: 600; margin-bottom: .35rem; }
+    .step p { font-size: .78rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* ── WHILE YOU WAIT ── */
+    .wait-section {
+      margin-top: 5rem; width: 100%; max-width: 700px; text-align: left;
+      background: var(--navy-mid); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 2rem 2.5rem;
+    }
+    .wait-label {
+      font-size: .72rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: .75rem;
+    }
+    .wait-section h3 { font-size: 1.1rem; margin-bottom: .6rem; }
+    .wait-section p { font-size: .9rem; color: #9ba8c4; line-height: 1.65; margin-bottom: 1.25rem; }
+    .wait-link {
+      color: var(--gold); font-size: .9rem; font-weight: 600; text-decoration: none;
+      display: inline-flex; align-items: center; gap: .4rem;
+    }
+    .wait-link:hover { text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center; padding: 2rem;
+      border-top: 1px solid var(--border);
+      font-size: .78rem; color: var(--text-muted);
+    }
+    footer a { color: var(--gold); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      nav { padding: 1rem 1.25rem; }
+      .nav-links { display: none; }
+      .btn-secondary { margin: .75rem 0 0; display: block; text-align: center; }
+      .wait-section { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="https://www.mgcglobalconsulting.com">MGC <span>Global Consulting</span></a>
+    <ul class="nav-links">
+      <li><a href="https://www.mgcglobalconsulting.com/directory">Directory</a></li>
+      <li><a href="https://www.mgcglobalconsulting.com/members">Members</a></li>
+      <li><a href="https://www.mgcglobalconsulting.com/partners">Partners</a></li>
+      <li><a href="https://www.mgcglobalconsulting.com/support">Support</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <main class="hero">
+    <div class="badge">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+      Submission Confirmed
+    </div>
+
+    <h1>Your Spot in the<br /><em>Directory is Reserved.</em></h1>
+
+    <p class="sub">
+      Checkout received. Your listing is being activated — think of it as your corner office in the MGC ecosystem, but without the lease.
+    </p>
+
+    <p class="body-copy">
+      You'll receive a confirmation email within the next few minutes with your member credentials and a direct link to your listing dashboard. Our team does a quick profile review before your listing goes live — typically within 24 hours. If anything looks off, we'll reach out directly.
+    </p>
+
+    <div>
+      <a class="btn-primary" href="https://www.mgcglobalconsulting.com/members/dashboard">View My Listing</a>
+      <a class="btn-secondary" href="https://www.mgcglobalconsulting.com/directory">Browse Directory</a>
+    </div>
+
+    <!-- WHAT HAPPENS NEXT -->
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Check Your Inbox</h4>
+        <p>Credentials & listing link on the way.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Complete Your Profile</h4>
+        <p>Add a bio, links, and services.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>Go Live</h4>
+        <p>Your listing activates after our 24hr review.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h4>Network</h4>
+        <p>Connect with members in the ecosystem.</p>
+      </div>
+    </div>
+
+    <!-- WHILE YOU WAIT -->
+    <div class="wait-section">
+      <div class="wait-label">⚡ While You Wait</div>
+      <h3>Explore Who's Already in the Room</h3>
+      <p>
+        The directory is your shortcut to the ecosystem. Browse active member profiles, find collaboration opportunities, and see exactly what a strong listing looks like before you build yours.
+      </p>
+      <a class="wait-link" href="https://www.mgcglobalconsulting.com/directory">
+        Browse the Full Directory
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2026 <a href="https://www.mgcglobalconsulting.com">MGC Global Consulting</a>. All rights reserved. &nbsp;|&nbsp;
+    <a href="https://www.mgcglobalconsulting.com/support">Support</a> &nbsp;|&nbsp;
+    <a href="https://www.mgcglobalconsulting.com/privacy">Privacy Policy</a>
+  </footer>
+
+<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/245294674.js"></script>
+<script src="/hs-breeze-bridge.js" defer></script>
+</body>
+</html>

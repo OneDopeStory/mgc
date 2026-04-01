@@ -1,0 +1,11 @@
+{
+  "name": "mgc-netlify-functions",
+  "version": "1.0.0",
+  "description": "MGC Global Consulting — Netlify serverless functions",
+  "dependencies": {
+    "stripe": "^17.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

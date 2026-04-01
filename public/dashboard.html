@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elite Dashboard — MGC Global Consulting</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy-deep:#0A1628;--navy:#112A60;--primary:#135997;--cyan:#4AAFCF;
+  --gold:#C9A84C;--gold-light:#F0D98A;--white:#FFFFFF;
+  --success:#22C55E;--warning:#F59E0B;--error:#EF4444;
+  --surface:#0d1f38;--surface-2:#0f2540;
+  --font-display:'Sora',system-ui,sans-serif;--font-body:'Plus Jakarta Sans',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --sidebar-w:260px;
+}
+html{font-size:15px;height:100%}
+body{font-family:var(--font-body);color:white;background:var(--navy-deep);overflow-x:hidden;-webkit-font-smoothing:antialiased;display:flex;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--surface);border-right:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100;overflow-y:auto}
+.sidebar-logo{padding:1.75rem 1.5rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.06)}
+.logo-text{font-family:var(--font-display);font-weight:800;font-size:1rem;letter-spacing:-0.02em}
+.logo-text span{color:var(--cyan)}
+.logo-badge{display:inline-flex;align-items:center;gap:0.3rem;margin-top:0.4rem;padding:0.2rem 0.6rem;border-radius:9999px;background:rgba(201,168,76,0.15);color:var(--gold);font-family:var(--font-display);font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border:1px solid rgba(201,168,76,0.25)}
+.sidebar-section{padding:1.5rem 0.75rem 0.5rem}
+.sidebar-section-label{font-family:var(--font-display);font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:0 0.75rem;margin-bottom:0.5rem}
+.nav-item{display:flex;align-items:center;gap:0.75rem;padding:0.7rem 0.75rem;border-radius:10px;color:rgba(255,255,255,0.55);font-size:0.85rem;font-weight:500;cursor:pointer;transition:all 0.2s;margin-bottom:2px}
+.nav-item:hover,.nav-item.active{background:rgba(74,175,207,0.1);color:white}
+.nav-item.active{background:rgba(74,175,207,0.12);color:var(--cyan)}
+.nav-item svg{width:16px;height:16px;flex-shrink:0}
+.nav-badge{margin-left:auto;padding:0.15rem 0.5rem;border-radius:9999px;background:rgba(74,175,207,0.2);color:var(--cyan);font-size:0.65rem;font-weight:700}
+.nav-badge.gold{background:rgba(201,168,76,0.15);color:var(--gold)}
+.sidebar-footer{margin-top:auto;padding:1.25rem;border-top:1px solid rgba(255,255,255,0.06)}
+.member-info{display:flex;align-items:center;gap:0.75rem}
+.member-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--cyan));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:0.85rem;flex-shrink:0}
+.member-name{font-size:0.85rem;font-weight:600;color:white}
+.member-tier{font-size:0.72rem;color:var(--gold);font-weight:600}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);flex:1;min-height:100vh;display:flex;flex-direction:column}
+
+/* TOP BAR */
+.topbar{padding:1.25rem 2rem;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;background:var(--surface);position:sticky;top:0;z-index:50}
+.topbar-left h1{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:white}
+.topbar-left p{font-size:0.8rem;color:rgba(255,255,255,0.4);margin-top:0.15rem}
+.topbar-right{display:flex;align-items:center;gap:1rem}
+.btn-call{display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.1rem;border-radius:9999px;background:linear-gradient(135deg,var(--gold),#e8c76a);color:#1a1200;font-family:var(--font-display);font-weight:800;font-size:0.78rem;cursor:pointer;border:none;transition:opacity 0.2s,transform 0.2s}
+.btn-call:hover{opacity:0.9;transform:translateY(-1px)}
+.notif-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background 0.2s}
+.notif-btn:hover{background:rgba(255,255,255,0.1)}
+.notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--gold);border:2px solid var(--surface)}
+
+/* ── DASHBOARD CONTENT ── */
+.content{padding:2rem;flex:1}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-bottom:2rem}
+@media(max-width:1100px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+.kpi-card{background:var(--surface);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:1.5rem;position:relative;overflow:hidden}
+.kpi-card::after{content:'';position:absolute;top:0;right:0;width:60%;height:100%;background:radial-gradient(circle at 100% 0%,rgba(74,175,207,0.05),transparent);pointer-events:none}
+.kpi-label{font-size:0.72rem;font-weight:600;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.4rem}
+.kpi-value{font-family:var(--font-display);font-size:2.25rem;font-weight:800;color:white;letter-spacing:-0.04em;line-height:1;margin-bottom:0.5rem}
+.kpi-value span{font-size:1rem;font-weight:400;color:rgba(255,255,255,0.4);margin-left:2px}
+.kpi-delta{font-size:0.75rem;font-weight:600;color:var(--success)}
+.kpi-delta.down{color:var(--error)}
+
+/* STATUS BADGE */
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.status-dot.online{background:var(--success);box-shadow:0 0 6px rgba(34,197,94,0.5)}
+.status-dot.warning{background:var(--warning);box-shadow:0 0 6px rgba(245,158,11,0.4)}
+.status-dot.offline{background:var(--error)}
+
+/* GRID LAYOUT */
+.dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+@media(max-width:1000px){.dashboard-grid{grid-template-columns:1fr}}
+.dashboard-grid.three{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:1100px){.dashboard-grid.three{grid-template-columns:1fr}}
+
+/* PANEL */
+.panel{background:var(--surface);border:1px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden}
+.panel.full{grid-column:1/-1}
+.panel-header{padding:1.25rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-family:var(--font-display);font-size:0.88rem;font-weight:700;color:white}
+.panel-subtitle{font-size:0.75rem;color:rgba(255,255,255,0.35);margin-top:0.1rem}
+.panel-action{font-family:var(--font-display);font-size:0.72rem;font-weight:700;color:var(--cyan);cursor:pointer;transition:opacity 0.2s;background:none;border:none;padding:0}
+.panel-action:hover{opacity:0.7}
+.panel-body{padding:1.5rem}
+
+/* ── AI AGENT STATUS ── */
+.agent-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.agent-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:1.25rem;transition:border-color 0.2s}
+.agent-card:hover{border-color:rgba(74,175,207,0.2)}
+.agent-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem}
+.agent-name{font-family:var(--font-display);font-size:0.82rem;font-weight:700;color:white}
+.agent-status-badge{display:flex;align-items:center;gap:0.35rem;padding:0.2rem 0.6rem;border-radius:9999px;font-size:0.65rem;font-weight:700;font-family:var(--font-display)}
+.agent-status-badge.running{background:rgba(34,197,94,0.12);color:var(--success);border:1px solid rgba(34,197,94,0.2)}
+.agent-status-badge.paused{background:rgba(245,158,11,0.12);color:var(--warning);border:1px solid rgba(245,158,11,0.2)}
+.agent-status-badge.building{background:rgba(74,175,207,0.12);color:var(--cyan);border:1px solid rgba(74,175,207,0.2)}
+.agent-desc{font-size:0.78rem;color:rgba(255,255,255,0.45);line-height:1.5;margin-bottom:0.875rem}
+.agent-metric{font-size:0.72rem;color:rgba(255,255,255,0.3)}
+.agent-metric span{color:white;font-weight:600}
+.progress-bar{height:4px;background:rgba(255,255,255,0.08);border-radius:9999px;margin-top:0.75rem;overflow:hidden}
+.progress-fill{height:100%;border-radius:9999px;background:linear-gradient(90deg,var(--primary),var(--cyan));transition:width 1s var(--ease)}
+
+/* ── PRIORITY SUPPORT ── */
+.support-status{display:flex;align-items:center;gap:0.75rem;padding:1rem 1.25rem;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:12px;margin-bottom:1.25rem}
+.support-status-text{font-size:0.82rem;color:rgba(255,255,255,0.8);line-height:1.4}
+.support-status-text strong{color:var(--success);display:block;font-size:0.85rem}
+.ticket-list{display:flex;flex-direction:column;gap:0.75rem}
+.ticket{display:flex;align-items:flex-start;gap:0.875rem;padding:1rem 1.25rem;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.ticket-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem}
+.ticket-icon.open{background:rgba(74,175,207,0.15)}
+.ticket-icon.resolved{background:rgba(34,197,94,0.12)}
+.ticket-info{flex:1}
+.ticket-title{font-size:0.82rem;font-weight:600;color:white;margin-bottom:0.2rem}
+.ticket-meta{font-size:0.72rem;color:rgba(255,255,255,0.35);display:flex;gap:0.75rem}
+.ticket-badge{padding:0.15rem 0.5rem;border-radius:9999px;font-size:0.65rem;font-weight:700;font-family:var(--font-display)}
+.ticket-badge.open{background:rgba(74,175,207,0.15);color:var(--cyan)}
+.ticket-badge.resolved{background:rgba(34,197,94,0.12);color:var(--success)}
+.new-ticket-btn{width:100%;padding:0.75rem;border-radius:10px;border:1.5px dashed rgba(255,255,255,0.12);background:transparent;color:rgba(255,255,255,0.4);font-family:var(--font-display);font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.2s;margin-top:0.75rem;display:flex;align-items:center;justify-content:center;gap:0.5rem}
+.new-ticket-btn:hover{border-color:rgba(74,175,207,0.35);color:var(--cyan)}
+
+/* ── ACTIVITY FEED ── */
+.activity-list{display:flex;flex-direction:column;gap:0}
+.activity-item{display:flex;align-items:flex-start;gap:1rem;padding:0.875rem 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.activity-dot.cyan{background:var(--cyan)}
+.activity-dot.gold{background:var(--gold)}
+.activity-dot.green{background:var(--success)}
+.activity-text{font-size:0.82rem;color:rgba(255,255,255,0.7);line-height:1.5}
+.activity-text strong{color:white}
+.activity-time{font-size:0.7rem;color:rgba(255,255,255,0.3);margin-top:0.15rem}
+
+/* ── UPCOMING ── */
+.upcoming-list{display:flex;flex-direction:column;gap:0.75rem}
+.upcoming-item{display:flex;align-items:center;gap:1rem;padding:0.875rem 1.1rem;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.06)}
+.upcoming-date{text-align:center;min-width:42px}
+.upcoming-month{font-size:0.65rem;font-weight:700;text-transform:uppercase;color:var(--cyan);letter-spacing:0.08em}
+.upcoming-day{font-family:var(--font-display);font-size:1.5rem;font-weight:800;color:white;line-height:1}
+.upcoming-info{flex:1}
+.upcoming-title{font-size:0.85rem;font-weight:600;color:white}
+.upcoming-sub{font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:0.15rem}
+.upcoming-badge{padding:0.2rem 0.6rem;border-radius:9999px;background:rgba(201,168,76,0.12);color:var(--gold);font-size:0.65rem;font-weight:700;border:1px solid rgba(201,168,76,0.2)}
+
+/* ── BILLING ── */
+.billing-row{display:flex;align-items:center;justify-content:space-between;padding:0.875rem 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.billing-row:last-child{border-bottom:none}
+.billing-label{font-size:0.82rem;color:rgba(255,255,255,0.6)}
+.billing-val{font-size:0.85rem;font-weight:600;color:white}
+.billing-val.green{color:var(--success)}
+.billing-val.gold{color:var(--gold)}
+
+/* ── QUICK ACTIONS ── */
+.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
+.qa-btn{padding:0.875rem 1rem;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.7);font-family:var(--font-display);font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:0.5rem;text-align:left}
+.qa-btn:hover{border-color:rgba(74,175,207,0.3);color:white;background:rgba(74,175,207,0.07)}
+
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .main{margin-left:0}
+  .kpi-row{grid-template-columns:1fr 1fr}
+  .agent-grid{grid-template-columns:1fr}
+  .quick-actions{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">MGC <span>Global</span></div>
+    <div class="logo-badge">👑 Elite Member</div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Overview</div>
+    <div class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14"/><path d="M4.93 4.93a10 10 0 000 14.14"/></svg>
+      AI Agent Status
+      <span class="nav-badge">4</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      Automations
+      <span class="nav-badge">12</span>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Support</div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Priority Support
+      <span class="nav-badge gold">2</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Upcoming Calls
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Resources & SOPs
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Account</div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      Billing
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      Profile Settings
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="member-info">
+      <div class="member-avatar">M</div>
+      <div>
+        <div class="member-name">Mark Cartwright</div>
+        <div class="member-tier">👑 Elite · Active</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Elite Command Center</h1>
+      <p>Welcome back. Here's what's happening in your ecosystem.</p>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-call" onclick="Calendly && Calendly.initPopupWidget({url:'https://calendly.com/mark-mgcglobalconsulting/30min'})">
+        📅 Book 1:1 with Mark
+      </button>
+      <div class="notif-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <div class="notif-dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- KPI ROW -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label"><span class="status-dot online"></span> Active Automations</div>
+        <div class="kpi-value">12</div>
+        <div class="kpi-delta">↑ 3 deployed this month</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">⏱ Hours Saved / Month</div>
+        <div class="kpi-value">47<span>hrs</span></div>
+        <div class="kpi-delta">↑ 12hrs vs last month</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">💰 Est. Value Generated</div>
+        <div class="kpi-value">$8,400</div>
+        <div class="kpi-delta">↑ 23% vs last month</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">🎯 Next 1:1 Call</div>
+        <div class="kpi-value" style="font-size:1.4rem">Mar 18</div>
+        <div class="kpi-delta" style="color:var(--gold)">In 5 days · 60 min</div>
+      </div>
+    </div>
+
+    <!-- ROW 1: AI AGENTS + PRIORITY SUPPORT -->
+    <div class="dashboard-grid">
+
+      <!-- AI AGENT STATUS -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">🤖 Custom AI Agent Status</div>
+            <div class="panel-subtitle">Your deployed AI agents — live status</div>
+          </div>
+          <button class="panel-action">View All →</button>
+        </div>
+        <div class="panel-body">
+          <div class="agent-grid">
+
+            <div class="agent-card">
+              <div class="agent-header">
+                <div class="agent-name">Lead Qualifier</div>
+                <div class="agent-status-badge running"><span class="status-dot online"></span>Running</div>
+              </div>
+              <p class="agent-desc">Auto-qualifies inbound leads via email and Slack. Scores by fit, urgency, and deal size.</p>
+              <div class="agent-metric">Processed <span>143 leads</span> this month</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:78%"></div></div>
+            </div>
+
+            <div class="agent-card">
+              <div class="agent-header">
+                <div class="agent-name">Invoice Assistant</div>
+                <div class="agent-status-badge running"><span class="status-dot online"></span>Running</div>
+              </div>
+              <p class="agent-desc">Monitors QuickBooks for overdue invoices and sends personalized follow-up sequences.</p>
+              <div class="agent-metric">Recovered <span>$12,400</span> this quarter</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:92%"></div></div>
+            </div>
+
+            <div class="agent-card">
+              <div class="agent-header">
+                <div class="agent-name">Content Engine</div>
+                <div class="agent-status-badge paused"><span class="status-dot warning"></span>Paused</div>
+              </div>
+              <p class="agent-desc">Drafts LinkedIn posts and newsletter content from your weekly call transcripts.</p>
+              <div class="agent-metric">Last run <span>6 days ago</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:35%;background:var(--warning)"></div></div>
+            </div>
+
+            <div class="agent-card">
+              <div class="agent-header">
+                <div class="agent-name">Report Builder</div>
+                <div class="agent-status-badge building"><span class="status-dot online"></span>Building</div>
+              </div>
+              <p class="agent-desc">Generates weekly performance reports from CRM, billing, and automation data.</p>
+              <div class="agent-metric">Next report <span>Sunday 8am</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+            </div>
+
+          </div><!-- /agent-grid -->
+        </div>
+      </div>
+
+      <!-- 24/7 PRIORITY SUPPORT -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">🛡️ 24/7 Priority Support</div>
+            <div class="panel-subtitle">Same-day response guaranteed for Elite members</div>
+          </div>
+          <button class="panel-action" onclick="document.getElementById('invoiceModal') && document.getElementById('invoiceModal').classList.add('active')">New Ticket +</button>
+        </div>
+        <div class="panel-body">
+          <div class="support-status">
+            <div><span class="status-dot online"></span></div>
+            <div class="support-status-text">
+              <strong>All Systems Operational</strong>
+              Support is active · avg response time today: <strong style="color:white">1.4 hrs</strong>
+            </div>
+          </div>
+          <div class="ticket-list">
+            <div class="ticket">
+              <div class="ticket-icon open">💬</div>
+              <div class="ticket-info">
+                <div class="ticket-title">Zapier webhook not triggering on new HubSpot contacts</div>
+                <div class="ticket-meta">
+                  <span>Opened 2 hrs ago</span>
+                  <span class="ticket-badge open">Open</span>
+                </div>
+              </div>
+            </div>
+            <div class="ticket">
+              <div class="ticket-icon resolved">✅</div>
+              <div class="ticket-info">
+                <div class="ticket-title">QuickBooks OAuth token refresh failing in prod</div>
+                <div class="ticket-meta">
+                  <span>Resolved yesterday · 47 min</span>
+                  <span class="ticket-badge resolved">Resolved</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="new-ticket-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Open New Support Ticket
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /row 1 -->
+
+    <!-- ROW 2: ACTIVITY + UPCOMING + BILLING + QUICK ACTIONS -->
+    <div class="dashboard-grid" style="grid-template-columns:1.4fr 1fr 1fr">
+
+      <!-- ACTIVITY FEED -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">⚡ Recent Activity</div>
+        </div>
+        <div class="panel-body">
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-dot cyan"></div>
+              <div>
+                <div class="activity-text"><strong>Lead Qualifier Agent</strong> scored 8 new leads — 3 flagged high priority</div>
+                <div class="activity-time">Today, 9:14 AM</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot green"></div>
+              <div>
+                <div class="activity-text"><strong>Automation deployed:</strong> HubSpot → Slack new deal notification</div>
+                <div class="activity-time">Yesterday, 4:32 PM</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot gold"></div>
+              <div>
+                <div class="activity-text"><strong>Invoice recovered:</strong> $2,400 from overdue client follow-up sequence</div>
+                <div class="activity-time">Mar 11, 2:18 PM</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot cyan"></div>
+              <div>
+                <div class="activity-text"><strong>Weekly report</strong> generated and sent to your inbox</div>
+                <div class="activity-time">Mar 10, 8:00 AM</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot green"></div>
+              <div>
+                <div class="activity-text"><strong>CRM cleanup complete:</strong> 47 duplicates removed, pipeline restructured</div>
+                <div class="activity-time">Mar 9, 11:45 AM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPCOMING CALLS -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">📅 Upcoming Calls</div>
+          <button class="panel-action" onclick="Calendly && Calendly.initPopupWidget({url:'https://calendly.com/mark-mgcglobalconsulting/30min'})">Schedule +</button>
+        </div>
+        <div class="panel-body">
+          <div class="upcoming-list">
+            <div class="upcoming-item">
+              <div class="upcoming-date">
+                <div class="upcoming-month">MAR</div>
+                <div class="upcoming-day">18</div>
+              </div>
+              <div class="upcoming-info">
+                <div class="upcoming-title">Weekly 1:1 with Mark</div>
+                <div class="upcoming-sub">2:00 PM EST · 60 min · Zoom</div>
+              </div>
+              <div class="upcoming-badge">1:1</div>
+            </div>
+            <div class="upcoming-item">
+              <div class="upcoming-date">
+                <div class="upcoming-month">MAR</div>
+                <div class="upcoming-day">25</div>
+              </div>
+              <div class="upcoming-info">
+                <div class="upcoming-title">Monthly Strategy Review</div>
+                <div class="upcoming-sub">1:00 PM EST · 90 min · Zoom</div>
+              </div>
+              <div class="upcoming-badge">Strategy</div>
+            </div>
+            <div class="upcoming-item">
+              <div class="upcoming-date">
+                <div class="upcoming-month">APR</div>
+                <div class="upcoming-day">1</div>
+              </div>
+              <div class="upcoming-info">
+                <div class="upcoming-title">Q2 Planning Session</div>
+                <div class="upcoming-sub">10:00 AM EST · 2 hrs · Zoom</div>
+              </div>
+              <div class="upcoming-badge">Planning</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BILLING + QUICK ACTIONS -->
+      <div style="display:flex;flex-direction:column;gap:1.25rem">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">💳 Billing</div>
+          </div>
+          <div class="panel-body" style="padding:1rem 1.25rem">
+            <div class="billing-row">
+              <div class="billing-label">Current Plan</div>
+              <div class="billing-val gold">Elite · $1,299/mo</div>
+            </div>
+            <div class="billing-row">
+              <div class="billing-label">Next Invoice</div>
+              <div class="billing-val">Apr 13, 2026</div>
+            </div>
+            <div class="billing-row">
+              <div class="billing-label">Member Since</div>
+              <div class="billing-val">Mar 13, 2026</div>
+            </div>
+            <div class="billing-row">
+              <div class="billing-label">Status</div>
+              <div class="billing-val green">Active ✓</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">⚡ Quick Actions</div>
+          </div>
+          <div class="panel-body" style="padding:1rem 1.25rem">
+            <div class="quick-actions">
+              <button class="qa-btn" onclick="Calendly && Calendly.initPopupWidget({url:'https://calendly.com/mark-mgcglobalconsulting/30min'})">
+                📅 Book Call
+              </button>
+              <button class="qa-btn">
+                💬 Slack Mark
+              </button>
+              <button class="qa-btn">
+                📋 View SOPs
+              </button>
+              <button class="qa-btn">
+                📊 Reports
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /row 2 -->
+
+  </div><!-- /content -->
+</main>
+
+<script>
+// Animate KPI values on load
+document.querySelectorAll('.progress-fill').forEach(bar => {
+  const w = bar.style.width;
+  bar.style.width = '0';
+  setTimeout(() => bar.style.width = w, 300);
+});
+
+// Sidebar nav toggle
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', function() {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/245294674.js"></script>
+</body>
+</html>
