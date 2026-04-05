@@ -3,614 +3,1223 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Elite Dashboard — MGC Global Consulting</title>
+<title>Client Portal — MGC Global Consulting</title>
 <meta name="robots" content="noindex,nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --navy-deep:#0A1628;--navy:#112A60;--primary:#135997;--cyan:#4AAFCF;
-  --gold:#C9A84C;--gold-light:#F0D98A;--white:#FFFFFF;
-  --success:#22C55E;--warning:#F59E0B;--error:#EF4444;
-  --surface:#0d1f38;--surface-2:#0f2540;
-  --font-display:'Sora',system-ui,sans-serif;--font-body:'Plus Jakarta Sans',system-ui,sans-serif;
+  --abyss:#010C1A;--deep:#020F20;--navy:#041428;--ocean:#061D35;
+  --blue:#0A3A6B;--mid:#0E5494;--sky:#1A8FD1;--cyan:#00D4FF;
+  --gold:#FFB347;--gold-dark:#C9892A;--gold-glow:rgba(255,179,71,0.25);
+  --white:#FFFFFF;--muted:rgba(255,255,255,0.55);--dim:rgba(255,255,255,0.25);
+  --success:#22C55E;--warning:#F59E0B;--error:#EF4444;--info:#3B82F6;
+  --surface:rgba(6,29,53,0.8);--surface-2:rgba(10,58,107,0.35);
+  --border:rgba(0,212,255,0.12);--border-gold:rgba(255,179,71,0.25);
+  --font-display:'Raleway',sans-serif;--font-body:'Plus+Jakarta+Sans',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace;
   --ease:cubic-bezier(0.16,1,0.3,1);
-  --sidebar-w:260px;
+  --sidebar-w:265px;
+  --radius:14px;
 }
 html{font-size:15px;height:100%}
-body{font-family:var(--font-body);color:white;background:var(--navy-deep);overflow-x:hidden;-webkit-font-smoothing:antialiased;display:flex;min-height:100vh}
+body{font-family:var(--font-body);color:white;background:var(--abyss);overflow-x:hidden;-webkit-font-smoothing:antialiased;min-height:100vh}
 
-/* ── SIDEBAR ── */
-.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--surface);border-right:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100;overflow-y:auto}
-.sidebar-logo{padding:1.75rem 1.5rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.06)}
-.logo-text{font-family:var(--font-display);font-weight:800;font-size:1rem;letter-spacing:-0.02em}
-.logo-text span{color:var(--cyan)}
-.logo-badge{display:inline-flex;align-items:center;gap:0.3rem;margin-top:0.4rem;padding:0.2rem 0.6rem;border-radius:9999px;background:rgba(201,168,76,0.15);color:var(--gold);font-family:var(--font-display);font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border:1px solid rgba(201,168,76,0.25)}
-.sidebar-section{padding:1.5rem 0.75rem 0.5rem}
-.sidebar-section-label{font-family:var(--font-display);font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:0 0.75rem;margin-bottom:0.5rem}
-.nav-item{display:flex;align-items:center;gap:0.75rem;padding:0.7rem 0.75rem;border-radius:10px;color:rgba(255,255,255,0.55);font-size:0.85rem;font-weight:500;cursor:pointer;transition:all 0.2s;margin-bottom:2px}
-.nav-item:hover,.nav-item.active{background:rgba(74,175,207,0.1);color:white}
-.nav-item.active{background:rgba(74,175,207,0.12);color:var(--cyan)}
-.nav-item svg{width:16px;height:16px;flex-shrink:0}
-.nav-badge{margin-left:auto;padding:0.15rem 0.5rem;border-radius:9999px;background:rgba(74,175,207,0.2);color:var(--cyan);font-size:0.65rem;font-weight:700}
-.nav-badge.gold{background:rgba(201,168,76,0.15);color:var(--gold)}
-.sidebar-footer{margin-top:auto;padding:1.25rem;border-top:1px solid rgba(255,255,255,0.06)}
-.member-info{display:flex;align-items:center;gap:0.75rem}
-.member-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--cyan));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:0.85rem;flex-shrink:0}
-.member-name{font-size:0.85rem;font-weight:600;color:white}
-.member-tier{font-size:0.72rem;color:var(--gold);font-weight:600}
+/* ─── BACKGROUND ─── */
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(0,212,255,0.05),transparent),radial-gradient(ellipse 60% 50% at 80% 80%,rgba(14,84,148,0.08),transparent);pointer-events:none;z-index:0}
 
-/* ── MAIN ── */
-.main{margin-left:var(--sidebar-w);flex:1;min-height:100vh;display:flex;flex-direction:column}
+/* ─── AUTH SCREEN ─── */
+#auth-screen{position:fixed;inset:0;background:var(--abyss);display:flex;align-items:center;justify-content:center;z-index:200;padding:1rem}
+#auth-screen::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 40%,rgba(0,212,255,0.06),transparent),radial-gradient(ellipse 50% 40% at 80% 70%,rgba(14,84,148,0.1),transparent)}
 
-/* TOP BAR */
-.topbar{padding:1.25rem 2rem;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;background:var(--surface);position:sticky;top:0;z-index:50}
-.topbar-left h1{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:white}
-.topbar-left p{font-size:0.8rem;color:rgba(255,255,255,0.4);margin-top:0.15rem}
-.topbar-right{display:flex;align-items:center;gap:1rem}
-.btn-call{display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.1rem;border-radius:9999px;background:linear-gradient(135deg,var(--gold),#e8c76a);color:#1a1200;font-family:var(--font-display);font-weight:800;font-size:0.78rem;cursor:pointer;border:none;transition:opacity 0.2s,transform 0.2s}
-.btn-call:hover{opacity:0.9;transform:translateY(-1px)}
-.notif-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background 0.2s}
-.notif-btn:hover{background:rgba(255,255,255,0.1)}
-.notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--gold);border:2px solid var(--surface)}
+.auth-card{position:relative;width:100%;max-width:440px;background:rgba(6,29,53,0.9);border:1px solid var(--border);border-radius:24px;padding:2.5rem;backdrop-filter:blur(24px)}
 
-/* ── DASHBOARD CONTENT ── */
-.content{padding:2rem;flex:1}
+.auth-logo{display:flex;align-items:center;gap:0.85rem;margin-bottom:2rem;justify-content:center}
+.auth-logo-img{width:54px;height:54px;border-radius:50%;object-fit:contain;filter:drop-shadow(0 0 14px rgba(0,212,255,0.5))}
+.auth-logo-text{font-family:var(--font-display);font-size:1.1rem;font-weight:800;letter-spacing:-0.01em;line-height:1.2}
+.auth-logo-text span{color:var(--cyan)}
+.auth-logo-sub{font-size:0.7rem;color:rgba(0,212,255,0.7);letter-spacing:0.08em;text-transform:uppercase;font-weight:600}
 
-/* KPI ROW */
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-bottom:2rem}
+.auth-tabs{display:flex;background:rgba(1,12,26,0.6);border-radius:10px;padding:4px;margin-bottom:1.75rem}
+.auth-tab{flex:1;padding:.55rem;text-align:center;font-family:var(--font-display);font-size:0.82rem;font-weight:700;color:var(--muted);cursor:pointer;border-radius:8px;transition:all 0.2s;border:none;background:none}
+.auth-tab.active{background:rgba(0,212,255,0.12);color:var(--cyan);border:1px solid rgba(0,212,255,0.2)}
+
+.auth-form{display:flex;flex-direction:column;gap:1rem}
+.auth-form.hidden{display:none}
+.form-group{display:flex;flex-direction:column;gap:0.4rem}
+.form-label{font-size:0.75rem;font-weight:600;color:var(--muted);letter-spacing:0.04em;text-transform:uppercase}
+.form-input{background:rgba(1,12,26,0.7);border:1px solid rgba(0,212,255,0.15);border-radius:10px;padding:.75rem 1rem;color:white;font-family:var(--font-body);font-size:0.875rem;outline:none;transition:border-color 0.2s}
+.form-input:focus{border-color:rgba(0,212,255,0.45)}
+.form-input::placeholder{color:var(--dim)}
+
+.btn-auth{padding:.8rem;border-radius:10px;font-family:var(--font-display);font-weight:800;font-size:0.875rem;cursor:pointer;transition:all 0.2s;border:none;letter-spacing:0.02em}
+.btn-auth-primary{background:linear-gradient(135deg,var(--sky),var(--cyan));color:var(--abyss)}
+.btn-auth-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,212,255,0.25)}
+.btn-auth-primary:active{transform:translateY(0)}
+.btn-auth-google{background:rgba(255,255,255,0.06);color:white;border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;gap:.6rem}
+.btn-auth-google:hover{background:rgba(255,255,255,0.1)}
+
+.auth-divider{display:flex;align-items:center;gap:.75rem;color:var(--dim);font-size:0.75rem}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.1)}
+
+.auth-error{padding:.7rem 1rem;border-radius:8px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);color:#fca5a5;font-size:0.8rem;display:none}
+.auth-error.show{display:block}
+.auth-success{padding:.7rem 1rem;border-radius:8px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#86efac;font-size:0.8rem;display:none}
+.auth-success.show{display:block}
+
+/* ─── PORTAL APP (hidden until authed) ─── */
+#portal-app{display:none;min-height:100vh}
+#portal-app.show{display:flex}
+
+/* ─── SIDEBAR ─── */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:linear-gradient(180deg,rgba(4,20,40,0.97) 0%,rgba(2,15,32,0.97) 100%);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100;overflow-y:auto;transition:transform 0.3s var(--ease)}
+
+.sidebar-top{padding:1.5rem 1.25rem 1.25rem;border-bottom:1px solid var(--border)}
+.s-logo{display:flex;align-items:center;gap:.7rem;text-decoration:none;margin-bottom:.9rem}
+.s-logo-img{width:42px;height:42px;border-radius:50%;object-fit:contain;filter:drop-shadow(0 0 10px rgba(0,212,255,0.4))}
+.s-logo-label{font-family:var(--font-display);font-weight:800;font-size:.88rem;line-height:1.2}
+.s-logo-label span{color:var(--cyan);display:block;font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(0,212,255,.7)}
+
+.s-user{display:flex;align-items:center;gap:.65rem;padding:.6rem .75rem;background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.1);border-radius:10px}
+.s-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--mid),var(--cyan));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:.82rem;flex-shrink:0;text-transform:uppercase}
+.s-user-name{font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s-user-tier{font-size:.65rem;color:var(--gold);font-weight:700;letter-spacing:.04em}
+
+.sidebar-nav{padding:1.25rem .75rem;flex:1}
+.nav-group-label{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);padding:0 .6rem;margin:.9rem 0 .35rem}
+.nav-group-label:first-child{margin-top:0}
+.s-nav-item{display:flex;align-items:center;gap:.65rem;padding:.65rem .75rem;border-radius:10px;color:rgba(255,255,255,.5);font-size:.83rem;font-weight:500;cursor:pointer;transition:all .2s;border:none;background:none;width:100%;text-align:left;margin-bottom:2px;text-decoration:none}
+.s-nav-item:hover{background:rgba(0,212,255,0.07);color:rgba(255,255,255,.85)}
+.s-nav-item.active{background:rgba(0,212,255,0.1);color:var(--cyan);border:1px solid rgba(0,212,255,0.15)}
+.s-nav-item svg,.s-nav-item .nav-icon{width:16px;height:16px;flex-shrink:0;opacity:.7}
+.s-nav-item.active svg,.s-nav-item.active .nav-icon{opacity:1}
+.nav-pill{margin-left:auto;padding:.12rem .45rem;border-radius:99px;font-size:.62rem;font-weight:700;background:rgba(0,212,255,0.15);color:var(--cyan)}
+.nav-pill.gold{background:rgba(255,179,71,0.15);color:var(--gold)}
+.nav-pill.red{background:rgba(239,68,68,0.15);color:#fca5a5}
+
+.sidebar-footer{padding:1rem .75rem 1.25rem;border-top:1px solid var(--border)}
+.s-logout{display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;border-radius:10px;color:rgba(255,255,255,.4);font-size:.8rem;font-weight:500;cursor:pointer;transition:all .2s;border:none;background:none;width:100%;text-align:left}
+.s-logout:hover{background:rgba(239,68,68,0.08);color:#fca5a5}
+
+/* ─── MAIN ─── */
+.portal-main{margin-left:var(--sidebar-w);flex:1;min-height:100vh;display:flex;flex-direction:column;position:relative;z-index:1}
+
+/* ─── TOPBAR ─── */
+.topbar{padding:1rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(2,15,32,0.85);backdrop-filter:blur(16px);position:sticky;top:0;z-index:50}
+.topbar-title{font-family:var(--font-display);font-size:1rem;font-weight:800;letter-spacing:-.01em}
+.topbar-sub{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+.topbar-right{display:flex;align-items:center;gap:.75rem}
+.btn-schedule{display:flex;align-items:center;gap:.45rem;padding:.55rem 1rem;border-radius:99px;background:linear-gradient(135deg,rgba(255,179,71,0.15),rgba(201,138,42,0.1));border:1px solid var(--border-gold);color:var(--gold);font-family:var(--font-display);font-weight:700;font-size:.75rem;cursor:pointer;transition:all .2s}
+.btn-schedule:hover{background:rgba(255,179,71,0.2);transform:translateY(-1px)}
+.notif-btn{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background .2s}
+.notif-btn:hover{background:rgba(255,255,255,0.09)}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--gold);border:1.5px solid var(--abyss)}
+
+/* ─── PANELS (pages) ─── */
+.panel-page{display:none;padding:2rem;flex:1;flex-direction:column;gap:1.5rem;animation:fadeUp .35s var(--ease)}
+.panel-page.active{display:flex}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── CARDS ─── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;backdrop-filter:blur(12px)}
+.card-header{padding:1.15rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-family:var(--font-display);font-size:.88rem;font-weight:800;letter-spacing:-.01em}
+.card-sub{font-size:.72rem;color:var(--muted);margin-top:.1rem}
+.card-action{font-family:var(--font-display);font-size:.72rem;font-weight:700;color:var(--cyan);cursor:pointer;background:none;border:none;padding:0;transition:opacity .2s}
+.card-action:hover{opacity:.7}
+.card-body{padding:1.5rem}
+
+/* ─── KPI ROW ─── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.15rem}
 @media(max-width:1100px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
-.kpi-card{background:var(--surface);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:1.5rem;position:relative;overflow:hidden}
-.kpi-card::after{content:'';position:absolute;top:0;right:0;width:60%;height:100%;background:radial-gradient(circle at 100% 0%,rgba(74,175,207,0.05),transparent);pointer-events:none}
-.kpi-label{font-size:0.72rem;font-weight:600;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.4rem}
-.kpi-value{font-family:var(--font-display);font-size:2.25rem;font-weight:800;color:white;letter-spacing:-0.04em;line-height:1;margin-bottom:0.5rem}
-.kpi-value span{font-size:1rem;font-weight:400;color:rgba(255,255,255,0.4);margin-left:2px}
-.kpi-delta{font-size:0.75rem;font-weight:600;color:var(--success)}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.35rem;position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
+.kpi-card:hover{border-color:rgba(0,212,255,0.25);transform:translateY(-2px)}
+.kpi-card::after{content:'';position:absolute;top:0;right:0;width:60%;height:100%;background:radial-gradient(circle at 100% 0%,rgba(0,212,255,0.04),transparent);pointer-events:none}
+.kpi-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:.85rem}
+.kpi-icon.blue{background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2)}
+.kpi-icon.gold{background:rgba(255,179,71,0.1);border:1px solid rgba(255,179,71,0.2)}
+.kpi-icon.green{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2)}
+.kpi-icon.purple{background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2)}
+.kpi-label{font-size:.7rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem}
+.kpi-value{font-family:var(--font-display);font-size:2rem;font-weight:900;letter-spacing:-.04em;line-height:1;margin-bottom:.35rem}
+.kpi-delta{font-size:.72rem;font-weight:600;color:var(--success);display:flex;align-items:center;gap:.25rem}
 .kpi-delta.down{color:var(--error)}
+.kpi-delta.neutral{color:var(--muted)}
 
-/* STATUS BADGE */
-.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
-.status-dot.online{background:var(--success);box-shadow:0 0 6px rgba(34,197,94,0.5)}
-.status-dot.warning{background:var(--warning);box-shadow:0 0 6px rgba(245,158,11,0.4)}
-.status-dot.offline{background:var(--error)}
+/* ─── GRID LAYOUTS ─── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.15rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.15rem}
+.g-full{grid-column:1/-1}
+@media(max-width:1000px){.g2,.g3{grid-template-columns:1fr}}
 
-/* GRID LAYOUT */
-.dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
-@media(max-width:1000px){.dashboard-grid{grid-template-columns:1fr}}
-.dashboard-grid.three{grid-template-columns:1fr 1fr 1fr}
-@media(max-width:1100px){.dashboard-grid.three{grid-template-columns:1fr}}
+/* ─── PROGRESS BAR ─── */
+.progress-track{height:6px;background:rgba(255,255,255,0.07);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--sky),var(--cyan));transition:width .8s var(--ease)}
+.progress-fill.gold{background:linear-gradient(90deg,var(--gold-dark),var(--gold))}
+.progress-fill.green{background:linear-gradient(90deg,#16a34a,var(--success))}
 
-/* PANEL */
-.panel{background:var(--surface);border:1px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden}
-.panel.full{grid-column:1/-1}
-.panel-header{padding:1.25rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between}
-.panel-title{font-family:var(--font-display);font-size:0.88rem;font-weight:700;color:white}
-.panel-subtitle{font-size:0.75rem;color:rgba(255,255,255,0.35);margin-top:0.1rem}
-.panel-action{font-family:var(--font-display);font-size:0.72rem;font-weight:700;color:var(--cyan);cursor:pointer;transition:opacity 0.2s;background:none;border:none;padding:0}
-.panel-action:hover{opacity:0.7}
-.panel-body{padding:1.5rem}
+/* ─── TABLE ─── */
+.tbl{width:100%;border-collapse:collapse;font-size:.82rem}
+.tbl th{padding:.75rem 1rem;text-align:left;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);border-bottom:1px solid var(--border)}
+.tbl td{padding:.85rem 1rem;border-bottom:1px solid rgba(255,255,255,0.04);color:rgba(255,255,255,.8)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(0,212,255,0.03)}
 
-/* ── AI AGENT STATUS ── */
-.agent-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.agent-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:1.25rem;transition:border-color 0.2s}
-.agent-card:hover{border-color:rgba(74,175,207,0.2)}
-.agent-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem}
-.agent-name{font-family:var(--font-display);font-size:0.82rem;font-weight:700;color:white}
-.agent-status-badge{display:flex;align-items:center;gap:0.35rem;padding:0.2rem 0.6rem;border-radius:9999px;font-size:0.65rem;font-weight:700;font-family:var(--font-display)}
-.agent-status-badge.running{background:rgba(34,197,94,0.12);color:var(--success);border:1px solid rgba(34,197,94,0.2)}
-.agent-status-badge.paused{background:rgba(245,158,11,0.12);color:var(--warning);border:1px solid rgba(245,158,11,0.2)}
-.agent-status-badge.building{background:rgba(74,175,207,0.12);color:var(--cyan);border:1px solid rgba(74,175,207,0.2)}
-.agent-desc{font-size:0.78rem;color:rgba(255,255,255,0.45);line-height:1.5;margin-bottom:0.875rem}
-.agent-metric{font-size:0.72rem;color:rgba(255,255,255,0.3)}
-.agent-metric span{color:white;font-weight:600}
-.progress-bar{height:4px;background:rgba(255,255,255,0.08);border-radius:9999px;margin-top:0.75rem;overflow:hidden}
-.progress-fill{height:100%;border-radius:9999px;background:linear-gradient(90deg,var(--primary),var(--cyan));transition:width 1s var(--ease)}
+/* ─── STATUS BADGES ─── */
+.badge{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .6rem;border-radius:99px;font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.badge-active{background:rgba(34,197,94,0.12);color:#86efac;border:1px solid rgba(34,197,94,0.2)}
+.badge-pending{background:rgba(245,158,11,0.12);color:#fcd34d;border:1px solid rgba(245,158,11,0.2)}
+.badge-review{background:rgba(59,130,246,0.12);color:#93c5fd;border:1px solid rgba(59,130,246,0.2)}
+.badge-done{background:rgba(168,85,247,0.12);color:#d8b4fe;border:1px solid rgba(168,85,247,0.2)}
+.badge-paid{background:rgba(34,197,94,0.12);color:#86efac;border:1px solid rgba(34,197,94,0.2)}
+.badge-unpaid{background:rgba(239,68,68,0.12);color:#fca5a5;border:1px solid rgba(239,68,68,0.2)}
+.badge-gold{background:rgba(255,179,71,0.12);color:var(--gold);border:1px solid rgba(255,179,71,0.2)}
 
-/* ── PRIORITY SUPPORT ── */
-.support-status{display:flex;align-items:center;gap:0.75rem;padding:1rem 1.25rem;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:12px;margin-bottom:1.25rem}
-.support-status-text{font-size:0.82rem;color:rgba(255,255,255,0.8);line-height:1.4}
-.support-status-text strong{color:var(--success);display:block;font-size:0.85rem}
-.ticket-list{display:flex;flex-direction:column;gap:0.75rem}
-.ticket{display:flex;align-items:flex-start;gap:0.875rem;padding:1rem 1.25rem;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
-.ticket-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem}
-.ticket-icon.open{background:rgba(74,175,207,0.15)}
-.ticket-icon.resolved{background:rgba(34,197,94,0.12)}
-.ticket-info{flex:1}
-.ticket-title{font-size:0.82rem;font-weight:600;color:white;margin-bottom:0.2rem}
-.ticket-meta{font-size:0.72rem;color:rgba(255,255,255,0.35);display:flex;gap:0.75rem}
-.ticket-badge{padding:0.15rem 0.5rem;border-radius:9999px;font-size:0.65rem;font-weight:700;font-family:var(--font-display)}
-.ticket-badge.open{background:rgba(74,175,207,0.15);color:var(--cyan)}
-.ticket-badge.resolved{background:rgba(34,197,94,0.12);color:var(--success)}
-.new-ticket-btn{width:100%;padding:0.75rem;border-radius:10px;border:1.5px dashed rgba(255,255,255,0.12);background:transparent;color:rgba(255,255,255,0.4);font-family:var(--font-display);font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.2s;margin-top:0.75rem;display:flex;align-items:center;justify-content:center;gap:0.5rem}
-.new-ticket-btn:hover{border-color:rgba(74,175,207,0.35);color:var(--cyan)}
+/* ─── PROJECT CARD ─── */
+.proj-card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:1.15rem;transition:all .2s;cursor:pointer}
+.proj-card:hover{border-color:rgba(0,212,255,0.22);background:rgba(0,212,255,0.04);transform:translateY(-2px)}
+.proj-title{font-family:var(--font-display);font-weight:700;font-size:.88rem;margin-bottom:.3rem}
+.proj-meta{font-size:.72rem;color:var(--muted);margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem}
+.proj-phase{font-size:.68rem;color:var(--cyan);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem}
+.proj-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.75rem}
 
-/* ── ACTIVITY FEED ── */
-.activity-list{display:flex;flex-direction:column;gap:0}
-.activity-item{display:flex;align-items:flex-start;gap:1rem;padding:0.875rem 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+/* ─── DELIVERABLE ITEM ─── */
+.deliv-item{display:flex;align-items:center;gap:1rem;padding:.85rem 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.deliv-item:last-child{border-bottom:none}
+.deliv-icon{width:38px;height:38px;border-radius:10px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.15);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.deliv-info{flex:1}
+.deliv-name{font-size:.85rem;font-weight:600;margin-bottom:.15rem}
+.deliv-meta{font-size:.72rem;color:var(--muted)}
+.deliv-action{padding:.35rem .85rem;border-radius:8px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:var(--cyan);font-family:var(--font-display);font-size:.7rem;font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.deliv-action:hover{background:rgba(0,212,255,0.18)}
+
+/* ─── INVOICE ROW ─── */
+.inv-amount{font-family:var(--font-mono);font-weight:500}
+
+/* ─── SCHEDULE ─── */
+.sched-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:1rem}
+.sched-day-label{text-align:center;font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding-bottom:.5rem}
+.sched-cell{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid transparent}
+.sched-cell:hover{background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.2)}
+.sched-cell.today{background:rgba(0,212,255,0.12);border-color:rgba(0,212,255,0.3);color:var(--cyan);font-weight:800}
+.sched-cell.has-event{background:rgba(255,179,71,0.1);border-color:rgba(255,179,71,0.2);color:var(--gold)}
+.sched-cell.past{color:var(--dim)}
+.sched-cell.empty{pointer-events:none}
+
+/* ─── FORM ELEMENTS ─── */
+.field-group{display:flex;flex-direction:column;gap:.4rem}
+.field-label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.field-input,.field-select,.field-textarea{background:rgba(1,12,26,0.6);border:1px solid rgba(0,212,255,0.12);border-radius:10px;padding:.7rem 1rem;color:white;font-family:var(--font-body);font-size:.85rem;outline:none;transition:border-color .2s;width:100%}
+.field-input:focus,.field-select:focus,.field-textarea:focus{border-color:rgba(0,212,255,0.4)}
+.field-input::placeholder,.field-textarea::placeholder{color:var(--dim)}
+.field-textarea{resize:vertical;min-height:90px}
+.field-select option{background:var(--navy);color:white}
+
+.btn-primary{padding:.7rem 1.5rem;border-radius:10px;background:linear-gradient(135deg,var(--sky),var(--cyan));color:var(--abyss);font-family:var(--font-display);font-weight:800;font-size:.82rem;cursor:pointer;border:none;transition:all .2s;letter-spacing:.02em}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,212,255,0.25)}
+.btn-outline{padding:.65rem 1.35rem;border-radius:10px;background:transparent;color:var(--cyan);border:1px solid rgba(0,212,255,0.3);font-family:var(--font-display);font-weight:700;font-size:.8rem;cursor:pointer;transition:all .2s}
+.btn-outline:hover{background:rgba(0,212,255,0.08)}
+
+/* ─── WELCOME BANNER ─── */
+.welcome-banner{background:linear-gradient(135deg,rgba(10,58,107,0.5),rgba(0,212,255,0.08));border:1px solid rgba(0,212,255,0.18);border-radius:var(--radius);padding:1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:relative;overflow:hidden}
+.welcome-banner::before{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,255,0.08),transparent);pointer-events:none}
+.welcome-heading{font-family:var(--font-display);font-size:1.3rem;font-weight:900;letter-spacing:-.02em;margin-bottom:.3rem}
+.welcome-heading span{color:var(--cyan)}
+.welcome-sub{font-size:.82rem;color:var(--muted)}
+
+/* ─── ACTIVITY FEED ─── */
+.activity-item{display:flex;gap:.85rem;padding:.7rem 0;border-bottom:1px solid rgba(255,255,255,0.04);align-items:flex-start}
 .activity-item:last-child{border-bottom:none}
-.activity-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
-.activity-dot.cyan{background:var(--cyan)}
-.activity-dot.gold{background:var(--gold)}
-.activity-dot.green{background:var(--success)}
-.activity-text{font-size:0.82rem;color:rgba(255,255,255,0.7);line-height:1.5}
-.activity-text strong{color:white}
-.activity-time{font-size:0.7rem;color:rgba(255,255,255,0.3);margin-top:0.15rem}
+.act-dot{width:8px;height:8px;border-radius:50%;margin-top:.4rem;flex-shrink:0}
+.act-dot.cyan{background:var(--cyan);box-shadow:0 0 8px rgba(0,212,255,0.5)}
+.act-dot.gold{background:var(--gold)}
+.act-dot.green{background:var(--success)}
+.act-dot.blue{background:var(--info)}
+.act-text{font-size:.82rem;color:rgba(255,255,255,.8);line-height:1.4}
+.act-time{font-size:.7rem;color:var(--dim);margin-top:.1rem;font-family:var(--font-mono)}
 
-/* ── UPCOMING ── */
-.upcoming-list{display:flex;flex-direction:column;gap:0.75rem}
-.upcoming-item{display:flex;align-items:center;gap:1rem;padding:0.875rem 1.1rem;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.06)}
-.upcoming-date{text-align:center;min-width:42px}
-.upcoming-month{font-size:0.65rem;font-weight:700;text-transform:uppercase;color:var(--cyan);letter-spacing:0.08em}
-.upcoming-day{font-family:var(--font-display);font-size:1.5rem;font-weight:800;color:white;line-height:1}
-.upcoming-info{flex:1}
-.upcoming-title{font-size:0.85rem;font-weight:600;color:white}
-.upcoming-sub{font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:0.15rem}
-.upcoming-badge{padding:0.2rem 0.6rem;border-radius:9999px;background:rgba(201,168,76,0.12);color:var(--gold);font-size:0.65rem;font-weight:700;border:1px solid rgba(201,168,76,0.2)}
+/* ─── SETTINGS ─── */
+.settings-section{margin-bottom:2rem}
+.settings-title{font-family:var(--font-display);font-size:.88rem;font-weight:800;margin-bottom:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:.8rem 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.settings-row:last-child{border-bottom:none}
+.settings-label{font-size:.85rem;font-weight:500}
+.settings-desc{font-size:.72rem;color:var(--muted);margin-top:.1rem}
+.toggle{position:relative;width:40px;height:22px;cursor:pointer}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,0.1);border-radius:99px;transition:.3s}
+.toggle-slider:before{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:white;left:3px;top:3px;transition:.3s}
+.toggle input:checked + .toggle-slider{background:var(--cyan)}
+.toggle input:checked + .toggle-slider:before{transform:translateX(18px)}
 
-/* ── BILLING ── */
-.billing-row{display:flex;align-items:center;justify-content:space-between;padding:0.875rem 0;border-bottom:1px solid rgba(255,255,255,0.05)}
-.billing-row:last-child{border-bottom:none}
-.billing-label{font-size:0.82rem;color:rgba(255,255,255,0.6)}
-.billing-val{font-size:0.85rem;font-weight:600;color:white}
-.billing-val.green{color:var(--success)}
-.billing-val.gold{color:var(--gold)}
+/* ─── EMPTY STATE ─── */
+.empty-state{text-align:center;padding:3rem 1rem}
+.empty-icon{font-size:2.5rem;margin-bottom:.75rem;opacity:.4}
+.empty-title{font-family:var(--font-display);font-weight:700;font-size:.95rem;color:rgba(255,255,255,.5);margin-bottom:.3rem}
+.empty-sub{font-size:.78rem;color:var(--dim)}
 
-/* ── QUICK ACTIONS ── */
-.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
-.qa-btn{padding:0.875rem 1rem;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.7);font-family:var(--font-display);font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:0.5rem;text-align:left}
-.qa-btn:hover{border-color:rgba(74,175,207,0.3);color:white;background:rgba(74,175,207,0.07)}
+/* ─── LOADING SKELETON ─── */
+.skel{background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
+/* ─── TOAST ─── */
+#toast-container{position:fixed;bottom:2rem;right:2rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem}
+.toast{display:flex;align-items:center;gap:.75rem;padding:.85rem 1.15rem;border-radius:12px;background:rgba(6,29,53,0.96);border:1px solid var(--border);backdrop-filter:blur(16px);min-width:280px;animation:toastIn .3s var(--ease);font-size:.83rem}
+.toast.success{border-color:rgba(34,197,94,0.3)}
+.toast.error{border-color:rgba(239,68,68,0.3)}
+.toast.info{border-color:rgba(0,212,255,0.3)}
+.toast-icon{font-size:1rem;flex-shrink:0}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* ─── LOADING OVERLAY ─── */
+#loading-overlay{position:fixed;inset:0;background:var(--abyss);display:flex;align-items:center;justify-content:center;z-index:300;transition:opacity .4s}
+#loading-overlay.hide{opacity:0;pointer-events:none}
+.loader-logo{width:70px;height:70px;border-radius:50%;filter:drop-shadow(0 0 20px rgba(0,212,255,0.5));animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 20px rgba(0,212,255,0.5))}50%{transform:scale(1.06);filter:drop-shadow(0 0 30px rgba(0,212,255,0.8))}}
+
+/* ─── MOBILE SIDEBAR TOGGLE ─── */
+.mobile-menu-btn{display:none;width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
 @media(max-width:768px){
+  .mobile-menu-btn{display:flex}
   .sidebar{transform:translateX(-100%)}
-  .main{margin-left:0}
+  .sidebar.open{transform:translateX(0)}
+  .portal-main{margin-left:0}
+  .topbar{padding:.85rem 1rem}
+  .panel-page{padding:1rem}
   .kpi-row{grid-template-columns:1fr 1fr}
-  .agent-grid{grid-template-columns:1fr}
-  .quick-actions{grid-template-columns:1fr}
+  .g2,.g3{grid-template-columns:1fr}
+  .sched-grid{gap:2px}
+  .sched-cell{font-size:.7rem}
 }
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="sidebar-logo">
-    <a class="nav-logo" href="index.html" style="display:flex;align-items:center;gap:0.7rem;flex-shrink:0;margin-bottom:1rem;text-decoration:none;">
-      <div class="nav-logo-mark" style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--cyan));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:1rem;color:white;">MGC</div>
-      <div class="nav-logo-text" style="display:flex;flex-direction:column">
-        <span class="nav-logo-name" style="font-family:var(--font-display);font-weight:800;font-size:0.8rem;color:white;letter-spacing:-0.02em;white-space:nowrap">MGC Global</span>
-      </div>
-    </a>
-    <div class="logo-badge">👑 Elite Member</div>
-  </div>
+<!-- LOADING OVERLAY -->
+<div id="loading-overlay">
+  <img src="assets/images/mgc-logo-transparent.png" alt="MGC" class="loader-logo">
+</div>
 
-  <div class="sidebar-section">
-    <div class="sidebar-section-label">Overview</div>
-    <div class="nav-item active">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      Dashboard
-    </div>
-    <div class="nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14"/><path d="M4.93 4.93a10 10 0 000 14.14"/></svg>
-      AI Agent Status
-      <span class="nav-badge">4</span>
-    </div>
-    <div class="nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-      Automations
-      <span class="nav-badge">12</span>
-    </div>
-  </div>
-
-  <div class="sidebar-section">
-    <div class="sidebar-section-label">Support</div>
-    <div class="nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-      Priority Support
-      <span class="nav-badge gold">2</span>
-    </div>
-    <div class="nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      Upcoming Calls
-    </div>
-    <div class="nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      Resources & SOPs
-    </div>
-  </div>
-
-  <div class="sidebar-section">
-    <div class="sidebar-section-label">Account</div>
-    <div class="nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-      Billing
-    </div>
-    <div class="nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-      Profile Settings
-    </div>
-  </div>
-
-  <div class="sidebar-footer">
-    <div class="member-info">
-      <div class="member-avatar">M</div>
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <img src="assets/images/mgc-logo-transparent.png" alt="MGC" class="auth-logo-img">
       <div>
-        <div class="member-name">Mark Cartwright</div>
-        <div class="member-tier">👑 Elite · Active</div>
+        <div class="auth-logo-text">MGC <span>Global</span></div>
+        <div class="auth-logo-sub">Client Portal</div>
       </div>
     </div>
-  </div>
-</aside>
 
-<!-- MAIN CONTENT -->
-<main class="main">
-  <div class="topbar">
-    <div class="topbar-left">
-      <h1>Elite Command Center</h1>
-      <p>Welcome back. Here's what's happening in your ecosystem.</p>
+    <div class="auth-tabs" role="tablist">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')" role="tab">Sign In</button>
+      <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')" role="tab">Create Account</button>
     </div>
-    <div class="topbar-right">
-      <button class="btn-call" onclick="Calendly && Calendly.initPopupWidget({url:'https://calendly.com/mark-mgcglobalconsulting/30min'})">
-        📅 Book 1:1 with Mark
+
+    <!-- LOGIN FORM -->
+    <div class="auth-form" id="form-login">
+      <div id="login-error" class="auth-error"></div>
+      <div class="form-group">
+        <label class="form-label" for="login-email">Email Address</label>
+        <input class="form-input" type="email" id="login-email" placeholder="you@company.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="login-pass">Password</label>
+        <input class="form-input" type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn-auth btn-auth-primary" onclick="doLogin()">Sign In to Portal</button>
+      <div class="auth-divider">or</div>
+      <button class="btn-auth btn-auth-google" onclick="doGoogleAuth()">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
       </button>
-      <div class="notif-btn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
-        <div class="notif-dot"></div>
+    </div>
+
+    <!-- SIGNUP FORM -->
+    <div class="auth-form hidden" id="form-signup">
+      <div id="signup-error" class="auth-error"></div>
+      <div id="signup-success" class="auth-success"></div>
+      <div class="form-group">
+        <label class="form-label" for="signup-name">Full Name</label>
+        <input class="form-input" type="text" id="signup-name" placeholder="Jane Smith" autocomplete="name">
       </div>
+      <div class="form-group">
+        <label class="form-label" for="signup-company">Company</label>
+        <input class="form-input" type="text" id="signup-company" placeholder="Acme Corp">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="signup-email">Email Address</label>
+        <input class="form-input" type="email" id="signup-email" placeholder="you@company.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="signup-pass">Password</label>
+        <input class="form-input" type="password" id="signup-pass" placeholder="Min. 8 characters" autocomplete="new-password">
+      </div>
+      <button class="btn-auth btn-auth-primary" onclick="doSignup()">Create Account</button>
+      <div class="auth-divider">or</div>
+      <button class="btn-auth btn-auth-google" onclick="doGoogleAuth()">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Sign up with Google
+      </button>
     </div>
   </div>
+</div>
 
-  <div class="content">
+<!-- PORTAL APP -->
+<div id="portal-app">
 
-    <!-- KPI ROW -->
-    <div class="kpi-row">
-      <div class="kpi-card">
-        <div class="kpi-label"><span class="status-dot online"></span> Active Automations</div>
-        <div class="kpi-value">12</div>
-        <div class="kpi-delta">↑ 3 deployed this month</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">⏱ Hours Saved / Month</div>
-        <div class="kpi-value">47<span>hrs</span></div>
-        <div class="kpi-delta">↑ 12hrs vs last month</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">💰 Est. Value Generated</div>
-        <div class="kpi-value">$8,400</div>
-        <div class="kpi-delta">↑ 23% vs last month</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">🎯 Next 1:1 Call</div>
-        <div class="kpi-value" style="font-size:1.4rem">Mar 18</div>
-        <div class="kpi-delta" style="color:var(--gold)">In 5 days · 60 min</div>
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <a href="index.html" class="s-logo">
+        <img src="assets/images/mgc-logo-transparent.png" alt="MGC" class="s-logo-img">
+        <div class="s-logo-label">MGC Global <span>Client Portal</span></div>
+      </a>
+      <div class="s-user">
+        <div class="s-avatar" id="s-avatar">MG</div>
+        <div>
+          <div class="s-user-name" id="s-user-name">Loading…</div>
+          <div class="s-user-tier" id="s-user-tier">Enterprise Client</div>
+        </div>
       </div>
     </div>
 
-    <!-- ROW 1: AI AGENTS + PRIORITY SUPPORT -->
-    <div class="dashboard-grid">
+    <nav class="sidebar-nav">
+      <div class="nav-group-label">Main</div>
+      <button class="s-nav-item active" data-panel="overview" onclick="showPanel('overview',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Overview
+      </button>
+      <button class="s-nav-item" data-panel="projects" onclick="showPanel('projects',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Projects
+        <span class="nav-pill" id="projects-count">–</span>
+      </button>
+      <button class="s-nav-item" data-panel="deliverables" onclick="showPanel('deliverables',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Deliverables
+        <span class="nav-pill" id="deliverables-count">–</span>
+      </button>
+      <button class="s-nav-item" data-panel="invoices" onclick="showPanel('invoices',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        Invoices
+        <span class="nav-pill gold" id="invoices-count">–</span>
+      </button>
 
-      <!-- AI AGENT STATUS -->
-      <div class="panel">
-        <div class="panel-header">
+      <div class="nav-group-label">Workspace</div>
+      <button class="s-nav-item" data-panel="schedule" onclick="showPanel('schedule',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Schedule
+      </button>
+      <button class="s-nav-item" data-panel="settings" onclick="showPanel('settings',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="s-logout" onclick="doLogout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <main class="portal-main">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:.85rem">
+        <button class="mobile-menu-btn" onclick="toggleSidebar()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div>
+          <div class="topbar-title" id="topbar-title">Overview</div>
+          <div class="topbar-sub" id="topbar-sub">Welcome back</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn-schedule" onclick="showPanel('schedule',null)">
+          📅 Request Session
+        </button>
+        <button class="notif-btn" title="Notifications">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div class="notif-dot"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── OVERVIEW PANEL ── -->
+    <section class="panel-page active" id="panel-overview">
+      <div class="welcome-banner">
+        <div>
+          <div class="welcome-heading">Welcome back, <span id="welcome-name">Client</span> 👋</div>
+          <div class="welcome-sub">Here's what's happening across your MGC engagement.</div>
+        </div>
+        <button class="btn-primary" onclick="showPanel('schedule',null)">Book a Strategy Call →</button>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-icon blue">📊</div>
+          <div class="kpi-label">Active Projects</div>
+          <div class="kpi-value" id="kpi-projects">–</div>
+          <div class="kpi-delta neutral" id="kpi-projects-sub">Loading…</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon green">✅</div>
+          <div class="kpi-label">Deliverables Ready</div>
+          <div class="kpi-value" id="kpi-deliverables">–</div>
+          <div class="kpi-delta" id="kpi-deliverables-sub">Ready to download</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon gold">💳</div>
+          <div class="kpi-label">Outstanding Balance</div>
+          <div class="kpi-value" id="kpi-balance">–</div>
+          <div class="kpi-delta neutral" id="kpi-balance-sub">–</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon purple">🤖</div>
+          <div class="kpi-label">AI Automations</div>
+          <div class="kpi-value">12</div>
+          <div class="kpi-delta">↑ 3 this month</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <!-- RECENT PROJECTS -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Active Projects</div>
+              <div class="card-sub">Your current engagements</div>
+            </div>
+            <button class="card-action" onclick="showPanel('projects',null)">View All →</button>
+          </div>
+          <div class="card-body" id="overview-projects-list">
+            <div class="skel" style="height:60px;margin-bottom:10px;border-radius:10px"></div>
+            <div class="skel" style="height:60px;border-radius:10px"></div>
+          </div>
+        </div>
+
+        <!-- ACTIVITY FEED -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Recent Activity</div>
+              <div class="card-sub">Live updates from your projects</div>
+            </div>
+          </div>
+          <div class="card-body" id="activity-feed">
+            <div class="activity-item">
+              <div class="act-dot cyan"></div>
+              <div><div class="act-text">Portal initialized for your account</div><div class="act-time">just now</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PENDING DELIVERABLES -->
+      <div class="card">
+        <div class="card-header">
           <div>
-            <div class="panel-title">🤖 Custom AI Agent Status</div>
-            <div class="panel-subtitle">Your deployed AI agents — live status</div>
+            <div class="card-title">Pending Deliverables</div>
+            <div class="card-sub">Items ready for your review</div>
           </div>
-          <button class="panel-action">View All →</button>
+          <button class="card-action" onclick="showPanel('deliverables',null)">View All →</button>
         </div>
-        <div class="panel-body">
-          <div class="agent-grid">
+        <div class="card-body" id="overview-deliverables"></div>
+      </div>
+    </section>
 
-            <div class="agent-card">
-              <div class="agent-header">
-                <div class="agent-name">Lead Qualifier</div>
-                <div class="agent-status-badge running"><span class="status-dot online"></span>Running</div>
-              </div>
-              <p class="agent-desc">Auto-qualifies inbound leads via email and Slack. Scores by fit, urgency, and deal size.</p>
-              <div class="agent-metric">Processed <span>143 leads</span> this month</div>
-              <div class="progress-bar"><div class="progress-fill" style="width:78%"></div></div>
-            </div>
-
-            <div class="agent-card">
-              <div class="agent-header">
-                <div class="agent-name">Invoice Assistant</div>
-                <div class="agent-status-badge running"><span class="status-dot online"></span>Running</div>
-              </div>
-              <p class="agent-desc">Monitors QuickBooks for overdue invoices and sends personalized follow-up sequences.</p>
-              <div class="agent-metric">Recovered <span>$12,400</span> this quarter</div>
-              <div class="progress-bar"><div class="progress-fill" style="width:92%"></div></div>
-            </div>
-
-            <div class="agent-card">
-              <div class="agent-header">
-                <div class="agent-name">Content Engine</div>
-                <div class="agent-status-badge paused"><span class="status-dot warning"></span>Paused</div>
-              </div>
-              <p class="agent-desc">Drafts LinkedIn posts and newsletter content from your weekly call transcripts.</p>
-              <div class="agent-metric">Last run <span>6 days ago</span></div>
-              <div class="progress-bar"><div class="progress-fill" style="width:35%;background:var(--warning)"></div></div>
-            </div>
-
-            <div class="agent-card">
-              <div class="agent-header">
-                <div class="agent-name">Report Builder</div>
-                <div class="agent-status-badge building"><span class="status-dot online"></span>Building</div>
-              </div>
-              <p class="agent-desc">Generates weekly performance reports from CRM, billing, and automation data.</p>
-              <div class="agent-metric">Next report <span>Sunday 8am</span></div>
-              <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
-            </div>
-
-          </div><!-- /agent-grid -->
+    <!-- ── PROJECTS PANEL ── -->
+    <section class="panel-page" id="panel-projects">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:900;letter-spacing:-.02em">Your Projects</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">Track progress across all engagements</div>
         </div>
       </div>
+      <div class="g2" id="projects-grid">
+        <div class="skel" style="height:180px;border-radius:14px"></div>
+        <div class="skel" style="height:180px;border-radius:14px"></div>
+      </div>
+    </section>
 
-      <!-- 24/7 PRIORITY SUPPORT -->
-      <div class="panel">
-        <div class="panel-header">
+    <!-- ── DELIVERABLES PANEL ── -->
+    <section class="panel-page" id="panel-deliverables">
+      <div>
+        <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:900;letter-spacing:-.02em">Deliverables</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">Files, reports and assets from your projects</div>
+      </div>
+      <div class="card">
+        <div class="card-body" id="deliverables-list">
+          <div class="skel" style="height:56px;border-radius:10px;margin-bottom:10px"></div>
+          <div class="skel" style="height:56px;border-radius:10px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── INVOICES PANEL ── -->
+    <section class="panel-page" id="panel-invoices">
+      <div>
+        <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:900;letter-spacing:-.02em">Invoices</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">Billing history and payment status</div>
+      </div>
+      <div class="card">
+        <div class="card-header">
           <div>
-            <div class="panel-title">🛡️ 24/7 Priority Support</div>
-            <div class="panel-subtitle">Same-day response guaranteed for Elite members</div>
+            <div class="card-title">Invoice History</div>
+            <div class="card-sub">All transactions</div>
           </div>
-          <button class="panel-action" onclick="document.getElementById('invoiceModal') && document.getElementById('invoiceModal').classList.add('active')">New Ticket +</button>
+          <div id="invoices-total" style="font-family:var(--font-mono);font-size:.82rem;color:var(--cyan)"></div>
         </div>
-        <div class="panel-body">
-          <div class="support-status">
-            <div><span class="status-dot online"></span></div>
-            <div class="support-status-text">
-              <strong>All Systems Operational</strong>
-              Support is active · avg response time today: <strong style="color:white">1.4 hrs</strong>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Invoice #</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Due Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="invoices-tbody">
+              <tr><td colspan="5"><div class="skel" style="height:40px;border-radius:8px"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SCHEDULE PANEL ── -->
+    <section class="panel-page" id="panel-schedule">
+      <div>
+        <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:900;letter-spacing:-.02em">Schedule</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">Book strategy calls and project check-ins</div>
+      </div>
+      <div class="g2">
+        <!-- CALENDAR -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" id="cal-month-label">April 2026</div>
+            <div style="display:flex;gap:.5rem">
+              <button class="card-action" onclick="changeMonth(-1)">‹ Prev</button>
+              <button class="card-action" onclick="changeMonth(1)">Next ›</button>
             </div>
           </div>
-          <div class="ticket-list">
-            <div class="ticket">
-              <div class="ticket-icon open">💬</div>
-              <div class="ticket-info">
-                <div class="ticket-title">Zapier webhook not triggering on new HubSpot contacts</div>
-                <div class="ticket-meta">
-                  <span>Opened 2 hrs ago</span>
-                  <span class="ticket-badge open">Open</span>
+          <div class="card-body">
+            <div class="sched-grid" id="cal-labels"></div>
+            <div class="sched-grid" id="cal-grid"></div>
+          </div>
+        </div>
+
+        <!-- REQUEST FORM -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Request a Session</div>
+            <div class="card-sub">We'll confirm within 24 hours</div>
+          </div>
+          <div class="card-body">
+            <form id="schedule-form" onsubmit="submitSchedule(event)" style="display:flex;flex-direction:column;gap:1rem">
+              <div class="field-group">
+                <label class="field-label">Session Type</label>
+                <select class="field-select" id="sched-type">
+                  <option value="strategy">Strategy Call (60 min)</option>
+                  <option value="review">Project Review (45 min)</option>
+                  <option value="onboarding">Onboarding Session (90 min)</option>
+                  <option value="urgent">Urgent Support (30 min)</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Preferred Date</label>
+                <input class="field-input" type="date" id="sched-date">
+              </div>
+              <div class="field-group">
+                <label class="field-label">Message / Agenda</label>
+                <textarea class="field-textarea" id="sched-msg" placeholder="What would you like to discuss?"></textarea>
+              </div>
+              <div id="sched-result" class="auth-success" style="margin:0"></div>
+              <button class="btn-primary" type="submit">Request Session →</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPCOMING BOOKINGS -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Upcoming Sessions</div>
+        </div>
+        <div class="card-body" id="upcoming-bookings">
+          <div class="empty-state">
+            <div class="empty-icon">📅</div>
+            <div class="empty-title">No sessions scheduled</div>
+            <div class="empty-sub">Request a session using the form above</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SETTINGS PANEL ── -->
+    <section class="panel-page" id="panel-settings">
+      <div>
+        <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:900;letter-spacing:-.02em">Account Settings</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">Manage your profile and preferences</div>
+      </div>
+
+      <div class="g2">
+        <!-- PROFILE FORM -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Profile Information</div>
+          </div>
+          <div class="card-body">
+            <form id="profile-form" onsubmit="saveProfile(event)" style="display:flex;flex-direction:column;gap:1rem">
+              <div class="field-group">
+                <label class="field-label">Full Name</label>
+                <input class="field-input" type="text" id="profile-name" placeholder="Your name">
+              </div>
+              <div class="field-group">
+                <label class="field-label">Company</label>
+                <input class="field-input" type="text" id="profile-company" placeholder="Company name">
+              </div>
+              <div class="field-group">
+                <label class="field-label">Phone</label>
+                <input class="field-input" type="tel" id="profile-phone" placeholder="+1 (555) 000-0000">
+              </div>
+              <div class="field-group">
+                <label class="field-label">Email</label>
+                <input class="field-input" type="email" id="profile-email" disabled style="opacity:.5;cursor:not-allowed">
+              </div>
+              <div id="profile-result" class="auth-success" style="margin:0"></div>
+              <button class="btn-primary" type="submit">Save Changes</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- PREFERENCES -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Notifications</div>
+          </div>
+          <div class="card-body">
+            <div class="settings-section">
+              <div class="settings-row">
+                <div>
+                  <div class="settings-label">Email Notifications</div>
+                  <div class="settings-desc">Receive updates for new deliverables</div>
                 </div>
+                <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
               </div>
-            </div>
-            <div class="ticket">
-              <div class="ticket-icon resolved">✅</div>
-              <div class="ticket-info">
-                <div class="ticket-title">QuickBooks OAuth token refresh failing in prod</div>
-                <div class="ticket-meta">
-                  <span>Resolved yesterday · 47 min</span>
-                  <span class="ticket-badge resolved">Resolved</span>
+              <div class="settings-row">
+                <div>
+                  <div class="settings-label">Invoice Reminders</div>
+                  <div class="settings-desc">Payment due date alerts</div>
                 </div>
+                <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="settings-label">Project Milestones</div>
+                  <div class="settings-desc">Alerts when phases complete</div>
+                </div>
+                <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
               </div>
             </div>
-          </div>
-          <button class="new-ticket-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Open New Support Ticket
-          </button>
-        </div>
-      </div>
 
-    </div><!-- /row 1 -->
-
-    <!-- ROW 2: ACTIVITY + UPCOMING + BILLING + QUICK ACTIONS -->
-    <div class="dashboard-grid" style="grid-template-columns:1.4fr 1fr 1fr">
-
-      <!-- ACTIVITY FEED -->
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">⚡ Recent Activity</div>
-        </div>
-        <div class="panel-body">
-          <div class="activity-list">
-            <div class="activity-item">
-              <div class="activity-dot cyan"></div>
-              <div>
-                <div class="activity-text"><strong>Lead Qualifier Agent</strong> scored 8 new leads — 3 flagged high priority</div>
-                <div class="activity-time">Today, 9:14 AM</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-dot green"></div>
-              <div>
-                <div class="activity-text"><strong>Automation deployed:</strong> HubSpot → Slack new deal notification</div>
-                <div class="activity-time">Yesterday, 4:32 PM</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-dot gold"></div>
-              <div>
-                <div class="activity-text"><strong>Invoice recovered:</strong> $2,400 from overdue client follow-up sequence</div>
-                <div class="activity-time">Mar 11, 2:18 PM</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-dot cyan"></div>
-              <div>
-                <div class="activity-text"><strong>Weekly report</strong> generated and sent to your inbox</div>
-                <div class="activity-time">Mar 10, 8:00 AM</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-dot green"></div>
-              <div>
-                <div class="activity-text"><strong>CRM cleanup complete:</strong> 47 duplicates removed, pipeline restructured</div>
-                <div class="activity-time">Mar 9, 11:45 AM</div>
+            <div class="settings-section" style="margin-top:1.5rem">
+              <div class="settings-title">Security</div>
+              <div class="settings-row">
+                <div>
+                  <div class="settings-label">Change Password</div>
+                  <div class="settings-desc">Send reset link to your email</div>
+                </div>
+                <button class="btn-outline" onclick="sendPasswordReset()">Reset</button>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- UPCOMING CALLS -->
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">📅 Upcoming Calls</div>
-          <button class="panel-action" onclick="Calendly && Calendly.initPopupWidget({url:'https://calendly.com/mark-mgcglobalconsulting/30min'})">Schedule +</button>
-        </div>
-        <div class="panel-body">
-          <div class="upcoming-list">
-            <div class="upcoming-item">
-              <div class="upcoming-date">
-                <div class="upcoming-month">MAR</div>
-                <div class="upcoming-day">18</div>
-              </div>
-              <div class="upcoming-info">
-                <div class="upcoming-title">Weekly 1:1 with Mark</div>
-                <div class="upcoming-sub">2:00 PM EST · 60 min · Zoom</div>
-              </div>
-              <div class="upcoming-badge">1:1</div>
-            </div>
-            <div class="upcoming-item">
-              <div class="upcoming-date">
-                <div class="upcoming-month">MAR</div>
-                <div class="upcoming-day">25</div>
-              </div>
-              <div class="upcoming-info">
-                <div class="upcoming-title">Monthly Strategy Review</div>
-                <div class="upcoming-sub">1:00 PM EST · 90 min · Zoom</div>
-              </div>
-              <div class="upcoming-badge">Strategy</div>
-            </div>
-            <div class="upcoming-item">
-              <div class="upcoming-date">
-                <div class="upcoming-month">APR</div>
-                <div class="upcoming-day">1</div>
-              </div>
-              <div class="upcoming-info">
-                <div class="upcoming-title">Q2 Planning Session</div>
-                <div class="upcoming-sub">10:00 AM EST · 2 hrs · Zoom</div>
-              </div>
-              <div class="upcoming-badge">Planning</div>
-            </div>
+      <!-- MEMBERSHIP TIER -->
+      <div class="card" style="background:linear-gradient(135deg,rgba(255,179,71,0.08),rgba(201,138,42,0.04));border-color:var(--border-gold)">
+        <div class="card-body" style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
+          <div style="font-size:2.5rem">⬡</div>
+          <div style="flex:1">
+            <div style="font-family:var(--font-display);font-weight:800;font-size:1rem;color:var(--gold)" id="tier-name">Enterprise Partner</div>
+            <div style="font-size:.8rem;color:var(--muted);margin-top:.25rem">Full access to AI automation, CRM optimization, systems design, and dedicated strategy support.</div>
           </div>
+          <a href="membership.html" class="btn-primary" style="text-decoration:none;white-space:nowrap">Upgrade Tier →</a>
         </div>
       </div>
+    </section>
 
-      <!-- BILLING + QUICK ACTIONS -->
-      <div style="display:flex;flex-direction:column;gap:1.25rem">
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">💳 Billing</div>
-          </div>
-          <div class="panel-body" style="padding:1rem 1.25rem">
-            <div class="billing-row">
-              <div class="billing-label">Current Plan</div>
-              <div class="billing-val gold">Elite · $1,299/mo</div>
-            </div>
-            <div class="billing-row">
-              <div class="billing-label">Next Invoice</div>
-              <div class="billing-val">Apr 13, 2026</div>
-            </div>
-            <div class="billing-row">
-              <div class="billing-label">Member Since</div>
-              <div class="billing-val">Mar 13, 2026</div>
-            </div>
-            <div class="billing-row">
-              <div class="billing-label">Status</div>
-              <div class="billing-val green">Active ✓</div>
-            </div>
-          </div>
-        </div>
+  </main>
+</div>
 
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">⚡ Quick Actions</div>
-          </div>
-          <div class="panel-body" style="padding:1rem 1.25rem">
-            <div class="quick-actions">
-              <button class="qa-btn" onclick="Calendly && Calendly.initPopupWidget({url:'https://calendly.com/mark-mgcglobalconsulting/30min'})">
-                📅 Book Call
-              </button>
-              <button class="qa-btn">
-                💬 Slack Mark
-              </button>
-              <button class="qa-btn">
-                📋 View SOPs
-              </button>
-              <button class="qa-btn">
-                📊 Reports
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /row 2 -->
-
-  </div><!-- /content -->
-</main>
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
 
 <script>
-// Animate KPI values on load
-document.querySelectorAll('.progress-fill').forEach(bar => {
-  const w = bar.style.width;
-  bar.style.width = '0';
-  setTimeout(() => bar.style.width = w, 300);
-});
+// ── SUPABASE INIT ──
+const SUPABASE_URL = 'https://zppuzfvchqxkzprfkhfz.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwcHV6ZnZjaHF4a3pwcmZraGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1NzYwNTksImV4cCI6MjA5MDE1MjA1OX0.-DGVDEIuWqivnMB3f8Hbi_GcIfR7EQ6_O_QGknDVXqI';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
-// Sidebar nav toggle
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', function() {
-    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    this.classList.add('active');
+let currentUser = null;
+let currentProfile = null;
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', async () => {
+  // Hide loading overlay after fonts load
+  setTimeout(() => {
+    document.getElementById('loading-overlay').classList.add('hide');
+  }, 800);
+
+  // Auth state listener
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (session && session.user) {
+      currentUser = session.user;
+      await initPortal(session.user);
+    } else {
+      currentUser = null;
+      showAuthScreen();
+    }
   });
+
+  // Initial session check
+  const { data: { session } } = await sb.auth.getSession();
+  if (session && session.user) {
+    currentUser = session.user;
+    await initPortal(session.user);
+  } else {
+    showAuthScreen();
+  }
+
+  // Calendar init
+  renderCalendar();
+  // Set min date for schedule form
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  document.getElementById('sched-date').min = d.toISOString().split('T')[0];
+  document.getElementById('sched-date').value = d.toISOString().split('T')[0];
 });
 
-// ── Live Activity Simulation ──
-const activityList = document.querySelector('.activity-list');
-const events = [
-  { text: "<strong>Lead Qualifier Agent</strong> scored 1 new lead — High priority", dot: "cyan" },
-  { text: "<strong>Sync Complete:</strong> Notion CRM ↔ HubSpot Pipeline", dot: "green" },
-  { text: "<strong>Alert:</strong> New Zapier trigger detected in Sales Channel", dot: "gold" },
-  { text: "<strong>AI Insight:</strong> Detected 12% drop in response time on support tickets", dot: "cyan" },
-  { text: "<strong>Auto-Fulfillment:</strong> Elite Member onboarding initiated", dot: "green" }
-];
+// ── AUTH SCREEN ──
+function showAuthScreen() {
+  document.getElementById('loading-overlay').classList.add('hide');
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('portal-app').classList.remove('show');
+}
 
-function addLiveEvent() {
-  const event = events[Math.floor(Math.random() * events.length)];
+function showPortal() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('portal-app').classList.add('show');
+}
+
+function switchTab(tab) {
+  document.getElementById('form-login').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('form-signup').classList.toggle('hidden', tab !== 'signup');
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+}
+
+// ── LOGIN ──
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const errEl = document.getElementById('login-error');
+  errEl.classList.remove('show');
+  if (!email || !pass) { showErr(errEl, 'Please fill in all fields.'); return; }
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) { showErr(errEl, error.message); return; }
+  // onAuthStateChange will handle portal init
+}
+
+// ── SIGNUP ──
+async function doSignup() {
+  const name = document.getElementById('signup-name').value.trim();
+  const company = document.getElementById('signup-company').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const pass = document.getElementById('signup-pass').value;
+  const errEl = document.getElementById('signup-error');
+  const succEl = document.getElementById('signup-success');
+  errEl.classList.remove('show');
+  succEl.classList.remove('show');
+
+  if (!name || !email || !pass) { showErr(errEl, 'Name, email, and password are required.'); return; }
+  if (pass.length < 8) { showErr(errEl, 'Password must be at least 8 characters.'); return; }
+
+  const { data, error } = await sb.auth.signUp({
+    email, password: pass,
+    options: { data: { full_name: name, company } }
+  });
+  if (error) { showErr(errEl, error.message); return; }
+  succEl.textContent = 'Account created! Check your email to confirm, then sign in.';
+  succEl.classList.add('show');
+}
+
+// ── GOOGLE AUTH ──
+async function doGoogleAuth() {
+  await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.href }
+  });
+}
+
+// ── LOGOUT ──
+async function doLogout() {
+  await sb.auth.signOut();
+  showAuthScreen();
+  toast('Signed out successfully', 'info');
+}
+
+// ── PORTAL INIT ──
+async function initPortal(user) {
+  showPortal();
+
+  // Load profile
+  const { data: profile } = await sb
+    .from('mgc_client_profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single();
+
+  currentProfile = profile;
+  const name = profile?.full_name || user.user_metadata?.full_name || user.email.split('@')[0];
+  const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
+  const tier = profile?.membership_tier || 'Enterprise Client';
+
+  // Update UI
+  document.getElementById('s-user-name').textContent = name;
+  document.getElementById('s-user-tier').textContent = tier;
+  document.getElementById('s-avatar').textContent = initials;
+  document.getElementById('welcome-name').textContent = name.split(' ')[0];
+  document.getElementById('topbar-sub').textContent = `Last seen: Today`;
+
+  // Pre-fill settings
+  document.getElementById('profile-name').value = profile?.full_name || '';
+  document.getElementById('profile-company').value = profile?.company || '';
+  document.getElementById('profile-phone').value = profile?.phone || '';
+  document.getElementById('profile-email').value = user.email;
+  document.getElementById('tier-name').textContent = tier;
+
+  // Load data
+  await Promise.all([loadProjects(), loadDeliverables(), loadInvoices()]);
+
+  // Activity ping
+  addActivity('Portal session started', 'cyan');
+
+  document.getElementById('loading-overlay').classList.add('hide');
+}
+
+// ── LOAD PROJECTS ──
+async function loadProjects() {
+  if (!currentUser) return;
+  const { data: projects, error } = await sb
+    .from('mgc_projects')
+    .select('*')
+    .eq('client_id', currentUser.id)
+    .order('created_at', { ascending: false });
+
+  const activeProjects = projects?.filter(p => p.status === 'active') || [];
+  document.getElementById('kpi-projects').textContent = activeProjects.length || 0;
+  document.getElementById('kpi-projects-sub').textContent = `${projects?.length || 0} total engagements`;
+  document.getElementById('projects-count').textContent = projects?.length || 0;
+
+  // Overview mini-list
+  const ovList = document.getElementById('overview-projects-list');
+  if (!projects || projects.length === 0) {
+    ovList.innerHTML = `<div class="empty-state"><div class="empty-icon">📁</div><div class="empty-title">No projects yet</div><div class="empty-sub">Your MGC projects will appear here</div></div>`;
+  } else {
+    ovList.innerHTML = projects.slice(0,3).map(p => `
+      <div class="proj-card" onclick="showPanel('projects',null)" style="margin-bottom:.75rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem">
+          <div class="proj-title">${escHtml(p.title)}</div>
+          <span class="badge badge-${p.status === 'active' ? 'active' : p.status === 'completed' ? 'done' : 'pending'}">${p.status}</span>
+        </div>
+        <div class="proj-phase">${escHtml(p.phase || 'Planning')}</div>
+        <div class="progress-track"><div class="progress-fill" style="width:${p.progress_pct || 0}%"></div></div>
+        <div style="font-size:.7rem;color:var(--muted);margin-top:.4rem">${p.progress_pct || 0}% complete</div>
+      </div>
+    `).join('');
+  }
+
+  // Full projects grid
+  const projGrid = document.getElementById('projects-grid');
+  if (!projects || projects.length === 0) {
+    projGrid.innerHTML = `<div class="empty-state g-full"><div class="empty-icon">📁</div><div class="empty-title">No projects yet</div><div class="empty-sub">Your MGC projects will appear here once your engagement begins</div></div>`;
+  } else {
+    projGrid.innerHTML = projects.map(p => `
+      <div class="proj-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+          <span class="badge badge-${p.status === 'active' ? 'active' : p.status === 'completed' ? 'done' : 'pending'}">${p.status}</span>
+          <span style="font-family:var(--font-mono);font-size:.65rem;color:var(--dim)">${p.service_type || ''}</span>
+        </div>
+        <div class="proj-title" style="margin-bottom:.3rem">${escHtml(p.title)}</div>
+        <div class="proj-meta">${escHtml(p.description || '')}</div>
+        <div class="proj-phase">${escHtml(p.phase || 'Planning Phase')}</div>
+        <div class="progress-track"><div class="progress-fill" style="width:${p.progress_pct || 0}%"></div></div>
+        <div class="proj-footer">
+          <span style="font-size:.7rem;color:var(--muted)">${p.progress_pct || 0}% complete</span>
+          <span style="font-size:.7rem;color:var(--muted)">${p.target_date ? 'Target: ' + formatDate(p.target_date) : ''}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  addActivity(`Loaded ${projects?.length || 0} project(s)`, 'blue');
+}
+
+// ── LOAD DELIVERABLES ──
+async function loadDeliverables() {
+  if (!currentUser) return;
+  const { data: delivs } = await sb
+    .from('mgc_deliverables')
+    .select('*')
+    .eq('client_id', currentUser.id)
+    .order('created_at', { ascending: false });
+
+  const ready = delivs?.filter(d => d.status === 'ready') || [];
+  document.getElementById('kpi-deliverables').textContent = ready.length;
+  document.getElementById('deliverables-count').textContent = delivs?.length || 0;
+
+  const renderDelivItem = d => `
+    <div class="deliv-item">
+      <div class="deliv-icon">${d.file_type === 'pdf' ? '📄' : d.file_type === 'video' ? '🎬' : d.file_type === 'design' ? '🎨' : '📦'}</div>
+      <div class="deliv-info">
+        <div class="deliv-name">${escHtml(d.title)}</div>
+        <div class="deliv-meta">${d.description || ''} · ${formatDate(d.created_at)}</div>
+      </div>
+      <span class="badge badge-${d.status === 'ready' ? 'active' : 'pending'}" style="margin-right:.75rem">${d.status}</span>
+      ${d.file_url ? `<a href="${escHtml(d.file_url)}" target="_blank" class="deliv-action">Download</a>` : '<span style="color:var(--dim);font-size:.75rem">Pending</span>'}
+    </div>
+  `;
+
+  // Overview pending
+  const ovDel = document.getElementById('overview-deliverables');
+  if (!delivs || delivs.length === 0) {
+    ovDel.innerHTML = `<div class="empty-state"><div class="empty-icon">📦</div><div class="empty-title">No deliverables yet</div><div class="empty-sub">Completed project assets will appear here</div></div>`;
+  } else {
+    ovDel.innerHTML = delivs.slice(0,4).map(renderDelivItem).join('');
+  }
+
+  // Full list
+  const delivList = document.getElementById('deliverables-list');
+  if (!delivs || delivs.length === 0) {
+    delivList.innerHTML = `<div class="empty-state"><div class="empty-icon">📦</div><div class="empty-title">No deliverables yet</div><div class="empty-sub">Your project assets and documents will appear here</div></div>`;
+  } else {
+    delivList.innerHTML = delivs.map(renderDelivItem).join('');
+  }
+}
+
+// ── LOAD INVOICES ──
+async function loadInvoices() {
+  if (!currentUser) return;
+  const { data: invs } = await sb
+    .from('mgc_invoices')
+    .select('*')
+    .eq('client_id', currentUser.id)
+    .order('created_at', { ascending: false });
+
+  const unpaid = invs?.filter(i => i.status === 'unpaid') || [];
+  const total = unpaid.reduce((sum, i) => sum + (i.amount_cents || 0), 0);
+  document.getElementById('kpi-balance').textContent = total > 0 ? '$' + (total/100).toLocaleString() : '$0';
+  document.getElementById('kpi-balance-sub').textContent = unpaid.length > 0 ? `${unpaid.length} invoice${unpaid.length > 1 ? 's' : ''} due` : 'All paid up!';
+  document.getElementById('invoices-count').textContent = unpaid.length || 0;
+  if (unpaid.length === 0) document.getElementById('invoices-count').className = 'nav-pill';
+
+  const tbody = document.getElementById('invoices-tbody');
+  if (!invs || invs.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state" style="padding:2rem"><div class="empty-icon">🧾</div><div class="empty-title">No invoices yet</div></div></td></tr>`;
+    return;
+  }
+
+  let paidTotal = 0;
+  tbody.innerHTML = invs.map(inv => {
+    if (inv.status === 'paid') paidTotal += (inv.amount_cents || 0);
+    return `
+      <tr>
+        <td><span class="inv-amount">${escHtml(inv.invoice_number || '–')}</span></td>
+        <td>${escHtml(inv.description || '–')}</td>
+        <td class="inv-amount">$${((inv.amount_cents || 0)/100).toLocaleString()}</td>
+        <td>${inv.due_date ? formatDate(inv.due_date) : '–'}</td>
+        <td><span class="badge badge-${inv.status === 'paid' ? 'paid' : 'unpaid'}">${inv.status}</span></td>
+      </tr>
+    `;
+  }).join('');
+
+  document.getElementById('invoices-total').textContent = `Paid: $${(paidTotal/100).toLocaleString()}`;
+}
+
+// ── SCHEDULE SUBMIT ──
+async function submitSchedule(e) {
+  e.preventDefault();
+  if (!currentUser) return;
+  const resultEl = document.getElementById('sched-result');
+  resultEl.classList.remove('show');
+
+  const { error } = await sb.from('mgc_bookings').insert({
+    name: currentProfile?.full_name || currentUser.email,
+    email: currentUser.email,
+    company: currentProfile?.company || '',
+    service: document.getElementById('sched-type').value,
+    message: document.getElementById('sched-msg').value,
+    requested_date: document.getElementById('sched-date').value,
+    status: 'pending'
+  });
+
+  if (error) {
+    toast('Failed to submit request. Please try again.', 'error');
+    return;
+  }
+
+  resultEl.textContent = '✓ Session request submitted! We\'ll confirm within 24 hours.';
+  resultEl.classList.add('show');
+  document.getElementById('schedule-form').reset();
+  toast('Session request submitted!', 'success');
+  addActivity('Strategy session requested', 'gold');
+}
+
+// ── SAVE PROFILE ──
+async function saveProfile(e) {
+  e.preventDefault();
+  if (!currentUser) return;
+  const resultEl = document.getElementById('profile-result');
+  resultEl.classList.remove('show');
+
+  const updates = {
+    full_name: document.getElementById('profile-name').value.trim(),
+    company: document.getElementById('profile-company').value.trim(),
+    phone: document.getElementById('profile-phone').value.trim(),
+    updated_at: new Date().toISOString()
+  };
+
+  const { error } = await sb.from('mgc_client_profiles').upsert({ id: currentUser.id, ...updates });
+  if (error) { toast('Error saving profile', 'error'); return; }
+
+  resultEl.textContent = '✓ Profile updated successfully';
+  resultEl.classList.add('show');
+  document.getElementById('s-user-name').textContent = updates.full_name || currentUser.email;
+  toast('Profile saved', 'success');
+}
+
+// ── PASSWORD RESET ──
+async function sendPasswordReset() {
+  if (!currentUser) return;
+  const { error } = await sb.auth.resetPasswordForEmail(currentUser.email, {
+    redirectTo: window.location.href
+  });
+  if (error) { toast('Failed to send reset email', 'error'); return; }
+  toast('Password reset email sent!', 'success');
+}
+
+// ── PANEL NAVIGATION ──
+function showPanel(panelId, btnEl) {
+  document.querySelectorAll('.panel-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + panelId).classList.add('active');
+
+  document.querySelectorAll('.s-nav-item').forEach(b => b.classList.remove('active'));
+  if (btnEl) {
+    btnEl.classList.add('active');
+  } else {
+    const btn = document.querySelector(`[data-panel="${panelId}"]`);
+    if (btn) btn.classList.add('active');
+  }
+
+  const titles = { overview:'Overview', projects:'Projects', deliverables:'Deliverables', invoices:'Invoices', schedule:'Schedule', settings:'Settings' };
+  document.getElementById('topbar-title').textContent = titles[panelId] || panelId;
+
+  // Close mobile sidebar
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ── CALENDAR ──
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function renderCalendar() {
+  document.getElementById('cal-month-label').textContent = `${MONTHS[calMonth]} ${calYear}`;
+  const labelsEl = document.getElementById('cal-labels');
+  labelsEl.innerHTML = DAYS.map(d => `<div class="sched-day-label">${d}</div>`).join('');
+
+  const first = new Date(calYear, calMonth, 1).getDay();
+  const days = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = new Date();
+  const gridEl = document.getElementById('cal-grid');
+  let cells = '';
+
+  for (let i = 0; i < first; i++) cells += `<div class="sched-cell empty"></div>`;
+  for (let d = 1; d <= days; d++) {
+    const isToday = d === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear();
+    const isPast = new Date(calYear, calMonth, d) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    cells += `<div class="sched-cell${isToday?' today':isPast?' past':''}" onclick="selectDate(${calYear},${calMonth+1},${d})">${d}</div>`;
+  }
+  gridEl.innerHTML = cells;
+}
+
+function changeMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function selectDate(y, m, d) {
+  const ds = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  document.getElementById('sched-date').value = ds;
+  toast(`Selected ${MONTHS[m-1]} ${d}, ${y}`, 'info');
+}
+
+// ── ACTIVITY FEED ──
+function addActivity(text, dotClass = 'cyan') {
+  const feed = document.getElementById('activity-feed');
+  if (!feed) return;
   const item = document.createElement('div');
   item.className = 'activity-item';
   item.style.opacity = '0';
-  item.style.transform = 'translateY(-10px)';
-  item.style.transition = 'all 0.5s ease';
-  
   item.innerHTML = `
-    <div class="activity-dot ${event.dot}"></div>
+    <div class="act-dot ${dotClass}"></div>
     <div>
-      <div class="activity-text">${event.text}</div>
-      <div class="activity-time">Just now</div>
+      <div class="act-text">${escHtml(text)}</div>
+      <div class="act-time">${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div>
     </div>
   `;
-  
-  activityList.insertBefore(item, activityList.firstChild);
-  
-  // Remove last item if too many
-  if(activityList.children.length > 8) activityList.lastChild.remove();
-  
-  setTimeout(() => {
-    item.style.opacity = '1';
-    item.style.transform = 'translateY(0)';
-  }, 10);
+  feed.insertBefore(item, feed.firstChild);
+  if (feed.children.length > 10) feed.lastChild.remove();
+  requestAnimationFrame(() => { item.style.transition = 'opacity .4s'; item.style.opacity = '1'; });
 }
 
-// Add a live event every 15-30 seconds
-setInterval(addLiveEvent, Math.random() * 15000 + 15000);
+// ── TOAST ──
+function toast(msg, type = 'info') {
+  const icons = { success:'✅', error:'❌', info:'ℹ️', warning:'⚠️' };
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span class="toast-icon">${icons[type]||'ℹ️'}</span><span>${escHtml(msg)}</span>`;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => { el.style.transition='opacity .3s'; el.style.opacity='0'; setTimeout(()=>el.remove(), 300); }, 3500);
+}
 
-// Simple KPI "Live" update
-setInterval(() => {
-    const kpiVal = document.querySelector('.kpi-card:nth-child(2) .kpi-value');
-    if(kpiVal) {
-        let val = parseInt(kpiVal.textContent);
-        if(!isNaN(val)) {
-            val += Math.random() > 0.7 ? 1 : 0;
-            kpiVal.innerHTML = `${val}<span>hrs</span>`;
-        }
-    }
-}, 30000);
+// ── HELPERS ──
+function showErr(el, msg) { el.textContent = msg; el.classList.add('show'); }
+function escHtml(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function formatDate(ds) {
+  if (!ds) return '';
+  const d = new Date(ds);
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+}
 </script>
-<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
-<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/245294674.js"></script>
 </body>
 </html>

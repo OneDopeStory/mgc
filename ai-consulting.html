@@ -12,7 +12,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@just_mgc">
 <link rel="canonical" href="https://www.mgcglobalconsulting.com/ai-consulting.html">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════
    VARIABLES & RESET
@@ -40,7 +40,7 @@ a{text-decoration:none;color:inherit}
 .nav{position:fixed;top:0;left:0;right:0;z-index:9999;padding:1rem 0;transition:all 0.4s var(--ease);background:rgba(10,22,40,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.06)}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;padding:0 2rem}
 .nav-logo{display:flex;align-items:center;gap:0.65rem;flex-shrink:0}
-.nav-logo-mark{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--cyan));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:1.3rem;color:white;flex-shrink:0}
+.nav-logo-img{width:46px;height:46px;object-fit:contain;width:56px;height:56px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 0 10px rgba(0,187,255,0.4)) drop-shadow(0 2px 6px rgba(0,0,0,0.5))}
 .nav-logo-text{display:flex;flex-direction:column}
 .nav-logo-name{font-family:var(--font-display);font-weight:800;font-size:0.95rem;color:white;letter-spacing:-0.02em;white-space:nowrap}
 .nav-logo-sub{font-size:0.65rem;color:rgba(255,255,255,0.45);font-weight:600;letter-spacing:2px;text-transform:uppercase;white-space:nowrap}
@@ -317,13 +317,11 @@ a{text-decoration:none;color:inherit}
    RESPONSIVE
    ═══════════════════════════════════════════════ */
 @media(max-width:1280px){
-  .nav-logo-mark{width:42px;height:42px;font-size:1.15rem}
   .nav-logo-name{font-size:0.88rem}
   .nav-links{gap:1.25rem}
   .nav-links a{font-size:0.78rem}
 }
 @media(max-width:1100px){
-  .nav-logo-mark{width:38px;height:38px;font-size:1.05rem}
   .nav-logo-name{font-size:0.82rem}
   .nav-links{gap:0.9rem}
   .nav-links a{font-size:0.72rem}
@@ -364,8 +362,6 @@ a{text-decoration:none;color:inherit}
   .footer-bottom{flex-direction:column;gap:1rem;text-align:center}
 }
 </style>
-<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
 </head>
 <body>
 
@@ -376,7 +372,7 @@ a{text-decoration:none;color:inherit}
 <nav class="nav" id="navbar">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">
-      <div class="nav-logo-mark">M</div>
+      <img src="assets/images/mgc-logo-transparent.png" alt="MGC Global Consulting" class="nav-logo-img">
       <div class="nav-logo-text">
         <span class="nav-logo-name">MGC Global</span>
         <span class="nav-logo-sub">Consulting</span>
@@ -388,7 +384,7 @@ a{text-decoration:none;color:inherit}
       <a href="index.html#process">Process</a>
       <a href="index.html#authority">About</a>
       <a href="index.html#contact">Contact</a>
-      <a href="" class="nav-cta" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/mark-mgcglobalconsulting/30min'});return false;">Book a Call</a>
+      <a href="index.html#booking" class="nav-cta">Start a Project</a>
     </div>
     <div class="hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('active')">
       <span></span><span></span><span></span>
@@ -410,10 +406,7 @@ a{text-decoration:none;color:inherit}
     <h1 class="reveal">AI Strategy That <span class="gradient-text">Actually Ships</span></h1>
     <p class="hero-lead reveal">78% of enterprises now use AI in at least one business function. But 70–85% of AI initiatives fail to meet expectations. The difference isn't the technology — it's whether you had a strategy before you bought the tool. That's where we come in.</p>
     <div class="hero-actions reveal">
-      <a href="" class="btn-primary" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/mark-mgcglobalconsulting/30min'});return false;">
-        <span>Book Your Strategy Session</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
+      <a href="index.html#booking" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0066FF,#00D4FF);color:white;padding:14px 32px;border-radius:100px;font-weight:700;font-size:0.9rem;text-decoration:none;white-space:nowrap">Book Your Strategy Session</a> <a href="checkout.html" style="display:inline-flex;align-items:center;gap:8px;background:rgba(0,102,255,0.12);color:#00D4FF;padding:14px 32px;border-radius:100px;font-weight:700;font-size:0.9rem;text-decoration:none;white-space:nowrap;border:1px solid rgba(0,187,255,0.3);margin-left:12px">Invest Now &rarr;</a>
       <a href="#framework" class="btn-outline">
         <span>See Our Process</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
@@ -797,15 +790,12 @@ a{text-decoration:none;color:inherit}
     <h2 class="reveal">Let's Find Your AI Advantage</h2>
     <p class="reveal">Start with a free 30-minute strategy conversation. We'll identify your highest-impact opportunities, assess your readiness, and tell you honestly whether working together makes sense.</p>
     <div class="cta-actions reveal">
-      <a href="" class="btn-primary" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/mark-mgcglobalconsulting/30min'});return false;">
-        <span>Book Your Free Strategy Session</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
+      <a href="index.html#booking" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0066FF,#00D4FF);color:white;padding:14px 32px;border-radius:100px;font-weight:700;font-size:0.9rem;text-decoration:none;white-space:nowrap">Book Your Free Strategy Session</a>
       <a href="index.html#services" class="btn-outline">
         <span>Explore Other Services</span>
       </a>
     </div>
-    <p class="cta-alt reveal">Or reach us directly: <a href="/cdn-cgi/l/email-protection#4821262e2708252f2b2f24272a29242b27263b3d243c21262f662b2725"><span class="__cf_email__" data-cfemail="7b12151d143b161c181c1714191a17181415080e170f12151c55181416">[email&#160;protected]</span></a> &nbsp;|&nbsp; <a href="tel:4109522846">410-952-2846</a></p>
+    <p class="cta-alt reveal">Or reach us directly: <a href="mailto:info@mgcglobalconsulting.com">info@mgcglobalconsulting.com</a> &nbsp;|&nbsp; <a href="tel:4109522846">410-952-2846</a></p>
   </div>
 </section>
 
@@ -815,7 +805,7 @@ a{text-decoration:none;color:inherit}
     <div class="footer-grid">
       <div class="footer-brand">
         <a href="index.html" class="nav-logo" style="margin-bottom:0.5rem">
-          <div class="nav-logo-mark">M</div>
+          <img src="assets/images/mgc-logo-transparent.png" alt="MGC Global Consulting" class="nav-logo-img">
           <div class="nav-logo-text">
             <span class="nav-logo-name">MGC Global</span>
             <span class="nav-logo-sub">Consulting</span>
@@ -841,7 +831,7 @@ a{text-decoration:none;color:inherit}
       </div>
       <div class="footer-col">
         <h4>Connect</h4>
-        <a href="/cdn-cgi/l/email-protection#751c1b131a3518121612191a171419161a1b060019011c1b125b161a18"><span class="__cf_email__" data-cfemail="4821262e2708252f2b2f24272a29242b27263b3d243c21262f662b2725">[email&#160;protected]</span></a>
+        <a href="mailto:info@mgcglobalconsulting.com">info@mgcglobalconsulting.com</a>
         <a href="tel:4109522846">410-952-2846</a>
         <a href="https://x.com/just_mgc" target="_blank">X / Twitter</a>
         <a href="https://www.facebook.com/share/17imWSpAHB" target="_blank">Facebook</a>
@@ -860,7 +850,7 @@ a{text-decoration:none;color:inherit}
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 /* ═══════════ SCROLL PROGRESS ═══════════ */
 window.addEventListener('scroll',()=>{
   const h=document.documentElement;
@@ -881,9 +871,7 @@ document.querySelectorAll('.nav-links a').forEach(a=>{
 </script>
 <!-- Floating CTA -->
 <div id="floatingCTA" style="position:fixed;bottom:24px;right:24px;z-index:9990;display:flex;flex-direction:column;gap:10px;align-items:flex-end;opacity:0;transform:translateY(20px);transition:all 0.4s cubic-bezier(0.16,1,0.3,1)">
-<a href="" onclick="Calendly.initPopupWidget({url:'https://calendly.com/mark-mgcglobalconsulting/30min'});return false;" style="display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#135997,#4AAFCF);color:white;padding:12px 20px;border-radius:50px;font-family:Sora,sans-serif;font-weight:700;font-size:0.8rem;letter-spacing:0.03em;box-shadow:0 8px 30px rgba(19,89,151,0.35);transition:all 0.3s;text-decoration:none;white-space:nowrap">
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-Book a Call</a>
+<a href="index.html#booking" class="cta-btn" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0066FF,#00D4FF);color:white;padding:14px 32px;border-radius:100px;font-weight:700;font-size:0.9rem;text-decoration:none;white-space:nowrap">Start a Project</a>
 </div>
 <script>
 (function(){
@@ -896,6 +884,6 @@ Book a Call</a>
 })();
 </script>
 <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/245294674.js"></script>
-<script src="/hs-breeze-bridge.js" defer></script>
+<script src="/assets/js/hs-breeze-bridge.js" defer></script>
 </body>
 </html>
