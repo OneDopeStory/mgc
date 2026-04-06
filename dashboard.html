@@ -73,6 +73,82 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 #portal-app{display:none;min-height:100vh}
 #portal-app.show{display:flex}
 
+/* ─── KNOWLEDGE BASE ─── */
+.kb-layout{display:grid;grid-template-columns:240px 1fr;gap:1.25rem;align-items:start}
+@media(max-width:860px){.kb-layout{grid-template-columns:1fr}}
+.kb-sidebar{background:rgba(4,20,40,0.7);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;position:sticky;top:0}
+.kb-search{padding:.75rem .9rem;border-bottom:1px solid var(--border)}
+.kb-search input{width:100%;background:rgba(1,12,26,0.6);border:1px solid rgba(0,212,255,0.12);border-radius:8px;padding:.5rem .75rem;color:white;font-size:.78rem;outline:none}
+.kb-search input::placeholder{color:var(--dim)}
+.kb-search input:focus{border-color:rgba(0,212,255,0.35)}
+.kb-tag-list{padding:.75rem .9rem;display:flex;flex-wrap:wrap;gap:.35rem;border-bottom:1px solid var(--border)}
+.kb-tag{padding:.2rem .6rem;border-radius:99px;font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border:1px solid rgba(0,212,255,0.15);color:rgba(0,212,255,.6);cursor:pointer;transition:all .2s;background:none}
+.kb-tag:hover,.kb-tag.active{background:rgba(0,212,255,.1);border-color:rgba(0,212,255,.3);color:var(--cyan)}
+.kb-tag.gold{border-color:rgba(255,179,71,.15);color:rgba(255,179,71,.6)}
+.kb-tag.gold:hover,.kb-tag.gold.active{background:rgba(255,179,71,.1);border-color:rgba(255,179,71,.3);color:var(--gold)}
+.kb-note-list{max-height:420px;overflow-y:auto}
+.kb-note-item{padding:.7rem .9rem;cursor:pointer;border-bottom:1px solid rgba(0,212,255,.05);transition:background .15s;border-left:2px solid transparent}
+.kb-note-item:hover{background:rgba(0,212,255,.04)}
+.kb-note-item.active{background:rgba(0,212,255,.08);border-left-color:var(--cyan)}
+.kb-note-title{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kb-note-meta{font-size:.68rem;color:var(--dim);margin-top:.2rem}
+.kb-viewer{background:rgba(4,20,40,0.7);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem 2rem;min-height:500px}
+.kb-viewer-title{font-family:var(--font-display);font-size:1.35rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.4rem}
+.kb-viewer-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.kb-viewer-body{font-size:.875rem;line-height:1.8;color:rgba(255,255,255,.78)}
+.kb-viewer-body h2{font-family:var(--font-display);font-size:1.05rem;font-weight:800;color:var(--cyan);margin:1.5rem 0 .5rem;letter-spacing:-.01em}
+.kb-viewer-body h3{font-size:.9rem;font-weight:700;color:rgba(255,255,255,.9);margin:1rem 0 .4rem}
+.kb-viewer-body p{margin-bottom:.9rem}
+.kb-viewer-body ul,.kb-viewer-body ol{padding-left:1.5rem;margin-bottom:.9rem}
+.kb-viewer-body li{margin-bottom:.3rem}
+.kb-viewer-body strong{color:white;font-weight:700}
+.kb-viewer-body code{font-family:var(--font-mono);font-size:.8rem;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.15);border-radius:4px;padding:.1rem .4rem;color:var(--cyan)}
+.kb-viewer-body blockquote{border-left:3px solid var(--cyan);padding:.6rem 1rem;margin:.75rem 0;background:rgba(0,212,255,.04);border-radius:0 8px 8px 0;color:rgba(0,212,255,.8);font-style:italic}
+.kb-viewer-divider{height:1px;background:var(--border);margin:1.5rem 0}
+.kb-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;color:var(--dim);text-align:center;gap:.5rem}
+.kb-empty-icon{font-size:2.5rem;opacity:.4}
+.kb-empty-text{font-size:.85rem}
+
+/* ─── RESEARCH HUB ─── */
+.hub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem}
+.hub-tool{background:rgba(4,20,40,0.7);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;display:flex;flex-direction:column;gap:.6rem;cursor:pointer;text-decoration:none;transition:all .25s;position:relative;overflow:hidden}
+.hub-tool::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(0,212,255,.03));opacity:0;transition:opacity .25s}
+.hub-tool:hover{transform:translateY(-3px);border-color:rgba(0,212,255,.25);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.hub-tool:hover::before{opacity:1}
+.hub-tool-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
+.hub-tool-icon.purple{background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.2)}
+.hub-tool-icon.blue{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.2)}
+.hub-tool-icon.green{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.2)}
+.hub-tool-icon.orange{background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.2)}
+.hub-tool-icon.cyan{background:rgba(0,212,255,.12);border:1px solid rgba(0,212,255,.2)}
+.hub-tool-icon.gold{background:rgba(255,179,71,.12);border:1px solid rgba(255,179,71,.2)}
+.hub-tool-name{font-family:var(--font-display);font-size:.88rem;font-weight:800;color:rgba(255,255,255,.9)}
+.hub-tool-desc{font-size:.72rem;color:var(--dim);line-height:1.5}
+.hub-tool-badge{position:absolute;top:.7rem;right:.7rem;padding:.15rem .45rem;border-radius:99px;font-size:.6rem;font-weight:700;letter-spacing:.04em;background:rgba(0,212,255,.12);color:var(--cyan);text-transform:uppercase}
+.hub-section-title{font-family:var(--font-display);font-size:.82rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:.85rem}
+.hub-workspace{background:rgba(4,20,40,0.7);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.hub-workspace-tabs{display:flex;border-bottom:1px solid var(--border)}
+.hub-tab{padding:.65rem 1.1rem;font-size:.78rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none}
+.hub-tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.hub-tab-body{padding:1.25rem;display:none;min-height:280px}
+.hub-tab-body.active{display:block}
+.hub-embed-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:240px;gap:1rem;text-align:center}
+.hub-embed-placeholder .icon{font-size:2.5rem;opacity:.5}
+.hub-embed-placeholder p{font-size:.82rem;color:var(--muted);max-width:320px;line-height:1.6}
+.hub-link-input{display:flex;gap:.6rem;margin-bottom:1rem}
+.hub-link-input input{flex:1;background:rgba(1,12,26,.6);border:1px solid rgba(0,212,255,.15);border-radius:8px;padding:.6rem .85rem;color:white;font-size:.82rem;outline:none}
+.hub-link-input input:focus{border-color:rgba(0,212,255,.4)}
+.hub-link-input button{padding:.6rem 1rem;background:linear-gradient(135deg,var(--sky),var(--cyan));color:var(--abyss);border:none;border-radius:8px;font-size:.78rem;font-weight:800;cursor:pointer;white-space:nowrap;transition:all .2s}
+.hub-link-input button:hover{filter:brightness(1.1)}
+.hub-saved-links{display:flex;flex-direction:column;gap:.5rem}
+.hub-saved-link{display:flex;align-items:center;gap:.75rem;padding:.6rem .85rem;background:rgba(1,12,26,.4);border:1px solid rgba(0,212,255,.08);border-radius:8px;text-decoration:none;transition:border-color .2s}
+.hub-saved-link:hover{border-color:rgba(0,212,255,.2)}
+.hub-saved-link-icon{font-size:1.1rem;flex-shrink:0}
+.hub-saved-link-title{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.8)}
+.hub-saved-link-url{font-size:.68rem;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px}
+.hub-scratch{width:100%;min-height:200px;background:rgba(1,12,26,.5);border:1px solid rgba(0,212,255,.12);border-radius:8px;padding:.75rem 1rem;color:white;font-size:.82rem;line-height:1.7;resize:vertical;outline:none;font-family:var(--font-body)}
+.hub-scratch:focus{border-color:rgba(0,212,255,.3)}
+
 /* ─── SIDEBAR ─── */
 .sidebar{width:var(--sidebar-w);flex-shrink:0;background:linear-gradient(180deg,rgba(4,20,40,0.97) 0%,rgba(2,15,32,0.97) 100%);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100;overflow-y:auto;transition:transform 0.3s var(--ease)}
 
@@ -408,6 +484,17 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <span class="nav-pill gold" id="invoices-count">–</span>
       </button>
 
+      <div class="nav-group-label">Intelligence</div>
+      <button class="s-nav-item" data-panel="knowledge" onclick="showPanel('knowledge',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Knowledge Base
+      </button>
+      <button class="s-nav-item" data-panel="research" onclick="showPanel('research',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        Research Hub
+        <span class="nav-pill" style="background:rgba(139,92,246,.15);color:#a78bfa">AI</span>
+      </button>
+
       <div class="nav-group-label">Workspace</div>
       <button class="s-nav-item" data-panel="schedule" onclick="showPanel('schedule',this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -591,6 +678,135 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
               <tr><td colspan="5"><div class="skel" style="height:40px;border-radius:8px"></div></td></tr>
             </tbody>
           </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── KNOWLEDGE BASE PANEL ── -->
+    <section class="panel-page" id="panel-knowledge">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.25rem">
+        <div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:900;letter-spacing:-.02em">Knowledge Base</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">Strategy notes, frameworks, and resources from your MGC engagement</div>
+        </div>
+        <button class="btn-primary" style="font-size:.78rem;padding:.6rem 1.2rem" onclick="openNewNote()">+ New Note</button>
+      </div>
+      <div class="kb-layout">
+        <!-- Sidebar -->
+        <div class="kb-sidebar">
+          <div class="kb-search">
+            <input type="text" id="kb-search-input" placeholder="Search notes…" oninput="filterKbNotes(this.value)">
+          </div>
+          <div class="kb-tag-list" id="kb-tag-list">
+            <button class="kb-tag active" onclick="filterKbByTag('all',this)">All</button>
+            <button class="kb-tag" onclick="filterKbByTag('strategy',this)">Strategy</button>
+            <button class="kb-tag gold" onclick="filterKbByTag('ai',this)">AI Tools</button>
+            <button class="kb-tag" onclick="filterKbByTag('crm',this)">CRM</button>
+            <button class="kb-tag" onclick="filterKbByTag('automation',this)">Automation</button>
+            <button class="kb-tag" onclick="filterKbByTag('growth',this)">Growth</button>
+          </div>
+          <div class="kb-note-list" id="kb-note-list"></div>
+        </div>
+        <!-- Viewer -->
+        <div class="kb-viewer" id="kb-viewer">
+          <div class="kb-empty">
+            <div class="kb-empty-icon">📖</div>
+            <div class="kb-empty-text">Select a note to read</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── RESEARCH HUB PANEL ── -->
+    <section class="panel-page" id="panel-research">
+      <div style="margin-bottom:1.25rem">
+        <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:900;letter-spacing:-.02em">Research Hub</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">AI-powered research tools, NotebookLM workspace, and saved resources</div>
+      </div>
+
+      <!-- Tools Grid -->
+      <div class="hub-section-title">Quick Access</div>
+      <div class="hub-grid">
+        <a href="https://notebooklm.google.com" target="_blank" class="hub-tool">
+          <div class="hub-tool-icon purple">🧠</div>
+          <div class="hub-tool-name">NotebookLM</div>
+          <div class="hub-tool-desc">AI-powered research synthesis and document analysis</div>
+          <span class="hub-tool-badge">Google AI</span>
+        </a>
+        <a href="https://claude.ai" target="_blank" class="hub-tool">
+          <div class="hub-tool-icon cyan">✦</div>
+          <div class="hub-tool-name">Claude AI</div>
+          <div class="hub-tool-desc">Advanced reasoning and strategy analysis assistant</div>
+          <span class="hub-tool-badge">Anthropic</span>
+        </a>
+        <a href="https://perplexity.ai" target="_blank" class="hub-tool">
+          <div class="hub-tool-icon blue">🔭</div>
+          <div class="hub-tool-name">Perplexity</div>
+          <div class="hub-tool-desc">Real-time AI search with cited sources</div>
+          <span class="hub-tool-badge">Live Search</span>
+        </a>
+        <a href="https://chatgpt.com" target="_blank" class="hub-tool">
+          <div class="hub-tool-icon green">⚡</div>
+          <div class="hub-tool-name">ChatGPT</div>
+          <div class="hub-tool-desc">Versatile AI for drafts, analysis, and brainstorming</div>
+          <span class="hub-tool-badge">OpenAI</span>
+        </a>
+        <a href="https://obsidian.md" target="_blank" class="hub-tool">
+          <div class="hub-tool-icon gold">💎</div>
+          <div class="hub-tool-name">Obsidian</div>
+          <div class="hub-tool-desc">Open your local Obsidian vault for deep-linked notes</div>
+          <span class="hub-tool-badge">Local</span>
+        </a>
+        <a href="https://scholar.google.com" target="_blank" class="hub-tool">
+          <div class="hub-tool-icon orange">📚</div>
+          <div class="hub-tool-name">Google Scholar</div>
+          <div class="hub-tool-desc">Academic papers and research literature</div>
+          <span class="hub-tool-badge">Research</span>
+        </a>
+      </div>
+
+      <!-- Workspace Tabs -->
+      <div class="hub-workspace">
+        <div class="hub-workspace-tabs">
+          <button class="hub-tab active" onclick="switchHubTab('notebook',this)">📓 NotebookLM</button>
+          <button class="hub-tab" onclick="switchHubTab('links',this)">🔗 Saved Links</button>
+          <button class="hub-tab" onclick="switchHubTab('scratch',this)">✏️ Scratchpad</button>
+        </div>
+
+        <!-- NotebookLM Tab -->
+        <div class="hub-tab-body active" id="hub-tab-notebook">
+          <div class="hub-embed-placeholder" id="hub-nlm-placeholder">
+            <div class="icon">🧠</div>
+            <p>Paste your <strong>NotebookLM shared notebook URL</strong> below to embed your workspace directly in the portal.</p>
+          </div>
+          <div class="hub-link-input" style="margin-top:0">
+            <input type="url" id="hub-nlm-url" placeholder="https://notebooklm.google.com/notebook/..." value="">
+            <button onclick="embedNotebookLM()">Load Notebook</button>
+          </div>
+          <div id="hub-nlm-frame" style="display:none;border-radius:8px;overflow:hidden;border:1px solid var(--border)">
+            <iframe id="hub-nlm-iframe" src="" width="100%" height="500" frameborder="0" style="display:block"></iframe>
+          </div>
+        </div>
+
+        <!-- Saved Links Tab -->
+        <div class="hub-tab-body" id="hub-tab-links">
+          <div class="hub-link-input">
+            <input type="url" id="hub-new-link-url" placeholder="https://...">
+            <button onclick="saveResearchLink()">Save Link</button>
+          </div>
+          <div class="hub-saved-links" id="hub-saved-links-list">
+            <!-- populated by JS -->
+          </div>
+        </div>
+
+        <!-- Scratchpad Tab -->
+        <div class="hub-tab-body" id="hub-tab-scratch">
+          <div style="margin-bottom:.75rem;font-size:.75rem;color:var(--muted)">Quick notes — auto-saved to your browser</div>
+          <textarea class="hub-scratch" id="hub-scratch-area" placeholder="Research notes, ideas, strategy snippets…" oninput="saveScratch()"></textarea>
+          <div style="display:flex;justify-content:space-between;margin-top:.5rem;font-size:.7rem;color:var(--dim)">
+            <span id="scratch-saved-status">Type to save…</span>
+            <button onclick="clearScratch()" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:.7rem">Clear</button>
+          </div>
         </div>
       </div>
     </section>
@@ -1133,7 +1349,9 @@ function showPanel(panelId, btnEl) {
     if (btn) btn.classList.add('active');
   }
 
-  const titles = { overview:'Overview', projects:'Projects', deliverables:'Deliverables', invoices:'Invoices', schedule:'Schedule', settings:'Settings' };
+  const titles = { overview:'Overview', projects:'Projects', deliverables:'Deliverables', invoices:'Invoices', knowledge:'Knowledge Base', research:'Research Hub', schedule:'Schedule', settings:'Settings' };
+  if (panelId === 'knowledge') initKnowledgeBase();
+  if (panelId === 'research') initResearchHub();
   document.getElementById('topbar-title').textContent = titles[panelId] || panelId;
 
   // Close mobile sidebar
@@ -1210,6 +1428,350 @@ function toast(msg, type = 'info') {
   el.innerHTML = `<span class="toast-icon">${icons[type]||'ℹ️'}</span><span>${escHtml(msg)}</span>`;
   document.getElementById('toast-container').appendChild(el);
   setTimeout(() => { el.style.transition='opacity .3s'; el.style.opacity='0'; setTimeout(()=>el.remove(), 300); }, 3500);
+}
+
+// ── KNOWLEDGE BASE ──
+const KB_NOTES = [
+  {
+    id:1, title:'AI Automation Fundamentals', tag:'ai', updated:'Apr 2026',
+    body:`## What is AI Automation?
+AI automation uses machine learning and intelligent workflows to eliminate repetitive tasks, surface insights, and accelerate decisions — without replacing the human judgment that drives growth.
+
+## The MGC Automation Stack
+- **Trigger Layer** — Identify which business events should initiate automated workflows (form submissions, CRM updates, calendar events)
+- **Process Layer** — Logic, conditions, and transformations (Zapier, Make, n8n, custom scripts)
+- **Output Layer** — Where results land: Slack alerts, Google Sheets rows, email sequences, database updates
+
+## High-ROI Automation Targets
+1. **Lead follow-up sequences** — 5-min response vs 47-min average = 10x conversion
+2. **Invoice generation & reminders** — Cuts AR cycle by 30-40%
+3. **Onboarding workflows** — Consistent client experience at scale
+4. **Reporting dashboards** — Auto-populated weekly/monthly metrics
+
+> **MGC Insight:** The best automations don't just save time — they create *consistency* that builds client trust.
+
+## Quick Start Checklist
+- [ ] Map your top 3 manual processes by time spent
+- [ ] Identify the trigger event for each
+- [ ] Choose the right tool (Zapier for simplicity, Make for complexity, n8n for control)
+- [ ] Build, test with real data, iterate`
+  },
+  {
+    id:2, title:'CRM Optimization Playbook', tag:'crm', updated:'Mar 2026',
+    body:`## Why Most CRMs Fail
+CRMs fail not because of the software — but because of **missing process, missing data, and missing adoption**. The technology is only as good as the system built around it.
+
+## The 5-Stage CRM Audit
+1. **Data Quality** — Duplicate records, missing fields, stale contacts
+2. **Pipeline Accuracy** — Are stages reflecting real buyer behavior?
+3. **Activity Logging** — Is every touchpoint being captured?
+4. **Automation Coverage** — Which manual steps can be eliminated?
+5. **Reporting Validity** — Are dashboards actually driving decisions?
+
+## HubSpot Best Practices (MGC Standard)
+- Custom properties should map to **decision-driving data** only — remove vanity fields
+- Deal stages should reflect the **buyer's journey**, not your internal process
+- Use \`Lifecycle Stage\` rigorously — Lead → MQL → SQL → Opportunity → Customer
+- Breeze AI: Enable contact enrichment and conversation intelligence for every new deal
+
+## Quick Wins
+- **Merge duplicates** monthly (HubSpot: Contacts → Actions → Merge)
+- Set up **re-engagement sequences** for contacts > 90 days inactive
+- Create **deal age alerts** — any open deal > 30 days triggers a follow-up task
+
+> **MGC Insight:** A CRM optimized for *speed* (fast data entry, fast retrieval) gets used. One optimized for *completeness* gets abandoned.`
+  },
+  {
+    id:3, title:'Systems Design Framework', tag:'strategy', updated:'Apr 2026',
+    body:`## MGC Systems Design Philosophy
+Every business is a system. Systems Design means architecting the flow of **information, decisions, and execution** so the business can scale without scaling its founder's hours.
+
+## The Four Layers of a Business Operating System
+
+\`\`\`
+Layer 1: Capture    — How data, leads, and tasks enter the system
+Layer 2: Process    — How they move, transform, and get assigned
+Layer 3: Execute    — How work gets done (human + automated)
+Layer 4: Review     — How performance is measured and improved
+\`\`\`
+
+## Design Principles
+- **Single source of truth** — Every data type lives in one place
+- **Minimum viable friction** — Reduce steps in every workflow until it breaks, then add one back
+- **Observable by default** — Every process should produce a metric
+- **Recoverable** — Every failure state should have a documented recovery path
+
+## Common Systems We Architect
+| System | Tools | Outcome |
+|--------|-------|---------|
+| Lead Capture → CRM | HubSpot + Typeform | Zero-leakage lead flow |
+| Client Onboarding | Notion + Slack + Stripe | Consistent 5-star first 30 days |
+| Reporting | Google Sheets + Looker Studio | Weekly insights without manual pulls |
+| Content → Revenue | AI + Calendly + Email | Evergreen lead generation |`
+  },
+  {
+    id:4, title:'Growth Metrics That Matter', tag:'growth', updated:'Feb 2026',
+    body:`## Vanity vs. Velocity Metrics
+Most businesses track metrics that *feel* good. MGC focuses on metrics that *predict* revenue.
+
+## The MGC Growth Dashboard
+**Acquisition**
+- CAC (Customer Acquisition Cost) — target < 3x MRR
+- Lead → Qualified rate — healthy: 20-40%
+- Time to first contact after lead — target: < 5 minutes
+
+**Retention**
+- NPS (Net Promoter Score) — benchmark quarterly
+- Churn rate — monthly recurring revenue at risk
+- Expansion MRR — upsell and cross-sell rate
+
+**Efficiency**
+- Revenue per employee hour
+- Automation coverage rate (% of workflows automated)
+- Average deal cycle length
+
+## Leading Indicators vs Lagging Indicators
+> Leading indicators *predict* future revenue: demo bookings, proposal requests, content engagement.
+> Lagging indicators *confirm* past performance: revenue, churn, NPS.
+
+**Track both. Act on leading indicators.**
+
+## Setting Your Growth Baseline
+1. Export 12 months of revenue data
+2. Calculate monthly growth rate (MoM)
+3. Identify the 3 metrics most correlated with revenue months
+4. Build a dashboard that shows those 3 metrics weekly`
+  },
+  {
+    id:5, title:'AI Tools for Consulting Clients', tag:'ai', updated:'Apr 2026',
+    body:`## The AI Toolkit MGC Recommends for Clients
+
+### Research & Analysis
+- **NotebookLM** — Upload PDFs, reports, and documents; ask AI questions across your entire knowledge base. Ideal for market research synthesis.
+- **Perplexity** — Real-time AI search with cited sources. Use for competitive intelligence and industry news.
+- **Claude** — Best for long-form analysis, strategy documents, and nuanced reasoning tasks.
+
+### Content & Communication
+- **ChatGPT-4** — Versatile: email drafts, social content, meeting summaries, first-draft everything.
+- **Jasper** — Marketing copy at scale with brand voice training.
+
+### Automation & Integration
+- **Zapier AI** — Natural language automation builder — describe a workflow, it builds it.
+- **Make (Integromat)** — Complex multi-step automations with visual flow builder.
+- **Relevance AI** — Build AI agents that execute multi-step business processes.
+
+### Operations
+- **Notion AI** — Meeting notes, project summaries, knowledge base queries.
+- **Fireflies.ai** — Auto-transcribe every meeting, extract action items, sync to CRM.
+
+> **MGC Standard:** We recommend starting with 2-3 AI tools max. Master them before expanding the stack. Tool sprawl is the enemy of adoption.`
+  },
+  {
+    id:6, title:'Client Success Roadmap', tag:'strategy', updated:'Apr 2026',
+    body:`## MGC 90-Day Engagement Framework
+
+### Phase 1: Discovery (Days 1-14)
+- Business audit — revenue model, team structure, tech stack, growth blockers
+- Systems mapping — document all current workflows
+- Competitive analysis — where are you vs. market leaders?
+- **Deliverable:** Findings report + Priority matrix
+
+### Phase 2: Architecture (Days 15-45)
+- Design target-state systems
+- Select and configure technology stack
+- Build automation blueprints
+- **Deliverable:** Systems Architecture Document + Implementation roadmap
+
+### Phase 3: Build (Days 46-75)
+- Execute top-priority automations
+- CRM optimization and data migration
+- Team training and adoption plan
+- **Deliverable:** Live systems + Training documentation
+
+### Phase 4: Optimize (Days 76-90)
+- Measure baseline metrics
+- Identify quick-win improvements
+- Establish ongoing reporting cadence
+- **Deliverable:** 90-day performance report + Next-90 roadmap
+
+## Keys to Engagement Success
+1. **Executive sponsorship** — Someone with authority must own the initiative
+2. **Weekly check-ins** — Velocity dies without accountability
+3. **Data access** — We need real numbers, not estimates
+4. **Implementation speed** — Perfect is the enemy of shipped`
+  }
+];
+
+let kbCurrentTag = 'all';
+let kbCurrentNote = null;
+let kbInitialized = false;
+
+function initKnowledgeBase() {
+  if (kbInitialized) return;
+  kbInitialized = true;
+  renderKbList(KB_NOTES);
+}
+
+function renderKbList(notes) {
+  const list = document.getElementById('kb-note-list');
+  const filtered = kbCurrentTag === 'all' ? notes : notes.filter(n => n.tag === kbCurrentTag);
+  if (filtered.length === 0) {
+    list.innerHTML = `<div style="padding:1.5rem;text-align:center;color:var(--dim);font-size:.8rem">No notes found</div>`;
+    return;
+  }
+  list.innerHTML = filtered.map(n => `
+    <div class="kb-note-item${kbCurrentNote?.id === n.id ? ' active' : ''}" onclick="openKbNote(${n.id})">
+      <div class="kb-note-title">${escHtml(n.title)}</div>
+      <div class="kb-note-meta">${n.tag} · ${n.updated}</div>
+    </div>
+  `).join('');
+}
+
+function openKbNote(id) {
+  kbCurrentNote = KB_NOTES.find(n => n.id === id);
+  if (!kbCurrentNote) return;
+  renderKbList(KB_NOTES);
+  const tagColor = { ai:'rgba(139,92,246,.15)', strategy:'rgba(0,212,255,.1)', crm:'rgba(34,197,94,.1)', growth:'rgba(249,115,22,.1)', automation:'rgba(59,130,246,.1)' };
+  const viewer = document.getElementById('kb-viewer');
+  viewer.innerHTML = `
+    <div class="kb-viewer-title">${escHtml(kbCurrentNote.title)}</div>
+    <div class="kb-viewer-tags">
+      <span class="kb-tag active" style="pointer-events:none">${kbCurrentNote.tag}</span>
+      <span style="font-size:.7rem;color:var(--dim);margin-left:auto">Updated ${kbCurrentNote.updated}</span>
+    </div>
+    <div class="kb-viewer-divider"></div>
+    <div class="kb-viewer-body">${renderMarkdown(kbCurrentNote.body)}</div>
+  `;
+}
+
+function renderMarkdown(md) {
+  return md
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+    .replace(/^\- \[x\] (.+)$/gm, '<li>☑ $1</li>')
+    .replace(/^\- \[ \] (.+)$/gm, '<li>☐ $1</li>')
+    .replace(/^\- (.+)$/gm, '<li>$1</li>')
+    .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, m => `<ul>${m}</ul>`)
+    .replace(/\|(.+)\|\n\|[-| ]+\|\n((?:\|.+\|\n?)*)/g, (_, hdr, rows) => {
+      const ths = hdr.split('|').filter(Boolean).map(h => `<th>${h.trim()}</th>`).join('');
+      const trs = rows.trim().split('\n').map(row => '<tr>' + row.split('|').filter(Boolean).map(c => `<td>${c.trim()}</td>`).join('') + '</tr>').join('');
+      return `<table style="width:100%;border-collapse:collapse;margin:.75rem 0;font-size:.8rem"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
+    })
+    .replace(/```[\w]*\n([\s\S]*?)```/g, '<pre style="background:rgba(1,12,26,.6);border:1px solid rgba(0,212,255,.12);border-radius:8px;padding:.85rem 1rem;font-family:var(--font-mono);font-size:.75rem;overflow-x:auto;margin:.75rem 0"><code>$1</code></pre>')
+    .split('\n\n').map(p => p.startsWith('<') ? p : `<p>${p}</p>`).join('');
+}
+
+function filterKbByTag(tag, btn) {
+  kbCurrentTag = tag;
+  document.querySelectorAll('.kb-tag').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderKbList(KB_NOTES);
+}
+
+function filterKbNotes(q) {
+  const filtered = KB_NOTES.filter(n =>
+    n.title.toLowerCase().includes(q.toLowerCase()) ||
+    n.body.toLowerCase().includes(q.toLowerCase()) ||
+    n.tag.toLowerCase().includes(q.toLowerCase())
+  );
+  renderKbList(filtered);
+}
+
+function openNewNote() {
+  toast('Note editor coming soon — notes sync to Supabase when available', 'info');
+}
+
+// ── RESEARCH HUB ──
+let researchInitialized = false;
+
+function initResearchHub() {
+  if (researchInitialized) return;
+  researchInitialized = true;
+
+  // Load scratch
+  const saved = localStorage.getItem('mgc_scratch');
+  if (saved) document.getElementById('hub-scratch-area').value = saved;
+
+  // Load saved links
+  renderSavedLinks();
+}
+
+function switchHubTab(tab, btn) {
+  document.querySelectorAll('.hub-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.hub-tab-body').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('hub-tab-' + tab).classList.add('active');
+}
+
+function embedNotebookLM() {
+  const url = document.getElementById('hub-nlm-url').value.trim();
+  if (!url || !url.startsWith('http')) { toast('Please enter a valid NotebookLM URL', 'error'); return; }
+  document.getElementById('hub-nlm-placeholder').style.display = 'none';
+  document.getElementById('hub-nlm-frame').style.display = 'block';
+  document.getElementById('hub-nlm-iframe').src = url;
+  localStorage.setItem('mgc_nlm_url', url);
+  toast('Loading NotebookLM workspace…', 'info');
+}
+
+function saveResearchLink() {
+  const url = document.getElementById('hub-new-link-url').value.trim();
+  if (!url || !url.startsWith('http')) { toast('Enter a valid URL', 'error'); return; }
+  const links = JSON.parse(localStorage.getItem('mgc_research_links') || '[]');
+  const title = url.replace(/https?:\/\/(www\.)?/, '').split('/')[0];
+  links.unshift({ url, title, saved: new Date().toLocaleDateString() });
+  localStorage.setItem('mgc_research_links', JSON.stringify(links.slice(0,20)));
+  document.getElementById('hub-new-link-url').value = '';
+  renderSavedLinks();
+  toast('Link saved', 'success');
+}
+
+function renderSavedLinks() {
+  const links = JSON.parse(localStorage.getItem('mgc_research_links') || '[]');
+  const el = document.getElementById('hub-saved-links-list');
+  if (!el) return;
+  if (links.length === 0) {
+    el.innerHTML = `<div style="text-align:center;color:var(--dim);font-size:.8rem;padding:2rem">No saved links yet. Paste a URL above to save it here.</div>`;
+    return;
+  }
+  const favicon = url => `https://www.google.com/s2/favicons?domain=${encodeURIComponent(url)}&sz=32`;
+  el.innerHTML = links.map((l, i) => `
+    <a href="${escHtml(l.url)}" target="_blank" class="hub-saved-link">
+      <img src="${favicon(l.url)}" class="hub-saved-link-icon" width="20" height="20" style="border-radius:4px" onerror="this.style.display='none'">
+      <div style="flex:1;min-width:0">
+        <div class="hub-saved-link-title">${escHtml(l.title)}</div>
+        <div class="hub-saved-link-url">${escHtml(l.url)}</div>
+      </div>
+      <button onclick="event.preventDefault();removeLink(${i})" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:.85rem;flex-shrink:0">✕</button>
+    </a>
+  `).join('');
+}
+
+function removeLink(i) {
+  const links = JSON.parse(localStorage.getItem('mgc_research_links') || '[]');
+  links.splice(i, 1);
+  localStorage.setItem('mgc_research_links', JSON.stringify(links));
+  renderSavedLinks();
+}
+
+let scratchTimeout;
+function saveScratch() {
+  clearTimeout(scratchTimeout);
+  document.getElementById('scratch-saved-status').textContent = 'Saving…';
+  scratchTimeout = setTimeout(() => {
+    localStorage.setItem('mgc_scratch', document.getElementById('hub-scratch-area').value);
+    document.getElementById('scratch-saved-status').textContent = 'Saved ✓';
+  }, 800);
+}
+
+function clearScratch() {
+  if (!confirm('Clear scratchpad?')) return;
+  document.getElementById('hub-scratch-area').value = '';
+  localStorage.removeItem('mgc_scratch');
+  document.getElementById('scratch-saved-status').textContent = 'Cleared';
 }
 
 // ── HELPERS ──
