@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You're In — MGC Global Consulting</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy-deep:#0A1628;--navy:#112A60;--primary:#135997;--cyan:#4AAFCF;
+  --gold:#C9A84C;--gold-light:#F0D98A;--white:#FFFFFF;--off-white:#F8F9FC;
+  --text:#1A2235;--muted:#6B7899;--border:#E2E8F0;--success:#22C55E;
+  --font-display:'Sora',system-ui,sans-serif;--font-body:'Plus Jakarta Sans',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+html{font-size:16px;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--font-body);color:var(--text);background:var(--navy-deep);overflow-x:hidden;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+a{text-decoration:none;color:inherit}
+
+/* ── CONFETTI CANVAS ── */
+canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:0}
+
+/* ── CARD ── */
+.card{background:rgba(255,255,255,0.07);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1.5px solid rgba(255,255,255,0.12);border-radius:24px;max-width:600px;width:100%;padding:3.5rem 3rem;text-align:center;position:relative;z-index:1;box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),inset 0 -1px 0 rgba(0,0,0,0.2),0 32px 80px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.05)}
+@media(max-width:480px){.card{padding:2.5rem 1.75rem}}
+
+/* ── SUCCESS ICON ── */
+.success-ring{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--success),#16a34a);display:flex;align-items:center;justify-content:center;margin:0 auto 2rem;animation:popIn 0.6s var(--ease) both;box-shadow:0 0 0 0 rgba(34,197,94,0.4)}
+.success-ring svg{width:38px;height:38px;stroke:white;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;fill:none}
+@keyframes popIn{0%{opacity:0;transform:scale(0.5)}70%{transform:scale(1.1)}100%{opacity:1;transform:scale(1)}}
+@keyframes ripple{0%{box-shadow:0 0 0 0 rgba(34,197,94,0.4)}100%{box-shadow:0 0 0 24px rgba(34,197,94,0)}}
+.success-ring.ripple{animation:popIn 0.6s var(--ease) both, ripple 1.5s 0.6s ease-out both}
+
+/* ── TEXT ── */
+.eyebrow{display:inline-block;font-size:0.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--primary);margin-bottom:0.75rem}
+h1{font-family:var(--font-display);font-size:clamp(1.75rem,4vw,2.5rem);font-weight:800;color:#ffffff;line-height:1.1;letter-spacing:-0.03em;margin-bottom:1rem;animation:fadeUp 0.7s 0.2s var(--ease) both}
+.subtitle{font-size:1rem;color:rgba(255,255,255,0.7);line-height:1.75;margin-bottom:2rem;animation:fadeUp 0.7s 0.35s var(--ease) both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── NEXT STEPS ── */
+.next-steps{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:1.75rem;margin-bottom:2rem;text-align:left;animation:fadeUp 0.7s 0.5s var(--ease) both;box-shadow:inset 0 1px 0 rgba(255,255,255,0.12)}
+.next-steps-title{font-family:var(--font-display);font-size:0.78rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:1rem}
+.step{display:flex;align-items:flex-start;gap:0.875rem;margin-bottom:1rem}
+.step:last-child{margin-bottom:0}
+.step-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--cyan));color:white;font-family:var(--font-display);font-size:0.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-text{font-size:0.88rem;color:rgba(255,255,255,0.75);line-height:1.55}
+.step-text strong{color:#ffffff;font-weight:700;display:block}
+
+/* ── HIGHLIGHT STRIP ── */
+.highlight{background:linear-gradient(135deg,var(--navy-deep),var(--navy));border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:2rem;display:flex;align-items:center;gap:1rem;text-align:left;animation:fadeUp 0.7s 0.6s var(--ease) both}
+.highlight-icon{font-size:1.5rem;flex-shrink:0}
+.highlight-text{font-size:0.85rem;color:rgba(255,255,255,0.75);line-height:1.55}
+.highlight-text strong{color:var(--cyan);font-weight:700}
+
+/* ── CTAs ── */
+.cta-group{display:flex;gap:0.875rem;flex-wrap:wrap;justify-content:center;animation:fadeUp 0.7s 0.7s var(--ease) both}
+.btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.875rem 1.75rem;border-radius:12px;font-family:var(--font-display);font-weight:700;font-size:0.88rem;letter-spacing:0.02em;transition:all 0.3s var(--ease);cursor:pointer;border:none}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--cyan));color:white}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(19,89,151,0.35)}
+.btn-ghost{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.85);border:1.5px solid rgba(255,255,255,0.18);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.5);color:#ffffff;background:rgba(255,255,255,0.12)}
+
+/* ── FOOTER TEXT ── */
+.card-footer{margin-top:2rem;font-size:0.78rem;color:rgba(255,255,255,0.45);line-height:1.6;animation:fadeUp 0.7s 0.85s var(--ease) both}
+.card-footer a{color:var(--cyan);font-weight:600}
+
+/* ── BG GLOW ── */
+.bg-glow{position:fixed;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(74,175,207,0.15),transparent),radial-gradient(ellipse 40% 40% at 80% 80%,rgba(201,168,76,0.08),transparent);pointer-events:none;z-index:0}
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<canvas id="confetti"></canvas>
+
+<div class="card">
+
+  <div class="success-ring ripple" id="successRing">
+    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+
+  <div class="eyebrow">Payment Confirmed</div>
+  <h1>You're officially in. Welcome to the team. 🎉</h1>
+  <p class="subtitle">
+    Your investment just unlocked something real. We've received your payment and our team is already preparing your onboarding. This is the beginning of building something that works without you — so you can focus on what only you can do.
+  </p>
+
+  <div class="next-steps">
+    <div class="next-steps-title">What happens next</div>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text"><strong>Check your inbox (within 5 min)</strong>A confirmation email is on its way with your receipt and next steps. Check your spam folder if you don't see it.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text"><strong>Book your kickoff session (within 24 hrs)</strong>Our team will reach out to schedule your onboarding session. Or use the button below to grab a time right now.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text"><strong>We get to work</strong>Systems get built, automations get deployed, and your operations start running at a higher level. Usually within the first week.</div>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <div class="highlight-icon">✨</div>
+    <div class="highlight-text">
+      <strong>You just made a great decision.</strong>
+      Every client who has committed to building smarter systems has seen the impact — less manual work, more clarity, more time. You're next.
+    </div>
+  </div>
+
+  <div class="cta-group">
+    <a href="https://calendly.com/mark-mgcglobalconsulting/30min" target="_blank" rel="noopener" class="btn btn-primary">
+      📅 Book Your Kickoff Call
+    </a>
+    <a href="/" class="btn btn-ghost">
+      ← Back to Site
+    </a>
+  </div>
+
+  <p class="card-footer">
+    Questions? Email <a href="mailto:mark@mgcglobalconsulting.com">mark@mgcglobalconsulting.com</a> or call <a href="tel:+14109522846">410.952.2846</a>.<br>
+    MGC Global Consulting LLC · Baltimore, MD 21202
+  </p>
+
+</div>
+
+<script>
+/* ── Confetti ── */
+(function(){
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+  const colors = ['#4AAFCF','#135997','#C9A84C','#22C55E','#F0D98A','#ffffff'];
+  const pieces = Array.from({length: 120}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height - canvas.height,
+    w: 6 + Math.random() * 6,
+    h: 10 + Math.random() * 6,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    rot: Math.random() * Math.PI * 2,
+    vx: (Math.random() - 0.5) * 2,
+    vy: 2 + Math.random() * 3,
+    vr: (Math.random() - 0.5) * 0.15,
+    opacity: 0.8 + Math.random() * 0.2,
+  }));
+
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = p.opacity;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      p.opacity -= 0.003;
+      if (p.y > canvas.height || p.opacity <= 0) {
+        p.y = -20;
+        p.x = Math.random() * canvas.width;
+        p.opacity = 0.8 + Math.random() * 0.2;
+      }
+    });
+    frame++;
+    if (frame < 300) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  setTimeout(draw, 400);
+})();
+
+/* ── Verify Stripe session if session_id param present ── */
+const sessionId = new URLSearchParams(location.search).get('session_id');
+if (sessionId) {
+  document.title = 'Payment Confirmed — MGC Global Consulting';
+}
+</script>
+</body>
+</html>

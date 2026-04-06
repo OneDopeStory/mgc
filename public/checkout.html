@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Standardizing Secure Checkout — MGC Global</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-deep:#0A1628;--navy:#112A60;--primary:#135997;--cyan:#4AAFCF;
+  --gold:#C9A84C;--white:#FFFFFF;--ease:cubic-bezier(0.16,1,0.3,1);
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--navy-deep);color:white;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
+.checkout-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);padding:3rem;border-radius:24px;max-width:480px;width:90%;text-align:center;backdrop-filter:blur(20px)}
+.logo-mark{width:60px;height:60px;background:linear-gradient(135deg,var(--primary),var(--cyan));border-radius:15px;margin:0 auto 1.5rem;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:800;font-size:1.5rem}
+h1{font-family:'Sora',sans-serif;font-size:1.5rem;margin-bottom:1rem}
+p{color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:2rem}
+.spinner{width:40px;height:40px;border:3px solid rgba(74,175,207,0.25);border-top-color:var(--cyan);border-radius:50%;margin:0 auto 2rem;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn-back{color:var(--cyan);text-decoration:none;font-weight:600;font-size:0.9rem}
+</style>
+</head>
+<body>
+<div class="checkout-card">
+  <div class="logo-mark">MGC</div>
+  <h1>Secure Redirect</h1>
+  <p id="checkout-msg">Redirecting you to our secure Stripe checkout portal...</p>
+  <div class="spinner"></div>
+  <a href="services.html" class="btn-back">← Back to Solutions</a>
+</div>
+
+<script>
+// Simulate Stripe Redirect for demo purposes
+// In a real environment, this would call your Netlify function to create a Checkout Session
+document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const service = params.get('service') || 'AI Assessment';
+    const amount = params.get('amount') || '750';
+    
+    document.getElementById('checkout-msg').innerHTML = `Redirecting you to secure checkout for: <br><strong>${service} — $${amount}</strong>`;
+    
+    // Auto-redirect simulation
+    setTimeout(() => {
+        // Here you would normally do:
+        // window.location.href = `https://checkout.stripe.com/pay/...`;
+        alert("Redirecting to Stripe... (Integration Pending API Key Config)");
+        window.location.href = "services.html";
+    }, 2500);
+});
+</script>
+</body>
+</html>
