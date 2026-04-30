@@ -320,3 +320,4 @@ The anon key is embedded in `dashboard.html` — this is intentional and safe. N
 - All nav links must appear on every page with consistent structure
 - Scroll progress bar (`#scrollBar`) must remain on every page
 - `mgc-logo-transparent.png` is the correct logo — circular with drop-shadow, no white fill
+# loyaltysocial
