@@ -230,7 +230,7 @@ img{max-width:100%;display:block}
   margin-bottom:1.75rem;
 }
 .hero-lead{
-  font-size:1.05rem;color:var(--t-mid);line-height:1.8;
+  font-size:1.05rem;color:var(--t-mid);line-height:2.0;letter-spacing:0.015em;
   max-width:490px;margin-bottom:2.5rem;font-weight:300;
 }
 
@@ -1071,15 +1071,155 @@ img{max-width:100%;display:block}
 }
 
 /* === SVG Icon overrides === */
-[class$="-icon"] svg, [class*="-icon "] svg { width:24px;height:24px;transition:transform 0.25s ease,opacity 0.25s ease; }
-[class$="-icon"]:hover svg, [class*="-icon "]:hover svg { transform:scale(1.15);opacity:0.9; }
-.del-icon, .deliv-icon, .fw-icon, .fmt-icon, .highlight-icon,
-.inc-icon, .perk-icon, .pillar-icon, .support-icon,
-.svc-icon, .tier-icon, .ws-icon, .wvc-icon {
-  font-size: 0 !important;
+[class$="-icon"] svg,[class*="-icon "] svg{width:24px;height:24px;transition:transform 0.25s ease,opacity 0.25s ease}
+[class$="-icon"]:hover svg,[class*="-icon "]:hover svg{transform:scale(1.15);opacity:0.9}
+.del-icon,.deliv-icon,.fw-icon,.fmt-icon,.highlight-icon,.inc-icon,.perk-icon,.pillar-icon,.support-icon,.svc-icon,.tier-icon,.ws-icon,.wvc-icon{font-size:0!important}
+.fit-card h3 svg,.good-fit h3 svg{color:#22c55e}
+
+/* ══════════════════════════════════════════════════════
+   HERO TEXTURE OVERLAY
+   ══════════════════════════════════════════════════════ */
+.hero::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:url('assets/Broken-Glass-Effect-PSD.jpg') center/cover no-repeat;
+  opacity:0.04;mix-blend-mode:screen;
 }
-/* Inline check icon in headings/list items */
-.fit-card h3 svg, .good-fit h3 svg { color:#22c55e; }
+html{scroll-padding-top:80px}
+
+/* ══════════════════════════════════════════════════════
+   SECTION BRIDGES — smooth gradient transitions
+   ══════════════════════════════════════════════════════ */
+.section-bridge{
+  height:100px;pointer-events:none;position:relative;z-index:0;
+}
+.sb-hero-trust{background:linear-gradient(180deg,var(--abyss) 0%,var(--deep) 100%)}
+.sb-trust-services{background:linear-gradient(180deg,var(--deep) 0%,var(--abyss) 100%)}
+.sb-services-eco{background:linear-gradient(180deg,var(--abyss) 0%,var(--ocean) 100%)}
+.sb-eco-partner{background:linear-gradient(180deg,var(--ocean) 0%,var(--navy) 100%)}
+.sb-partner-process{background:linear-gradient(180deg,var(--navy) 0%,var(--deep) 100%)}
+.sb-process-precision{background:linear-gradient(180deg,var(--deep) 0%,var(--navy) 100%)}
+.sb-precision-why{background:linear-gradient(180deg,var(--navy) 0%,var(--deep) 100%)}
+.sb-why-booking{background:linear-gradient(180deg,var(--deep) 0%,var(--abyss) 100%)}
+
+/* ══════════════════════════════════════════════════════
+   ENHANCED REVEAL — scale variant for images
+   ══════════════════════════════════════════════════════ */
+.reveal-scale{
+  opacity:0;transform:scale(0.96) translateY(16px);
+  transition:opacity 0.75s var(--ease),transform 0.75s var(--ease);
+}
+.reveal-scale.visible{opacity:1;transform:scale(1) translateY(0)}
+
+/* ══════════════════════════════════════════════════════
+   PARALLAX IMAGE SUPPORT
+   ══════════════════════════════════════════════════════ */
+.parallax-img{
+  will-change:transform;
+  transition:transform 0s linear;
+}
+
+/* ══════════════════════════════════════════════════════
+   PRECISION-BUILT SYSTEMS SECTION
+   ══════════════════════════════════════════════════════ */
+.precision-section{
+  padding:7.5rem 0;
+  background:linear-gradient(180deg,var(--navy) 0%,var(--deep) 100%);
+  position:relative;overflow:hidden;
+}
+.precision-section::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 55% 60% at 80% 50%,rgba(0,71,204,0.12) 0%,transparent 65%),
+    radial-gradient(ellipse 35% 40% at 10% 80%,rgba(255,179,71,0.05) 0%,transparent 55%);
+}
+.precision-grid{
+  max-width:1260px;margin:0 auto;padding:0 2.5rem;
+  display:grid;grid-template-columns:1.1fr 1fr;gap:5rem;align-items:center;
+}
+.precision-img-wrap{
+  position:relative;border-radius:var(--radius);overflow:hidden;
+  box-shadow:0 0 0 1px var(--b-hi),0 30px 80px rgba(0,0,0,0.5),0 0 60px rgba(0,102,255,0.08);
+  transition:box-shadow 0.5s var(--ease);
+}
+.precision-img-wrap:hover{
+  box-shadow:0 0 0 1px rgba(0,187,255,0.5),0 40px 100px rgba(0,0,0,0.6),0 0 80px rgba(0,187,255,0.15);
+}
+.precision-main-img{
+  width:100%;height:420px;object-fit:cover;display:block;
+  transition:transform 0.7s var(--ease);
+}
+.precision-img-wrap:hover .precision-main-img{transform:scale(1.03)}
+.precision-badge{
+  position:absolute;top:1.25rem;left:1.25rem;
+  background:rgba(1,12,26,0.88);backdrop-filter:blur(16px);
+  border:1px solid var(--b-hi);border-radius:var(--pill);
+  padding:.45rem 1.1rem;
+  font-family:var(--mono);font-size:.65rem;font-weight:700;
+  color:var(--cyan);letter-spacing:.1em;text-transform:uppercase;
+}
+.precision-img-glow{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 60%,rgba(0,212,255,0.08) 100%);
+  pointer-events:none;
+}
+.precision-text-col{position:relative;z-index:1}
+.precision-eyebrow{
+  font-family:var(--mono);font-size:.65rem;font-weight:700;
+  letter-spacing:4px;text-transform:uppercase;color:var(--gold);
+  display:inline-flex;align-items:center;gap:.6rem;margin-bottom:1.25rem;
+}
+.precision-eyebrow::before,.precision-eyebrow::after{
+  content:'';width:28px;height:1px;
+  background:linear-gradient(90deg,var(--gold),transparent);opacity:.7;
+}
+.precision-eyebrow::after{background:linear-gradient(90deg,transparent,var(--gold))}
+.precision-h2{
+  font-family:var(--display);font-size:clamp(2rem,3.8vw,3rem);
+  font-weight:800;line-height:1.08;letter-spacing:-0.8px;
+  color:white;margin-bottom:1.25rem;
+}
+.precision-gradient-text{
+  background:linear-gradient(135deg,var(--sky) 0%,var(--cyan) 55%,var(--gold) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.precision-lead{
+  color:var(--t-mid);font-size:.95rem;line-height:1.8;margin-bottom:2.25rem;font-weight:300;
+}
+.precision-stats{display:flex;flex-direction:column;gap:1rem;margin-bottom:2.5rem}
+.precision-stat{
+  display:flex;align-items:center;gap:1.25rem;
+  padding:1rem 1.25rem;
+  background:rgba(4,28,53,0.6);border:1px solid var(--b-mid);
+  border-radius:var(--r-sm);backdrop-filter:blur(8px);
+  transition:border-color 0.35s var(--ease),box-shadow 0.35s var(--ease);
+}
+.precision-stat:hover{border-color:var(--b-hi);box-shadow:0 0 20px rgba(0,187,255,0.08)}
+.ps-num{
+  font-family:var(--display);font-size:1.55rem;font-weight:800;
+  color:var(--cyan);line-height:1;min-width:52px;
+}
+.ps-num span{color:var(--gold);font-size:1rem}
+.ps-info{}
+.ps-label{font-family:var(--ui);font-size:.82rem;font-weight:600;color:white;margin-bottom:.2rem}
+.ps-sub{font-family:var(--body);font-size:.77rem;color:var(--t-dim)}
+@media(max-width:1024px){
+  .precision-grid{grid-template-columns:1fr;gap:3rem}
+  .precision-main-img{height:320px}
+}
+@media(max-width:768px){
+  .precision-main-img{height:240px}
+}
+
+/* ══════════════════════════════════════════════════════
+   COUNT-UP STAT HIGHLIGHT
+   ══════════════════════════════════════════════════════ */
+.counting{color:var(--cyan)!important;transition:color 0.3s}
+
+/* ══════════════════════════════════════════════════════
+   ECOSYSTEM — third small frame
+   ══════════════════════════════════════════════════════ */
+.eco-image-col{grid-template-columns:1fr 1fr}
+.eco-image-frame-sm{height:180px}
 
 </style>
 </head>
@@ -1332,15 +1472,21 @@ img{max-width:100%;display:block}
 </section>
 
 <!-- ══════════════ ECOSYSTEM IMAGE SECTION ══════════════ -->
+<div class="section-bridge sb-services-eco"></div>
 <section class="ecosystem-section reveal">
   <div class="eco-grid">
     <div class="eco-image-col">
-      <div class="eco-image-frame">
-        <img src="assets/logo-integration-hub.jpeg" alt="Unify Your Ecosystem — MGC Global Consulting" class="eco-img eco-img-main">
-        <div class="eco-tag-badge">Automation Intelligence</div>
+      <div class="eco-image-frame reveal-scale">
+        <img src="assets/unified-ecosystem.jpeg" alt="Unified Operations Layer — MGC Global Consulting" class="eco-img eco-img-main parallax-img" data-parallax-speed="0.25">
+        <div class="eco-tag-badge">Unified Operations Layer</div>
       </div>
-      <div class="eco-image-frame eco-image-frame-sm">
-        <img src="assets/unified-ecosystem.jpeg" alt="Connected Ecosystem" class="eco-img">
+      <div class="eco-image-frame eco-image-frame-sm reveal-scale d2">
+        <img src="assets/logo-integration-hub.jpeg" alt="Integration Hub" class="eco-img parallax-img" data-parallax-speed="0.15">
+        <div class="eco-tag-badge" style="font-size:.6rem">Integration Hub</div>
+      </div>
+      <div class="eco-image-frame eco-image-frame-sm reveal-scale d3">
+        <img src="assets/unify-1.png" alt="Data Unification" class="eco-img parallax-img" data-parallax-speed="0.15">
+        <div class="eco-tag-badge" style="font-size:.6rem">Data Unification</div>
       </div>
     </div>
     <div class="eco-text-col">
@@ -1359,6 +1505,7 @@ img{max-width:100%;display:block}
 </section>
 
 <!-- ══════════════ PARTNER TEASER ══════════════ -->
+<div class="section-bridge sb-eco-partner"></div>
 <section class="partner-teaser-section reveal">
   <div class="container">
     <div class="section-header" style="margin-bottom:3rem">
@@ -1367,18 +1514,18 @@ img{max-width:100%;display:block}
       <p>Join the MGC Partner & Referral Program — earn ongoing commissions, not one-time payouts. Starter, Pro, and Elite tiers available.</p>
     </div>
     <div class="partner-image-grid">
-      <div class="partner-img-card">
-        <img src="assets/get-paid-image.png" alt="Member Referral Program — Get Paid for Every Connection" class="partner-img">
+      <div class="partner-img-card reveal-scale">
+        <img src="assets/get-paid-image.png" alt="You Refer, We Pay — Automated Monthly Payouts" class="partner-img parallax-img" data-parallax-speed="0.2">
         <div class="partner-img-overlay">
-          <div class="pio-label">Member Referral</div>
-          <div class="pio-sub">Starter · Pro · Elite</div>
+          <div class="pio-label">You Refer, We Pay</div>
+          <div class="pio-sub">Automated Monthly Payouts</div>
         </div>
       </div>
-      <div class="partner-img-card">
-        <img src="assets/mgc-screw-graphic.jpeg" alt="Earn Ongoing Commission — Partner Program" class="partner-img">
+      <div class="partner-img-card reveal-scale d2">
+        <img src="assets/earn-commission.jpeg" alt="Partner Commissions — Up to 20% Recurring" class="partner-img parallax-img" data-parallax-speed="0.2">
         <div class="partner-img-overlay">
-          <div class="pio-label">Recurring Commission</div>
-          <div class="pio-sub">Not One-Time Payouts</div>
+          <div class="pio-label">Partner Commissions</div>
+          <div class="pio-sub">Up to 20% Recurring</div>
         </div>
       </div>
     </div>
@@ -1389,6 +1536,7 @@ img{max-width:100%;display:block}
 </section>
 
 <!-- ══════════════ PROCESS ══════════════ -->
+<div class="section-bridge sb-partner-process"></div>
 <section class="section process-section" id="process">
   <div class="container">
     <div class="section-header reveal">
@@ -1421,7 +1569,60 @@ img{max-width:100%;display:block}
   </div>
 </section>
 
+<!-- ══════════════ PRECISION-BUILT SYSTEMS ══════════════ -->
+<div class="section-bridge sb-process-precision"></div>
+<section class="precision-section" id="precision">
+  <div class="precision-grid">
+    <div class="precision-img-wrap reveal-scale">
+      <img src="assets/mgc-screw-graphic.jpeg"
+           alt="Precision-built systems — MGC Global Consulting"
+           class="precision-main-img parallax-img" data-parallax-speed="0.3">
+      <div class="precision-badge">Built to Spec</div>
+      <div class="precision-img-glow"></div>
+    </div>
+
+    <div class="precision-text-col reveal">
+      <div class="precision-eyebrow">Operational Excellence</div>
+      <h2 class="precision-h2">
+        Engineered for the<br>
+        <span class="precision-gradient-text">Best in the US</span>
+      </h2>
+      <p class="precision-lead">
+        MGC Global Consulting builds AI and automation systems with the same precision that engineers build infrastructure — architected to spec, stress-tested, documented, and built to outlast the engagement. We don't prototype. We deliver.
+      </p>
+      <div class="precision-stats">
+        <div class="precision-stat">
+          <div class="ps-num">47<span>+</span></div>
+          <div class="ps-info">
+            <div class="ps-label">Automation Workflows Deployed</div>
+            <div class="ps-sub">Live in client stacks across the United States</div>
+          </div>
+        </div>
+        <div class="precision-stat">
+          <div class="ps-num">100<span>%</span></div>
+          <div class="ps-info">
+            <div class="ps-label">Documented Handoffs</div>
+            <div class="ps-sub">Every system we build comes with full runbooks &amp; training</div>
+          </div>
+        </div>
+        <div class="precision-stat">
+          <div class="ps-num">6</div>
+          <div class="ps-info">
+            <div class="ps-label">Integrated Service Pillars</div>
+            <div class="ps-sub">AI Strategy · Automation · CRM · Systems · Training · Retainer</div>
+          </div>
+        </div>
+      </div>
+      <a href="#booking" class="btn-primary" style="display:inline-flex;align-items:center;gap:.7rem;padding:.9rem 2rem;font-size:.82rem">
+        <span>Start Your Assessment</span>
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- ══════════════ WHY MGC ══════════════ -->
+<div class="section-bridge sb-precision-why"></div>
 <section class="section why-section" id="why-mgc">
   <div class="container">
     <div class="section-header reveal">
@@ -1467,7 +1668,9 @@ img{max-width:100%;display:block}
       <div class="why-visual-wrap">
         <img src="assets/mgc-global-image-2.jpg" alt="MGC Global Consulting — Notion, Globe, Team, Conversion Systems" class="why-visual-img">
         <div class="why-visual-caption">
-          <span class="wvc-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+          <span class="wvc-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </span>
           <span>From Notion-powered CRMs to world-class conversion systems — we build it all in one cohesive stack.</span>
         </div>
       </div>
@@ -1497,6 +1700,7 @@ img{max-width:100%;display:block}
 <!-- ══════════════ BOOKING / CALENDAR ══════════════ -->
 <!-- ZAP-01: Form → Slack #mgc-leads + Sheets LEADS tab + Gmail   -->
 <!-- ZAP-02: Booking → Slack #mgc-bookings + Gmail + Sheets       -->
+<div class="section-bridge sb-why-booking"></div>
 <section class="booking-section" id="booking">
   <div class="container">
     <div class="booking-grid">
@@ -1698,13 +1902,13 @@ img{max-width:100%;display:block}
 <div id="mgc-agent">
   <div class="agent-bubble" id="agentBubble" title="MGC Navigator — Ask me anything">
     <div class="agent-pulse"></div>
-    <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><line x1="8" y1="15" x2="8" y2="17"/><line x1="16" y1="15" x2="16" y2="17"/><line x1="9" y1="21" x2="9" y2="21"/><line x1="15" y1="21" x2="15" y2="21"/><path d="M7 11V9a5 5 0 0 1 10 0v2"/></svg></span>
+    <span style="display:flex;align-items:center;justify-content:center;width:28px;height:28px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M9 11V7a3 3 0 0 1 6 0v4"/><circle cx="9" cy="16" r="1" fill="currentColor"/><circle cx="15" cy="16" r="1" fill="currentColor"/><path d="M12 3v2"/></svg></span>
     <div class="agent-notif">1</div>
   </div>
   <div class="agent-panel" id="agentPanel">
     <div class="agent-panel-head">
       <div class="agent-title">
-        <div class="agent-avatar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><line x1="8" y1="15" x2="8" y2="17"/><line x1="16" y1="15" x2="16" y2="17"/><line x1="9" y1="21" x2="9" y2="21"/><line x1="15" y1="21" x2="15" y2="21"/><path d="M7 11V9a5 5 0 0 1 10 0v2"/></svg></div>
+        <div class="agent-avatar" style="display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M9 11V7a3 3 0 0 1 6 0v4"/><circle cx="9" cy="16" r="1" fill="currentColor"/><circle cx="15" cy="16" r="1" fill="currentColor"/><path d="M12 3v2"/></svg></div>
         <div>
           <div class="agent-name">MGC Navigator</div>
           <div class="agent-status">Online · Ready to help</div>
@@ -1716,10 +1920,10 @@ img{max-width:100%;display:block}
       <div class="agent-msg bot">Hi! I'm the MGC Navigator. I can help you explore our services, find pricing, or get to the right page fast. What are you looking for?</div>
     </div>
     <div class="agent-quicklinks">
-      <span class="agent-ql" data-action="pricing">💰 Pricing</span>
-      <span class="agent-ql" data-action="services">🛠 Services</span>
-      <span class="agent-ql" data-action="book">📅 Schedule a Session</span>
-      <span class="agent-ql" data-action="portal">🔐 Client Portal</span>
+      <span class="agent-ql" data-action="pricing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="12" height="12"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Pricing</span>
+      <span class="agent-ql" data-action="services"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="12" height="12"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg> Services</span>
+      <span class="agent-ql" data-action="book"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="12" height="12"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Schedule</span>
+      <span class="agent-ql" data-action="portal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="12" height="12"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Client Portal</span>
     </div>
     <div class="agent-input-row">
       <input class="agent-input" id="agentInput" type="text" placeholder="Ask me anything...">
@@ -1757,11 +1961,47 @@ function closeMenu() {
   document.body.style.overflow = '';
 }
 
-// ── 4. Scroll Reveal ───────────────────────────────────────────────────────
+// ── 4. Scroll Reveal (includes reveal-scale) ───────────────────────────────
 const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
 }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el => observer.observe(el));
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r,.reveal-scale').forEach(el => observer.observe(el));
+
+// ── 4b. Count-Up Animation ─────────────────────────────────────────────────
+function countUp(el, target, suffix, duration) {
+  let start = 0;
+  const step = Math.ceil(target / (duration / 16));
+  const timer = setInterval(() => {
+    start = Math.min(start + step, target);
+    el.innerHTML = start + '<span>' + suffix + '</span>';
+    if (start >= target) clearInterval(timer);
+  }, 16);
+}
+const countObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    const text = el.textContent;
+    const num = parseInt(text.replace(/\D/g,''), 10);
+    const suffix = el.querySelector('span') ? el.querySelector('span').textContent : '';
+    if (!isNaN(num) && num > 0) countUp(el, num, suffix, 1200);
+    countObserver.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.h-stat-num,.stat-num').forEach(el => countObserver.observe(el));
+
+// ── 4c. Scroll Parallax ────────────────────────────────────────────────────
+const parallaxImgs = document.querySelectorAll('.parallax-img');
+function applyParallax() {
+  parallaxImgs.forEach(img => {
+    const rect = img.getBoundingClientRect();
+    const speed = parseFloat(img.dataset.parallaxSpeed || '0.2');
+    const offset = ((rect.top + rect.height / 2) / window.innerHeight - 0.5) * speed * 80;
+    img.style.transform = 'translateY(' + offset.toFixed(1) + 'px)';
+  });
+}
+window.addEventListener('scroll', applyParallax, { passive: true });
+applyParallax();
 
 // ── 5. Service Filter Pills ────────────────────────────────────────────────
 document.querySelectorAll('.filter-pill').forEach(pill => {
@@ -1907,21 +2147,21 @@ agentClose.addEventListener('click', () => {
 
 // Knowledge base for navigation
 const MGC_KB = [
-  { keywords: ['price','pricing','cost','how much','rate','fee','invest'], response: '💰 Our services start at $750 for the AI Readiness Assessment. Memberships run $199–$1,299/mo. Want to see all options?', link: 'membership.html', linkText: 'View Membership Plans' },
-  { keywords: ['ai','consulting','strategy','roadmap','assess'], response: '🧠 Our AI Consulting & Strategy service includes readiness assessments, 90-day roadmaps, and ROI modeling.', link: 'ai-consulting.html', linkText: 'View AI Consulting' },
-  { keywords: ['automat','zapier','workflow','n8n','slack'], response: '⚡ Our Automation Architecture service builds multi-platform workflows that eliminate manual work. Starter pack from $1,500.', link: 'automation.html', linkText: 'View Automation Services' },
-  { keywords: ['crm','hubspot','notion','pipeline','lead'], response: '📊 We build custom CRM systems in Notion and HubSpot — audit from $950, full build from $3,800.', link: 'crm-optimization.html', linkText: 'View CRM Services' },
-  { keywords: ['train','workshop','team','educat','learn'], response: '🎓 Our AI Workshops help teams at any level adopt AI practically, not theoretically.', link: 'ai-workshops.html', linkText: 'View Workshops' },
-  { keywords: ['retainer','ongoing','support','membership','member'], response: '🤝 We offer Starter ($199), Pro ($499), and Elite ($1,299) membership tiers for ongoing support.', link: 'membership.html', linkText: 'View Membership' },
-  { keywords: ['book','call','schedule','calendar','meeting','appoint'], response: '📅 Scroll down to pick a date on our calendar and submit a session request — we respond within 24 hours!', scrollTo: '#booking' },
-  { keywords: ['portal','dashboard','login','member area','client'], response: '🔐 Client Portal is your hub for deliverables, invoices, and AI agent status.', link: 'dashboard.html', linkText: 'Go to Client Portal' },
-  { keywords: ['pay','invoice','checkout','purchase','buy'], response: '💳 Ready to invest? Head to our checkout or request an invoice.', link: 'checkout.html', linkText: 'Go to Checkout' },
-  { keywords: ['contact','email','phone','reach'], response: '📬 Email us at info@mgcglobalconsulting.com or call 410-952-2846. We respond within 24 hours.', scrollTo: '#booking' },
+  { keywords: ['price','pricing','cost','how much','rate','fee','invest'], response: 'Our services start at $750 for the AI Readiness Assessment. Memberships run $199–$1,299/mo. Want to see all options?', link: 'membership.html', linkText: 'View Membership Plans' },
+  { keywords: ['ai','consulting','strategy','roadmap','assess'], response: 'Our AI Consulting & Strategy service includes readiness assessments, 90-day roadmaps, and ROI modeling.', link: 'ai-consulting.html', linkText: 'View AI Consulting' },
+  { keywords: ['automat','zapier','workflow','n8n','slack'], response: 'Our Automation Architecture service builds multi-platform workflows that eliminate manual work. Starter pack from $1,500.', link: 'automation.html', linkText: 'View Automation Services' },
+  { keywords: ['crm','hubspot','notion','pipeline','lead'], response: 'We build custom CRM systems in Notion and HubSpot — audit from $950, full build from $3,800.', link: 'crm-optimization.html', linkText: 'View CRM Services' },
+  { keywords: ['train','workshop','team','educat','learn'], response: 'Our AI Workshops help teams at any level adopt AI practically, not theoretically.', link: 'ai-workshops.html', linkText: 'View Workshops' },
+  { keywords: ['retainer','ongoing','support','membership','member'], response: 'We offer Starter ($199), Pro ($499), and Elite ($1,299) membership tiers for ongoing support.', link: 'membership.html', linkText: 'View Membership' },
+  { keywords: ['book','call','schedule','calendar','meeting','appoint'], response: 'Scroll down to pick a date on our calendar and submit a session request — we respond within 24 hours!', scrollTo: '#booking' },
+  { keywords: ['portal','dashboard','login','member area','client'], response: 'Client Portal is your hub for deliverables, invoices, and AI agent status.', link: 'dashboard.html', linkText: 'Go to Client Portal' },
+  { keywords: ['pay','invoice','checkout','purchase','buy'], response: 'Ready to invest? Head to our checkout or request an invoice.', link: 'checkout.html', linkText: 'Go to Checkout' },
+  { keywords: ['contact','email','phone','reach'], response: 'Email us at info@mgcglobalconsulting.com or call 410-952-2846. We respond within 24 hours.', scrollTo: '#booking' },
 ];
 
 function agentRespond(userText) {
   const txt = userText.toLowerCase();
-  let response = '🤔 I\'m not sure about that one. Try asking about our pricing, services, or how to book a call — or email us at info@mgcglobalconsulting.com';
+  let response = 'I\'m not sure about that one. Try asking about our pricing, services, or how to book a call — or email us at info@mgcglobalconsulting.com';
   let link = null, linkText = null, scrollTo = null;
 
   for (const entry of MGC_KB) {
