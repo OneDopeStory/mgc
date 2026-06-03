@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — MGC Global Consulting</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --abyss:#010C1A;--deep:#020F20;--navy:#041428;--ocean:#061D35;
+  --blue:#0A3A6B;--mid:#0E5494;--sky:#1A8FD1;--cyan:#00D4FF;
+  --gold:#FFB347;--gold-dark:#C9892A;
+  --white:#FFFFFF;--muted:rgba(255,255,255,0.55);--dim:rgba(255,255,255,0.25);
+  --success:#22C55E;--warning:#F59E0B;--error:#EF4444;--info:#3B82F6;
+  --surface:rgba(6,29,53,0.8);--border:rgba(0,212,255,0.12);
+  --font-display:'Raleway',sans-serif;--font-body:'Plus Jakarta Sans',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --sidebar-w:240px;--radius:14px;
+}
+html{font-size:15px;height:100%}
+body{font-family:var(--font-body);color:white;background:var(--abyss);overflow-x:hidden;-webkit-font-smoothing:antialiased;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(0,212,255,0.05),transparent),radial-gradient(ellipse 60% 50% at 80% 80%,rgba(14,84,148,0.08),transparent);pointer-events:none;z-index:0}
+
+/* ─── AUTH ─── */
+#auth-screen{position:fixed;inset:0;background:var(--abyss);display:flex;align-items:center;justify-content:center;z-index:200;padding:1rem}
+.auth-card{position:relative;width:100%;max-width:400px;background:rgba(6,29,53,0.9);border:1px solid var(--border);border-radius:24px;padding:2.5rem;backdrop-filter:blur(24px)}
+.auth-logo{display:flex;align-items:center;gap:.85rem;margin-bottom:2rem;justify-content:center}
+.auth-logo-img{width:48px;height:48px;border-radius:50%;object-fit:contain;filter:drop-shadow(0 0 12px rgba(0,212,255,.5))}
+.auth-logo-text{font-family:var(--font-display);font-size:1rem;font-weight:800;letter-spacing:-.01em}
+.auth-logo-text .sub{font-size:.68rem;color:rgba(0,212,255,.7);letter-spacing:.08em;text-transform:uppercase;font-weight:600;display:block;margin-top:.1rem}
+.form-group{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem}
+.form-label{font-size:.74rem;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.form-input{background:rgba(1,12,26,.7);border:1px solid rgba(0,212,255,.15);border-radius:10px;padding:.75rem 1rem;color:white;font-family:var(--font-body);font-size:.875rem;outline:none;transition:border-color .2s;width:100%}
+.form-input:focus{border-color:rgba(0,212,255,.45)}
+.form-input::placeholder{color:var(--dim)}
+.btn-auth{width:100%;padding:.8rem;border-radius:10px;font-family:var(--font-display);font-weight:800;font-size:.875rem;cursor:pointer;transition:all .2s;border:none;background:linear-gradient(135deg,var(--sky),var(--cyan));color:var(--abyss);margin-top:.5rem}
+.btn-auth:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,212,255,.25)}
+.auth-error{padding:.7rem 1rem;border-radius:8px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);color:#fca5a5;font-size:.8rem;display:none;margin-top:.75rem}
+.auth-error.show{display:block}
+
+/* ─── APP LAYOUT ─── */
+#admin-app{display:none;min-height:100vh}
+#admin-app.show{display:flex}
+
+/* ─── SIDEBAR ─── */
+.a-sidebar{width:var(--sidebar-w);background:rgba(4,20,40,.9);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;backdrop-filter:blur(20px)}
+.a-sidebar-head{padding:1.25rem 1.25rem 1rem;border-bottom:1px solid var(--border)}
+.a-logo{display:flex;align-items:center;gap:.7rem}
+.a-logo img{width:32px;height:32px;border-radius:50%;object-fit:contain}
+.a-logo-name{font-family:var(--font-display);font-size:.8rem;font-weight:800;letter-spacing:-.01em;line-height:1.2}
+.a-logo-name .sub{font-size:.62rem;color:rgba(255,179,71,.7);letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.a-nav{flex:1;overflow-y:auto;padding:.75rem .75rem}
+.a-nav-label{font-size:.62rem;font-weight:700;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;padding:.5rem .6rem .3rem;margin-top:.5rem}
+.a-nav-item{display:flex;align-items:center;gap:.65rem;padding:.55rem .75rem;border-radius:9px;font-size:.82rem;font-weight:600;color:var(--muted);cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:all .2s;position:relative}
+.a-nav-item:hover{background:rgba(0,212,255,.06);color:rgba(255,255,255,.85)}
+.a-nav-item.active{background:rgba(0,212,255,.1);color:white;font-weight:700}
+.a-nav-item svg{width:16px;height:16px;flex-shrink:0;opacity:.7}
+.a-nav-item.active svg{opacity:1}
+.a-badge{position:absolute;right:.65rem;background:var(--error);color:white;font-size:.58rem;font-weight:800;padding:.1rem .35rem;border-radius:10px;min-width:18px;text-align:center}
+.a-badge.gold{background:var(--gold-dark);color:var(--abyss)}
+.a-sidebar-foot{padding:.85rem 1rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:.65rem}
+.a-user-name{font-size:.75rem;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.a-sign-out{font-size:.7rem;color:var(--muted);cursor:pointer;background:none;border:none;flex-shrink:0;padding:.2rem .4rem;border-radius:6px;transition:color .2s}
+.a-sign-out:hover{color:var(--error)}
+
+/* ─── MAIN ─── */
+.a-main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.a-topbar{position:sticky;top:0;z-index:50;background:rgba(1,12,26,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:.85rem 2rem;display:flex;align-items:center;justify-content:space-between}
+.a-topbar-title{font-family:var(--font-display);font-size:.95rem;font-weight:800;letter-spacing:-.01em}
+.a-topbar-right{display:flex;align-items:center;gap:.75rem;font-size:.75rem;color:var(--muted)}
+.a-content{padding:2rem;display:flex;flex-direction:column;gap:1.5rem;flex:1}
+
+/* ─── PANELS ─── */
+.a-panel{display:none;flex-direction:column;gap:1.5rem;animation:fadeUp .3s var(--ease)}
+.a-panel.active{display:flex}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── CARDS ─── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;backdrop-filter:blur(12px)}
+.card-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-family:var(--font-display);font-size:.85rem;font-weight:800;letter-spacing:-.01em}
+.card-body{padding:1.5rem}
+
+/* ─── KPI ─── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:rgba(6,29,53,.55);backdrop-filter:blur(20px);border:1px solid rgba(0,212,255,.12);border-radius:var(--radius);padding:1.25rem 1.5rem}
+.kpi-label{font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.5rem}
+.kpi-value{font-family:var(--font-display);font-size:1.9rem;font-weight:900;letter-spacing:-.03em;line-height:1}
+.kpi-sub{font-size:.72rem;color:var(--muted);margin-top:.3rem}
+
+/* ─── TABLE ─── */
+.a-table-wrap{overflow-x:auto}
+.a-table{width:100%;border-collapse:collapse;font-size:.8rem}
+.a-table th{font-family:var(--font-display);font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:.65rem 1rem;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+.a-table td{padding:.7rem 1rem;border-bottom:1px solid rgba(0,212,255,.06);vertical-align:middle}
+.a-table tr:last-child td{border-bottom:none}
+.a-table tr:hover td{background:rgba(0,212,255,.03)}
+.a-table tbody tr{transition:background .15s}
+
+/* ─── STATUS PILLS ─── */
+.pill{display:inline-flex;align-items:center;padding:.2rem .6rem;border-radius:20px;font-size:.68rem;font-weight:700;white-space:nowrap}
+.pill-green{background:rgba(34,197,94,.12);color:#86efac;border:1px solid rgba(34,197,94,.2)}
+.pill-gold{background:rgba(255,179,71,.12);color:#fcd34d;border:1px solid rgba(255,179,71,.2)}
+.pill-blue{background:rgba(59,130,246,.12);color:#93c5fd;border:1px solid rgba(59,130,246,.2)}
+.pill-red{background:rgba(239,68,68,.12);color:#fca5a5;border:1px solid rgba(239,68,68,.2)}
+.pill-gray{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid rgba(255,255,255,.1)}
+.pill-cyan{background:rgba(0,212,255,.1);color:var(--cyan);border:1px solid rgba(0,212,255,.2)}
+
+/* ─── FORM ELEMENTS ─── */
+.field-group{display:flex;flex-direction:column;gap:.35rem}
+.field-label{font-size:.72rem;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.field-input{background:rgba(1,12,26,.7);border:1px solid rgba(0,212,255,.15);border-radius:10px;padding:.65rem 1rem;color:white;font-family:var(--font-body);font-size:.875rem;outline:none;transition:border-color .2s;width:100%}
+.field-input:focus{border-color:rgba(0,212,255,.45)}
+.field-input::placeholder{color:var(--dim)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:680px){.g2{grid-template-columns:1fr}}
+
+/* ─── BUTTONS ─── */
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.6rem 1.25rem;background:linear-gradient(135deg,var(--sky),var(--cyan));color:var(--abyss);border:none;border-radius:9px;font-family:var(--font-display);font-weight:800;font-size:.78rem;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,212,255,.25)}
+.btn-sm{padding:.35rem .8rem;font-size:.7rem;border-radius:7px}
+.btn-ghost{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .75rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:var(--muted);font-size:.72rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-ghost:hover{background:rgba(255,255,255,.09);color:white}
+.btn-danger{padding:.35rem .8rem;font-size:.7rem;border-radius:7px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.25);color:#fca5a5;font-family:var(--font-display);font-weight:700;cursor:pointer;transition:all .2s}
+.btn-danger:hover{background:rgba(239,68,68,.25)}
+
+/* ─── SEARCH BAR ─── */
+.a-search{display:flex;align-items:center;gap:.6rem;background:rgba(1,12,26,.6);border:1px solid var(--border);border-radius:10px;padding:.45rem .85rem}
+.a-search svg{width:14px;height:14px;color:var(--muted);flex-shrink:0}
+.a-search input{background:none;border:none;outline:none;color:white;font-family:var(--font-body);font-size:.82rem;flex:1;min-width:0}
+.a-search input::placeholder{color:var(--dim)}
+
+/* ─── EMPTY STATE ─── */
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--muted)}
+.empty-state svg{width:36px;height:36px;margin:0 auto .75rem;display:block;opacity:.35}
+.empty-state-title{font-family:var(--font-display);font-size:.88rem;font-weight:700;margin-bottom:.35rem;color:rgba(255,255,255,.5)}
+
+/* ─── DETAIL DRAWER ─── */
+#drawer-overlay{position:fixed;inset:0;background:rgba(1,12,26,.7);z-index:300;display:none;backdrop-filter:blur(4px)}
+#drawer-overlay.show{display:block}
+#drawer{position:fixed;top:0;right:-520px;width:520px;max-width:100vw;bottom:0;background:rgba(4,20,40,.97);border-left:1px solid var(--border);z-index:301;overflow-y:auto;transition:right .3s var(--ease);display:flex;flex-direction:column}
+#drawer.open{right:0}
+.drawer-head{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:inherit;z-index:1}
+.drawer-title{font-family:var(--font-display);font-size:.95rem;font-weight:800}
+.drawer-close{background:none;border:none;color:var(--muted);cursor:pointer;padding:.2rem;border-radius:6px;transition:color .2s;font-size:1.2rem;line-height:1}
+.drawer-close:hover{color:white}
+.drawer-body{padding:1.5rem;display:flex;flex-direction:column;gap:1.25rem;flex:1}
+.drawer-field{display:flex;flex-direction:column;gap:.25rem}
+.drawer-field-label{font-size:.68rem;font-weight:700;color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
+.drawer-field-value{font-size:.85rem;color:rgba(255,255,255,.9);line-height:1.5}
+.drawer-field-value.mono{font-family:var(--font-mono);font-size:.78rem}
+.drawer-actions{display:flex;gap:.65rem;flex-wrap:wrap;padding:1rem 1.5rem;border-top:1px solid var(--border)}
+
+/* ─── TOAST ─── */
+#toast-container{position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;display:flex;flex-direction:column;gap:.5rem;pointer-events:none}
+.toast{pointer-events:auto;padding:.7rem 1.1rem;border-radius:10px;font-size:.8rem;font-weight:600;backdrop-filter:blur(16px);animation:toastIn .25s var(--ease);display:flex;align-items:center;gap:.5rem;max-width:320px}
+.toast-success{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.25);color:#86efac}
+.toast-error{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.25);color:#fca5a5}
+.toast-info{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.25);color:#93c5fd}
+@keyframes toastIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+
+/* ─── MSG THREAD VIEWER ─── */
+.msg-card{padding:1rem 1.25rem;border-radius:10px;background:rgba(6,29,53,.6);border:1px solid var(--border);cursor:pointer;transition:all .2s;display:flex;flex-direction:column;gap:.35rem}
+.msg-card:hover{border-color:rgba(0,212,255,.25);background:rgba(6,29,53,.85)}
+.msg-card.unread{border-left:3px solid var(--cyan)}
+.msg-card-top{display:flex;align-items:center;gap:.75rem;justify-content:space-between}
+.msg-sender{font-family:var(--font-display);font-size:.82rem;font-weight:800}
+.msg-date{font-size:.68rem;color:var(--muted)}
+.msg-subject{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.8)}
+.msg-preview{font-size:.75rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+</style>
+</head>
+<body>
+
+<!-- ── AUTH ── -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <img class="auth-logo-img" src="assets/mgc-logo-transparent.png" alt="MGC" onerror="this.style.display='none'">
+      <div class="auth-logo-text">
+        MGC Global Consulting
+        <span class="sub">Admin Portal</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" type="email" id="auth-email" placeholder="admin@mgcglobalconsulting.com" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')adminLogin()">
+    </div>
+    <button class="btn-auth" onclick="adminLogin()">Sign In to Admin</button>
+    <div class="auth-error" id="auth-err"></div>
+  </div>
+</div>
+
+<!-- ── ADMIN APP ── -->
+<div id="admin-app">
+
+  <!-- Sidebar -->
+  <nav class="a-sidebar">
+    <div class="a-sidebar-head">
+      <div class="a-logo">
+        <img src="assets/mgc-logo-transparent.png" alt="MGC" width="32" height="32" style="border-radius:50%;object-fit:contain" onerror="this.style.display='none'">
+        <div class="a-logo-name">MGC Admin<span class="sub">Staff Portal</span></div>
+      </div>
+    </div>
+    <div class="a-nav">
+      <div class="a-nav-label">Overview</div>
+      <button class="a-nav-item active" data-panel="overview" onclick="showAdminPanel('overview',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </button>
+
+      <div class="a-nav-label">Clients</div>
+      <button class="a-nav-item" data-panel="clients" onclick="showAdminPanel('clients',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Clients
+        <span class="a-badge gold" id="badge-clients" style="display:none">0</span>
+      </button>
+      <button class="a-nav-item" data-panel="projects" onclick="showAdminPanel('projects',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Projects
+      </button>
+      <button class="a-nav-item" data-panel="invoices" onclick="showAdminPanel('invoices',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Invoices
+      </button>
+
+      <div class="a-nav-label">Inbox</div>
+      <button class="a-nav-item" data-panel="messages" onclick="showAdminPanel('messages',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Messages
+        <span class="a-badge" id="badge-messages" style="display:none">0</span>
+      </button>
+      <button class="a-nav-item" data-panel="uploads" onclick="showAdminPanel('uploads',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Uploads
+        <span class="a-badge" id="badge-uploads" style="display:none">0</span>
+      </button>
+      <button class="a-nav-item" data-panel="questionnaires" onclick="showAdminPanel('questionnaires',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Questionnaires
+        <span class="a-badge" id="badge-q" style="display:none">0</span>
+      </button>
+
+      <div class="a-nav-label">Workspace</div>
+      <button class="a-nav-item" data-panel="bookings" onclick="showAdminPanel('bookings',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Bookings
+      </button>
+    </div>
+    <div class="a-sidebar-foot">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="rgba(0,212,255,.5)" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <div class="a-user-name" id="admin-email-label">—</div>
+      <button class="a-sign-out" onclick="adminSignOut()">Sign out</button>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="a-main">
+    <div class="a-topbar">
+      <div class="a-topbar-title" id="topbar-title">Dashboard</div>
+      <div class="a-topbar-right">
+        <span id="topbar-clock"></span>
+        <button class="btn-ghost btn-sm" onclick="refreshAll()">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.5-8.5L23 10"/></svg>
+          Refresh
+        </button>
+      </div>
+    </div>
+
+    <div class="a-content">
+
+      <!-- ── OVERVIEW ── -->
+      <div class="a-panel active" id="panel-overview">
+        <div class="kpi-grid" id="kpi-grid">
+          <div class="kpi"><div class="kpi-label">Total Clients</div><div class="kpi-value" id="kpi-clients">—</div><div class="kpi-sub">Registered portal accounts</div></div>
+          <div class="kpi"><div class="kpi-label">Active Projects</div><div class="kpi-value" id="kpi-projects">—</div><div class="kpi-sub">In progress</div></div>
+          <div class="kpi"><div class="kpi-label">Unread Messages</div><div class="kpi-value" id="kpi-messages">—</div><div class="kpi-sub">Awaiting response</div></div>
+          <div class="kpi"><div class="kpi-label">Pending Invoices</div><div class="kpi-value" id="kpi-invoices">—</div><div class="kpi-sub">Unpaid or overdue</div></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+          <!-- Recent Messages -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Recent Messages</div>
+              <button class="btn-ghost btn-sm" onclick="showAdminPanel('messages',null)">View All</button>
+            </div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:.6rem" id="overview-messages">
+              <div class="empty-state"><div class="empty-state-title">Loading…</div></div>
+            </div>
+          </div>
+
+          <!-- Recent Uploads -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Recent Uploads</div>
+              <button class="btn-ghost btn-sm" onclick="showAdminPanel('uploads',null)">View All</button>
+            </div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:.6rem" id="overview-uploads">
+              <div class="empty-state"><div class="empty-state-title">Loading…</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Questionnaires -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">New Business Profiles</div>
+            <button class="btn-ghost btn-sm" onclick="showAdminPanel('questionnaires',null)">View All</button>
+          </div>
+          <div class="card-body" id="overview-questionnaires">
+            <div class="empty-state"><div class="empty-state-title">Loading…</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CLIENTS ── -->
+      <div class="a-panel" id="panel-clients">
+        <div style="display:flex;align-items:center;gap:1rem">
+          <div class="a-search" style="flex:1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Search clients…" oninput="filterClients(this.value)">
+          </div>
+        </div>
+        <div class="card">
+          <div class="a-table-wrap">
+            <table class="a-table">
+              <thead><tr>
+                <th>Name</th><th>Company</th><th>Email</th><th>Tier</th><th>Joined</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="clients-tbody">
+                <tr><td colspan="6"><div class="empty-state"><div class="empty-state-title">Loading…</div></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PROJECTS ── -->
+      <div class="a-panel" id="panel-projects">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
+          <div class="a-search" style="flex:1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Search projects…" oninput="filterProjects(this.value)">
+          </div>
+          <button class="btn-primary btn-sm" onclick="openNewProject()">+ New Project</button>
+        </div>
+        <div class="card">
+          <div class="a-table-wrap">
+            <table class="a-table">
+              <thead><tr>
+                <th>Title</th><th>Client</th><th>Status</th><th>Phase</th><th>Progress</th><th>Due</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="projects-tbody">
+                <tr><td colspan="7"><div class="empty-state"><div class="empty-state-title">Loading…</div></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── INVOICES ── -->
+      <div class="a-panel" id="panel-invoices">
+        <div class="card">
+          <div class="a-table-wrap">
+            <table class="a-table">
+              <thead><tr>
+                <th>Invoice #</th><th>Client</th><th>Amount</th><th>Status</th><th>Due</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="invoices-tbody">
+                <tr><td colspan="6"><div class="empty-state"><div class="empty-state-title">Loading…</div></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── MESSAGES ── -->
+      <div class="a-panel" id="panel-messages">
+        <div style="display:flex;gap:1rem;align-items:center">
+          <div class="a-search" style="flex:1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Search messages…" oninput="filterMessages(this.value)">
+          </div>
+          <select class="field-input" style="width:auto;min-width:130px" onchange="filterMessageStatus(this.value)">
+            <option value="">All</option>
+            <option value="unread">Unread</option>
+            <option value="read">Read</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.6rem" id="messages-list">
+          <div class="empty-state"><div class="empty-state-title">Loading…</div></div>
+        </div>
+      </div>
+
+      <!-- ── UPLOADS ── -->
+      <div class="a-panel" id="panel-uploads">
+        <div class="card">
+          <div class="a-table-wrap">
+            <table class="a-table">
+              <thead><tr>
+                <th>File</th><th>Client</th><th>Description</th><th>Size</th><th>Uploaded</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="uploads-tbody">
+                <tr><td colspan="6"><div class="empty-state"><div class="empty-state-title">Loading…</div></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── QUESTIONNAIRES ── -->
+      <div class="a-panel" id="panel-questionnaires">
+        <div style="display:flex;flex-direction:column;gap:.75rem" id="q-list">
+          <div class="empty-state"><div class="empty-state-title">Loading…</div></div>
+        </div>
+      </div>
+
+      <!-- ── BOOKINGS ── -->
+      <div class="a-panel" id="panel-bookings">
+        <div class="card">
+          <div class="a-table-wrap">
+            <table class="a-table">
+              <thead><tr>
+                <th>Name</th><th>Email</th><th>Service</th><th>Requested</th><th>Status</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="bookings-tbody">
+                <tr><td colspan="6"><div class="empty-state"><div class="empty-state-title">Loading…</div></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /a-content -->
+  </main>
+</div><!-- /admin-app -->
+
+<!-- ── DETAIL DRAWER ── -->
+<div id="drawer-overlay" onclick="closeDrawer()"></div>
+<div id="drawer">
+  <div class="drawer-head">
+    <div class="drawer-title" id="drawer-title">Detail</div>
+    <button class="drawer-close" onclick="closeDrawer()">&times;</button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+  <div class="drawer-actions" id="drawer-actions"></div>
+</div>
+
+<!-- ── TOAST ── -->
+<div id="toast-container"></div>
+
+<script>
+// ── ADMIN WHITELIST ──
+// Add authorized admin emails here. Keep lowercase.
+const ADMIN_EMAILS = [
+  'markatmgc@gmail.com',
+  'admin@mgcglobalconsulting.com',
+  'mgcglobalconsulting@gmail.com'
+];
+
+// ── SUPABASE ──
+const SUPABASE_URL = 'https://zppuzfvchqxkzprfkhfz.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwcHV6ZnZjaHF4a3pwcmZraGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1NzYwNTksImV4cCI6MjA5MDE1MjA1OX0.-DGVDEIuWqivnMB3f8Hbi_GcIfR7EQ6_O_QGknDVXqI';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+let adminUser = null;
+
+// ── AUTH ──
+window.addEventListener('DOMContentLoaded', async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session?.user && ADMIN_EMAILS.includes(session.user.email.toLowerCase())) {
+    bootAdmin(session.user);
+  } else if (session?.user) {
+    showAuthErr('Your account does not have admin access.');
+    await sb.auth.signOut();
+  }
+  startClock();
+});
+
+async function adminLogin() {
+  const email = document.getElementById('auth-email').value.trim().toLowerCase();
+  const pass = document.getElementById('auth-pass').value;
+  const errEl = document.getElementById('auth-err');
+  errEl.classList.remove('show');
+
+  if (!email || !pass) { showAuthErr('Email and password required.'); return; }
+  if (!ADMIN_EMAILS.includes(email)) { showAuthErr('This account does not have admin access.'); return; }
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) { showAuthErr(error.message); return; }
+  bootAdmin(data.user);
+}
+
+function showAuthErr(msg) {
+  const el = document.getElementById('auth-err');
+  el.textContent = msg; el.classList.add('show');
+}
+
+function bootAdmin(user) {
+  adminUser = user;
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('admin-app').classList.add('show');
+  document.getElementById('admin-email-label').textContent = user.email;
+  refreshAll();
+}
+
+async function adminSignOut() {
+  await sb.auth.signOut();
+  location.reload();
+}
+
+// ── PANEL NAVIGATION ──
+const PANEL_TITLES = {
+  overview: 'Dashboard', clients: 'Clients', projects: 'Projects', invoices: 'Invoices',
+  messages: 'Messages', uploads: 'File Uploads', questionnaires: 'Business Profiles', bookings: 'Bookings'
+};
+
+function showAdminPanel(id, btn) {
+  document.querySelectorAll('.a-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.a-nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  else { const b = document.querySelector(`[data-panel="${id}"]`); if (b) b.classList.add('active'); }
+  document.getElementById('topbar-title').textContent = PANEL_TITLES[id] || id;
+}
+
+// ── REFRESH ALL ──
+function refreshAll() {
+  loadClients();
+  loadProjects();
+  loadInvoices();
+  loadMessages();
+  loadUploads();
+  loadQuestionnaires();
+  loadBookings();
+  updateKPIs();
+}
+
+// ── KPIs ──
+async function updateKPIs() {
+  const [clients, projects, messages, invoices] = await Promise.allSettled([
+    sb.from('mgc_client_profiles').select('id', { count: 'exact', head: true }),
+    sb.from('mgc_projects').select('id', { count: 'exact', head: true }).eq('status', 'active'),
+    sb.from('mgc_messages').select('id', { count: 'exact', head: true }).eq('status', 'unread'),
+    sb.from('mgc_invoices').select('id', { count: 'exact', head: true }).in('status', ['pending', 'overdue']),
+  ]);
+  setKPI('kpi-clients', clients.value?.count ?? '—');
+  setKPI('kpi-projects', projects.value?.count ?? '—');
+  setKPI('kpi-messages', messages.value?.count ?? '—');
+  setKPI('kpi-invoices', invoices.value?.count ?? '—');
+
+  // Update badges
+  const msgCount = messages.value?.count ?? 0;
+  const uploadCount = (await sb.from('mgc_uploads').select('id', { count: 'exact', head: true }).eq('reviewed', false)).count ?? 0;
+  const qCount = (await sb.from('mgc_questionnaires').select('id', { count: 'exact', head: true }).eq('reviewed', false)).count ?? 0;
+
+  setBadge('badge-messages', msgCount);
+  setBadge('badge-uploads', uploadCount);
+  setBadge('badge-q', qCount);
+}
+
+function setKPI(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+function setBadge(id, count) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (count > 0) { el.textContent = count > 99 ? '99+' : count; el.style.display = ''; }
+  else { el.style.display = 'none'; }
+}
+
+// ── CLIENTS ──
+let allClients = [];
+async function loadClients() {
+  const { data, error } = await sb.from('mgc_client_profiles')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) { console.error('loadClients:', error); return; }
+  allClients = data || [];
+  renderClients(allClients);
+
+  // Overview: recent messages for client count
+  const badge = document.getElementById('badge-clients');
+  if (badge) { badge.textContent = allClients.length; badge.style.display = allClients.length ? '' : 'none'; }
+}
+
+function renderClients(clients) {
+  const tbody = document.getElementById('clients-tbody');
+  if (!clients.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><div class="empty-state-title">No clients yet</div></div></td></tr>`;
+    return;
+  }
+  const tierColor = { starter: 'pill-blue', pro: 'pill-cyan', elite: 'pill-gold' };
+  tbody.innerHTML = clients.map(c => `
+    <tr>
+      <td><div style="font-weight:600">${escHtml(c.full_name || '—')}</div></td>
+      <td style="color:var(--muted)">${escHtml(c.company || '—')}</td>
+      <td style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted)">${escHtml(c.email || '—')}</td>
+      <td><span class="pill ${tierColor[c.membership_tier] || 'pill-gray'}">${escHtml(c.membership_tier || 'none')}</span></td>
+      <td style="color:var(--muted);white-space:nowrap">${fmtDate(c.created_at)}</td>
+      <td>
+        <button class="btn-ghost btn-sm" onclick='viewClient(${JSON.stringify(c)})'>View</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterClients(q) {
+  const lower = q.toLowerCase();
+  renderClients(allClients.filter(c =>
+    (c.full_name || '').toLowerCase().includes(lower) ||
+    (c.company || '').toLowerCase().includes(lower) ||
+    (c.email || '').toLowerCase().includes(lower)
+  ));
+}
+
+function viewClient(c) {
+  openDrawer('Client: ' + (c.full_name || c.email), `
+    <div class="drawer-field"><div class="drawer-field-label">Name</div><div class="drawer-field-value">${escHtml(c.full_name || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Email</div><div class="drawer-field-value mono">${escHtml(c.email || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Company</div><div class="drawer-field-value">${escHtml(c.company || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Phone</div><div class="drawer-field-value mono">${escHtml(c.phone || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Membership Tier</div><div class="drawer-field-value">${escHtml(c.membership_tier || 'none')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">User ID</div><div class="drawer-field-value mono" style="font-size:.7rem">${escHtml(c.id || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Joined</div><div class="drawer-field-value">${fmtDate(c.created_at)}</div></div>
+  `, `<button class="btn-ghost btn-sm" onclick="copyText('${escHtml(c.id || '')}')">Copy ID</button>`);
+}
+
+// ── PROJECTS ──
+let allProjects = [];
+async function loadProjects() {
+  const { data, error } = await sb.from('mgc_projects')
+    .select('*, mgc_client_profiles(full_name,company)')
+    .order('created_at', { ascending: false });
+
+  if (error) { console.error('loadProjects:', error); return; }
+  allProjects = data || [];
+  renderProjects(allProjects);
+}
+
+function renderProjects(projects) {
+  const tbody = document.getElementById('projects-tbody');
+  if (!projects.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-state-title">No projects yet</div></div></td></tr>`;
+    return;
+  }
+  const statusPill = { active:'pill-green', paused:'pill-gold', complete:'pill-blue', cancelled:'pill-red' };
+  tbody.innerHTML = projects.map(p => {
+    const client = p.mgc_client_profiles;
+    const pct = p.progress_pct ?? 0;
+    return `<tr>
+      <td><div style="font-weight:600">${escHtml(p.title || '—')}</div><div style="font-size:.7rem;color:var(--muted)">${escHtml(p.service_type || '')}</div></td>
+      <td>${escHtml(client?.full_name || '—')}<br><span style="font-size:.7rem;color:var(--muted)">${escHtml(client?.company || '')}</span></td>
+      <td><span class="pill ${statusPill[p.status] || 'pill-gray'}">${escHtml(p.status || '—')}</span></td>
+      <td style="color:var(--muted)">${escHtml(p.phase || '—')}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <div style="flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:3px;min-width:60px">
+            <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--sky),var(--cyan));border-radius:3px"></div>
+          </div>
+          <span style="font-size:.7rem;color:var(--muted);white-space:nowrap">${pct}%</span>
+        </div>
+      </td>
+      <td style="color:var(--muted);white-space:nowrap">${fmtDate(p.end_date)}</td>
+      <td><button class="btn-ghost btn-sm" onclick='viewProject(${JSON.stringify(p)})'>Edit</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function filterProjects(q) {
+  const lower = q.toLowerCase();
+  renderProjects(allProjects.filter(p =>
+    (p.title || '').toLowerCase().includes(lower) ||
+    (p.service_type || '').toLowerCase().includes(lower) ||
+    (p.mgc_client_profiles?.full_name || '').toLowerCase().includes(lower)
+  ));
+}
+
+function viewProject(p) {
+  openDrawer('Project: ' + (p.title || '—'), `
+    <div class="drawer-field"><div class="drawer-field-label">Title</div><div class="drawer-field-value">${escHtml(p.title || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Service Type</div><div class="drawer-field-value">${escHtml(p.service_type || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Status</div><div class="drawer-field-value">${escHtml(p.status || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Phase</div><div class="drawer-field-value">${escHtml(p.phase || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Progress</div><div class="drawer-field-value">${p.progress_pct ?? 0}%</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Start Date</div><div class="drawer-field-value">${fmtDate(p.start_date)}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">End Date</div><div class="drawer-field-value">${fmtDate(p.end_date)}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Description</div><div class="drawer-field-value" style="white-space:pre-wrap">${escHtml(p.description || '—')}</div></div>
+  `, `
+    <button class="btn-ghost btn-sm" onclick="updateProjectStatus('${p.id}','active')">Set Active</button>
+    <button class="btn-ghost btn-sm" onclick="updateProjectStatus('${p.id}','paused')">Pause</button>
+    <button class="btn-ghost btn-sm" onclick="updateProjectStatus('${p.id}','complete')">Complete</button>
+  `);
+}
+
+async function updateProjectStatus(id, status) {
+  const { error } = await sb.from('mgc_projects').update({ status }).eq('id', id);
+  if (error) { toast('Failed to update: ' + error.message, 'error'); return; }
+  toast('Project status updated to ' + status, 'success');
+  closeDrawer();
+  loadProjects();
+  updateKPIs();
+}
+
+function openNewProject() {
+  toast('Project creation coming soon — use Supabase Studio for now', 'info');
+}
+
+// ── INVOICES ──
+async function loadInvoices() {
+  const { data, error } = await sb.from('mgc_invoices')
+    .select('*, mgc_client_profiles(full_name,company)')
+    .order('created_at', { ascending: false });
+
+  if (error) { console.error('loadInvoices:', error); return; }
+  const invoices = data || [];
+  const tbody = document.getElementById('invoices-tbody');
+  if (!invoices.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-state-title">No invoices yet</div></div></td></tr>`;
+    return;
+  }
+  const statusPill = { paid:'pill-green', pending:'pill-gold', overdue:'pill-red', cancelled:'pill-gray' };
+  tbody.innerHTML = invoices.map(inv => {
+    const client = inv.mgc_client_profiles;
+    const amt = inv.amount_cents ? `$${(inv.amount_cents/100).toLocaleString('en-US',{minimumFractionDigits:2})}` : '—';
+    return `<tr>
+      <td><div style="font-family:var(--font-mono);font-size:.78rem">${escHtml(inv.invoice_number || inv.id?.slice(0,8) || '—')}</div></td>
+      <td>${escHtml(client?.full_name || '—')}<br><span style="font-size:.7rem;color:var(--muted)">${escHtml(client?.company || '')}</span></td>
+      <td style="font-weight:700;color:${inv.status === 'overdue' ? 'var(--error)' : 'white'}">${amt}</td>
+      <td><span class="pill ${statusPill[inv.status] || 'pill-gray'}">${escHtml(inv.status || '—')}</span></td>
+      <td style="color:var(--muted);white-space:nowrap">${fmtDate(inv.due_date)}</td>
+      <td><button class="btn-ghost btn-sm" onclick='viewInvoice(${JSON.stringify(inv)})'>View</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function viewInvoice(inv) {
+  const client = inv.mgc_client_profiles;
+  const amt = inv.amount_cents ? `$${(inv.amount_cents/100).toLocaleString('en-US',{minimumFractionDigits:2})}` : '—';
+  openDrawer('Invoice ' + (inv.invoice_number || inv.id?.slice(0,8) || ''), `
+    <div class="drawer-field"><div class="drawer-field-label">Invoice #</div><div class="drawer-field-value mono">${escHtml(inv.invoice_number || inv.id || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Client</div><div class="drawer-field-value">${escHtml(client?.full_name || '—')} · ${escHtml(client?.company || '')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Amount</div><div class="drawer-field-value" style="font-size:1.3rem;font-family:var(--font-display);font-weight:900">${amt}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Status</div><div class="drawer-field-value">${escHtml(inv.status || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Due Date</div><div class="drawer-field-value">${fmtDate(inv.due_date)}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Stripe Payment Intent</div><div class="drawer-field-value mono" style="font-size:.7rem">${escHtml(inv.stripe_payment_intent_id || 'N/A')}</div></div>
+  `, `
+    <button class="btn-ghost btn-sm" onclick="markInvoicePaid('${inv.id}')">Mark Paid</button>
+    <button class="btn-danger btn-sm" onclick="markInvoiceVoid('${inv.id}')">Void</button>
+  `);
+}
+
+async function markInvoicePaid(id) {
+  const { error } = await sb.from('mgc_invoices').update({ status: 'paid' }).eq('id', id);
+  if (error) { toast('Failed: ' + error.message, 'error'); return; }
+  toast('Invoice marked as paid', 'success');
+  closeDrawer(); loadInvoices(); updateKPIs();
+}
+
+async function markInvoiceVoid(id) {
+  if (!confirm('Void this invoice?')) return;
+  const { error } = await sb.from('mgc_invoices').update({ status: 'cancelled' }).eq('id', id);
+  if (error) { toast('Failed: ' + error.message, 'error'); return; }
+  toast('Invoice voided', 'info');
+  closeDrawer(); loadInvoices(); updateKPIs();
+}
+
+// ── MESSAGES ──
+let allMessages = [];
+async function loadMessages() {
+  const { data, error } = await sb.from('mgc_messages')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) { console.error('loadMessages:', error); return; }
+  allMessages = data || [];
+  renderMessages(allMessages);
+
+  // Overview preview
+  const previewEl = document.getElementById('overview-messages');
+  if (previewEl) {
+    const recent = allMessages.slice(0,4);
+    if (!recent.length) { previewEl.innerHTML = `<div class="empty-state"><div class="empty-state-title">No messages yet</div></div>`; }
+    else previewEl.innerHTML = recent.map(m => msgCardHTML(m)).join('');
+  }
+}
+
+function msgCardHTML(m) {
+  return `<div class="msg-card ${m.status==='unread'?'unread':''}" onclick='viewMessage(${JSON.stringify(m)})'>
+    <div class="msg-card-top">
+      <div class="msg-sender">${escHtml(m.client_name || '—')}</div>
+      <div class="msg-date">${fmtDate(m.created_at)}</div>
+    </div>
+    <div class="msg-subject">${escHtml(m.subject || '—')} <span class="pill pill-gray" style="font-size:.62rem;padding:.1rem .4rem">${escHtml(m.category || '')}</span></div>
+    <div class="msg-preview">${escHtml(m.message || '')}</div>
+  </div>`;
+}
+
+function renderMessages(messages) {
+  const list = document.getElementById('messages-list');
+  if (!list) return;
+  if (!messages.length) {
+    list.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div class="empty-state-title">No messages</div></div>`;
+    return;
+  }
+  list.innerHTML = messages.map(m => msgCardHTML(m)).join('');
+}
+
+function filterMessages(q) {
+  const lower = q.toLowerCase();
+  renderMessages(allMessages.filter(m =>
+    (m.client_name || '').toLowerCase().includes(lower) ||
+    (m.subject || '').toLowerCase().includes(lower) ||
+    (m.message || '').toLowerCase().includes(lower)
+  ));
+}
+
+function filterMessageStatus(status) {
+  renderMessages(status ? allMessages.filter(m => m.status === status) : allMessages);
+}
+
+function viewMessage(m) {
+  openDrawer('Message from ' + (m.client_name || '—'), `
+    <div class="drawer-field"><div class="drawer-field-label">From</div><div class="drawer-field-value">${escHtml(m.client_name || '—')} ${m.company ? '· '+escHtml(m.company) : ''}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Category</div><div class="drawer-field-value"><span class="pill pill-cyan">${escHtml(m.category || '—')}</span></div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Subject</div><div class="drawer-field-value" style="font-weight:600">${escHtml(m.subject || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Message</div><div class="drawer-field-value" style="white-space:pre-wrap;line-height:1.65">${escHtml(m.message || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Received</div><div class="drawer-field-value">${fmtDate(m.created_at)}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Status</div><div class="drawer-field-value"><span class="pill ${m.status==='unread'?'pill-red':m.status==='resolved'?'pill-green':'pill-gray'}">${escHtml(m.status || '—')}</span></div></div>
+  `, `
+    <button class="btn-ghost btn-sm" onclick="setMessageStatus('${m.id}','read')">Mark Read</button>
+    <button class="btn-primary btn-sm" onclick="setMessageStatus('${m.id}','resolved')">Resolve</button>
+  `);
+
+  // Auto-mark as read
+  if (m.status === 'unread') {
+    sb.from('mgc_messages').update({ status: 'read' }).eq('id', m.id).then(() => {
+      loadMessages(); updateKPIs();
+    });
+  }
+}
+
+async function setMessageStatus(id, status) {
+  const { error } = await sb.from('mgc_messages').update({ status }).eq('id', id);
+  if (error) { toast('Failed: ' + error.message, 'error'); return; }
+  toast('Message marked as ' + status, 'success');
+  closeDrawer(); loadMessages(); updateKPIs();
+}
+
+// ── UPLOADS ──
+async function loadUploads() {
+  const { data, error } = await sb.from('mgc_uploads')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) { console.error('loadUploads:', error); return; }
+  const uploads = data || [];
+
+  // Overview preview
+  const previewEl = document.getElementById('overview-uploads');
+  if (previewEl) {
+    const recent = uploads.slice(0,4);
+    if (!recent.length) { previewEl.innerHTML = `<div class="empty-state"><div class="empty-state-title">No uploads yet</div></div>`; }
+    else previewEl.innerHTML = recent.map(u => `
+      <div style="display:flex;align-items:center;gap:.65rem;padding:.5rem 0;border-bottom:1px solid var(--border)">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--cyan)" stroke-width="2" style="flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.78rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(u.file_name || '—')}</div>
+          <div style="font-size:.68rem;color:var(--muted)">${escHtml(u.client_name || 'Unknown')} · ${fmtDate(u.created_at)}</div>
+        </div>
+        <a href="${escHtml(u.file_url || '#')}" target="_blank" class="btn-ghost btn-sm" style="text-decoration:none;flex-shrink:0">Download</a>
+      </div>
+    `).join('');
+  }
+
+  const tbody = document.getElementById('uploads-tbody');
+  if (!tbody) return;
+  if (!uploads.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-state-title">No uploads yet</div></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = uploads.map(u => `
+    <tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span style="font-weight:600">${escHtml(u.file_name || '—')}</span>
+        </div>
+      </td>
+      <td style="color:var(--muted)">${escHtml(u.client_name || '—')}</td>
+      <td style="color:var(--muted);font-size:.75rem">${escHtml(u.description || '—')}</td>
+      <td style="color:var(--muted);white-space:nowrap">${u.file_size ? (u.file_size/1024).toFixed(0)+' KB' : '—'}</td>
+      <td style="color:var(--muted);white-space:nowrap">${fmtDate(u.created_at)}</td>
+      <td style="display:flex;gap:.4rem">
+        <a href="${escHtml(u.file_url || '#')}" target="_blank" class="btn-ghost btn-sm" style="text-decoration:none">Download</a>
+        <button class="btn-danger btn-sm" onclick="deleteUpload('${u.id}','${escHtml(u.file_name||'')}')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function deleteUpload(id, name) {
+  if (!confirm(`Delete "${name}"?`)) return;
+  const { error } = await sb.from('mgc_uploads').delete().eq('id', id);
+  if (error) { toast('Delete failed: ' + error.message, 'error'); return; }
+  toast('File deleted', 'info');
+  loadUploads(); updateKPIs();
+}
+
+// ── QUESTIONNAIRES ──
+async function loadQuestionnaires() {
+  const { data, error } = await sb.from('mgc_questionnaires')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) { console.error('loadQuestionnaires:', error); return; }
+  const qs = data || [];
+
+  // Overview preview
+  const previewEl = document.getElementById('overview-questionnaires');
+  if (previewEl) {
+    if (!qs.length) { previewEl.innerHTML = `<div class="empty-state"><div class="empty-state-title">No submissions yet</div></div>`; }
+    else previewEl.innerHTML = `<div style="font-size:.8rem;color:var(--muted)">${qs.length} submission${qs.length !== 1 ? 's' : ''} — <button class="btn-ghost btn-sm" onclick="showAdminPanel('questionnaires',null)">Review All</button></div>`;
+  }
+
+  const list = document.getElementById('q-list');
+  if (!list) return;
+  if (!qs.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-state-title">No submissions yet</div></div>`;
+    return;
+  }
+  list.innerHTML = qs.map(q => `
+    <div class="card" style="cursor:pointer" onclick='viewQuestionnaire(${JSON.stringify(q)})'>
+      <div class="card-header">
+        <div>
+          <div class="card-title">${escHtml(q.client_name || '—')} ${q.company ? '· '+escHtml(q.company) : ''}</div>
+          <div style="font-size:.72rem;color:var(--muted);margin-top:.15rem">Submitted ${fmtDate(q.created_at)}</div>
+        </div>
+        <span class="pill ${q.reviewed ? 'pill-green' : 'pill-gold'}">${q.reviewed ? 'Reviewed' : 'New'}</span>
+      </div>
+      <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr;gap:.85rem">
+        <div>
+          <div class="drawer-field-label" style="margin-bottom:.2rem">Business & Market</div>
+          <div style="font-size:.78rem;color:rgba(255,255,255,.8);line-height:1.5">${escHtml((q.q1 || '').slice(0, 120))}${(q.q1||'').length > 120 ? '…' : ''}</div>
+        </div>
+        <div>
+          <div class="drawer-field-label" style="margin-bottom:.2rem">Investment Range</div>
+          <div style="font-size:.78rem;color:rgba(255,255,255,.8)">${escHtml(q.q5 || '—')}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function viewQuestionnaire(q) {
+  openDrawer('Business Profile: ' + (q.client_name || '—'), `
+    <div class="drawer-field"><div class="drawer-field-label">Client</div><div class="drawer-field-value">${escHtml(q.client_name || '—')} ${q.company ? '· '+escHtml(q.company) : ''}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">1. Business & Target Market</div><div class="drawer-field-value" style="white-space:pre-wrap">${escHtml(q.q1 || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">2. Pain Points & Bottlenecks</div><div class="drawer-field-value" style="white-space:pre-wrap">${escHtml(q.q2 || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">3. 90-Day Goals</div><div class="drawer-field-value" style="white-space:pre-wrap">${escHtml(q.q3 || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">4. Tools & Tech Fluency</div><div class="drawer-field-value" style="white-space:pre-wrap">${escHtml(q.q4 || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">5. Investment Range</div><div class="drawer-field-value">${escHtml(q.q5 || '—')}</div></div>
+    <div class="drawer-field"><div class="drawer-field-label">Submitted</div><div class="drawer-field-value">${fmtDate(q.created_at)}</div></div>
+  `, `
+    <button class="btn-primary btn-sm" onclick="markQReviewed('${q.id}')">Mark Reviewed</button>
+  `);
+}
+
+async function markQReviewed(id) {
+  const { error } = await sb.from('mgc_questionnaires').update({ reviewed: true }).eq('id', id);
+  if (error) { toast('Failed: ' + error.message, 'error'); return; }
+  toast('Marked as reviewed', 'success');
+  closeDrawer(); loadQuestionnaires(); updateKPIs();
+}
+
+// ── BOOKINGS ──
+async function loadBookings() {
+  const { data, error } = await sb.from('mgc_bookings')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) { console.error('loadBookings:', error); return; }
+  const bookings = data || [];
+  const tbody = document.getElementById('bookings-tbody');
+  if (!tbody) return;
+  if (!bookings.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-state-title">No bookings yet</div></div></td></tr>`;
+    return;
+  }
+  const statusPill = { pending:'pill-gold', confirmed:'pill-green', cancelled:'pill-red', completed:'pill-blue' };
+  tbody.innerHTML = bookings.map(b => `
+    <tr>
+      <td><div style="font-weight:600">${escHtml(b.name || '—')}</div></td>
+      <td style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted)">${escHtml(b.email || '—')}</td>
+      <td style="color:var(--muted)">${escHtml(b.service || '—')}</td>
+      <td style="color:var(--muted);white-space:nowrap">${fmtDate(b.requested_date)}</td>
+      <td><span class="pill ${statusPill[b.status] || 'pill-gray'}">${escHtml(b.status || 'pending')}</span></td>
+      <td>
+        <button class="btn-ghost btn-sm" onclick="confirmBooking('${b.id}')">Confirm</button>
+        <button class="btn-danger btn-sm" onclick="cancelBooking('${b.id}')">Cancel</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function confirmBooking(id) {
+  const { error } = await sb.from('mgc_bookings').update({ status: 'confirmed' }).eq('id', id);
+  if (error) { toast('Failed: ' + error.message, 'error'); return; }
+  toast('Booking confirmed', 'success'); loadBookings();
+}
+
+async function cancelBooking(id) {
+  if (!confirm('Cancel this booking?')) return;
+  const { error } = await sb.from('mgc_bookings').update({ status: 'cancelled' }).eq('id', id);
+  if (error) { toast('Failed: ' + error.message, 'error'); return; }
+  toast('Booking cancelled', 'info'); loadBookings();
+}
+
+// ── DRAWER ──
+function openDrawer(title, bodyHTML, actionsHTML = '') {
+  document.getElementById('drawer-title').textContent = title;
+  document.getElementById('drawer-body').innerHTML = bodyHTML;
+  document.getElementById('drawer-actions').innerHTML = actionsHTML;
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('show');
+}
+
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('show');
+}
+
+// ── TOAST ──
+function toast(msg, type = 'info') {
+  const container = document.getElementById('toast-container');
+  const div = document.createElement('div');
+  div.className = `toast toast-${type}`;
+  div.textContent = msg;
+  container.appendChild(div);
+  setTimeout(() => div.remove(), 4000);
+}
+
+// ── CLOCK ──
+function startClock() {
+  const el = document.getElementById('topbar-clock');
+  if (!el) return;
+  const tick = () => el.textContent = new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  tick(); setInterval(tick, 10000);
+}
+
+// ── HELPERS ──
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtDate(ds) {
+  if (!ds) return '—';
+  return new Date(ds).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+}
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => toast('Copied to clipboard', 'success'));
+}
+</script>
+</body>
+</html>

@@ -19,7 +19,7 @@
   --success:#22C55E;--warning:#F59E0B;--error:#EF4444;--info:#3B82F6;
   --surface:rgba(6,29,53,0.8);--surface-2:rgba(10,58,107,0.35);
   --border:rgba(0,212,255,0.12);--border-gold:rgba(255,179,71,0.25);
-  --font-display:'Raleway',sans-serif;--font-body:'Plus+Jakarta+Sans',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace;
+  --font-display:'Raleway',sans-serif;--font-body:'Plus Jakarta Sans',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace;
   --ease:cubic-bezier(0.16,1,0.3,1);
   --sidebar-w:265px;
   --radius:14px;
@@ -29,6 +29,9 @@ body{font-family:var(--font-body);color:white;background:var(--abyss);overflow-x
 
 /* ─── BACKGROUND ─── */
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(0,212,255,0.05),transparent),radial-gradient(ellipse 60% 50% at 80% 80%,rgba(14,84,148,0.08),transparent);pointer-events:none;z-index:0}
+
+/* ─── GOLD STRIPE ─── */
+#portal-stripe{display:none;position:fixed;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#C8922A 0%,#E8B94F 30%,#FFE99A 55%,#E8B94F 75%,#C8922A 100%);z-index:500;pointer-events:none}
 
 /* ─── AUTH SCREEN ─── */
 #auth-screen{position:fixed;inset:0;background:var(--abyss);display:flex;align-items:center;justify-content:center;z-index:200;padding:1rem}
@@ -69,7 +72,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .auth-success{padding:.7rem 1rem;border-radius:8px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#86efac;font-size:0.8rem;display:none}
 .auth-success.show{display:block}
 
-/* ─── PORTAL APP (hidden until authed) ─── */
+/* ─── PORTAL APP ─── */
 #portal-app{display:none;min-height:100vh}
 #portal-app.show{display:flex}
 
@@ -105,8 +108,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .kb-viewer-body code{font-family:var(--font-mono);font-size:.8rem;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.15);border-radius:4px;padding:.1rem .4rem;color:var(--cyan)}
 .kb-viewer-body blockquote{border-left:3px solid var(--cyan);padding:.6rem 1rem;margin:.75rem 0;background:rgba(0,212,255,.04);border-radius:0 8px 8px 0;color:rgba(0,212,255,.8);font-style:italic}
 .kb-viewer-divider{height:1px;background:var(--border);margin:1.5rem 0}
-.kb-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;color:var(--dim);text-align:center;gap:.5rem}
-.kb-empty-icon{font-size:2.5rem;opacity:.4}
+.kb-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;color:var(--dim);text-align:center;gap:.75rem}
+.kb-empty-icon{opacity:.35;display:flex;align-items:center;justify-content:center}
 .kb-empty-text{font-size:.85rem}
 
 /* ─── RESEARCH HUB ─── */
@@ -115,7 +118,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .hub-tool::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(0,212,255,.03));opacity:0;transition:opacity .25s}
 .hub-tool:hover{transform:translateY(-3px);border-color:rgba(0,212,255,.25);box-shadow:0 8px 24px rgba(0,0,0,.3)}
 .hub-tool:hover::before{opacity:1}
-.hub-tool-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
+.hub-tool-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .hub-tool-icon.purple{background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.2)}
 .hub-tool-icon.blue{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.2)}
 .hub-tool-icon.green{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.2)}
@@ -133,7 +136,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .hub-tab-body{padding:1.25rem;display:none;min-height:280px}
 .hub-tab-body.active{display:block}
 .hub-embed-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:240px;gap:1rem;text-align:center}
-.hub-embed-placeholder .icon{font-size:2.5rem;opacity:.5}
+.hub-embed-placeholder .icon{opacity:.4;display:flex;align-items:center;justify-content:center}
 .hub-embed-placeholder p{font-size:.82rem;color:var(--muted);max-width:320px;line-height:1.6}
 .hub-link-input{display:flex;gap:.6rem;margin-bottom:1rem}
 .hub-link-input input{flex:1;background:rgba(1,12,26,.6);border:1px solid rgba(0,212,255,.15);border-radius:8px;padding:.6rem .85rem;color:white;font-size:.82rem;outline:none}
@@ -152,7 +155,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 /* ─── SIDEBAR ─── */
 .sidebar{width:var(--sidebar-w);flex-shrink:0;background:linear-gradient(180deg,rgba(4,20,40,0.97) 0%,rgba(2,15,32,0.97) 100%);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100;overflow-y:auto;transition:transform 0.3s var(--ease)}
 
-.sidebar-top{padding:1.5rem 1.25rem 1.25rem;border-bottom:1px solid var(--border)}
+.sidebar-top{padding:calc(1.5rem + 4px) 1.25rem 1.25rem;border-bottom:1px solid var(--border)}
 .s-logo{display:flex;align-items:center;gap:.7rem;text-decoration:none;margin-bottom:.9rem}
 .s-logo-img{width:42px;height:42px;border-radius:50%;object-fit:contain;filter:drop-shadow(0 0 10px rgba(0,212,255,0.4))}
 .s-logo-label{font-family:var(--font-display);font-weight:800;font-size:.88rem;line-height:1.2}
@@ -183,20 +186,31 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .portal-main{margin-left:var(--sidebar-w);flex:1;min-height:100vh;display:flex;flex-direction:column;position:relative;z-index:1}
 
 /* ─── TOPBAR ─── */
-.topbar{padding:1rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(2,15,32,0.85);backdrop-filter:blur(16px);position:sticky;top:0;z-index:50}
+.topbar{padding:calc(1rem + 4px) 2rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(2,15,32,0.85);backdrop-filter:blur(16px);position:sticky;top:0;z-index:50}
 .topbar-title{font-family:var(--font-display);font-size:1rem;font-weight:800;letter-spacing:-.01em}
 .topbar-sub{font-size:.75rem;color:var(--muted);margin-top:.1rem}
 .topbar-right{display:flex;align-items:center;gap:.75rem}
 .btn-schedule{display:flex;align-items:center;gap:.45rem;padding:.55rem 1rem;border-radius:99px;background:linear-gradient(135deg,rgba(255,179,71,0.15),rgba(201,138,42,0.1));border:1px solid var(--border-gold);color:var(--gold);font-family:var(--font-display);font-weight:700;font-size:.75rem;cursor:pointer;transition:all .2s}
 .btn-schedule:hover{background:rgba(255,179,71,0.2);transform:translateY(-1px)}
+.btn-schedule svg{width:14px;height:14px;flex-shrink:0}
 .notif-btn{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background .2s}
 .notif-btn:hover{background:rgba(255,255,255,0.09)}
 .notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--gold);border:1.5px solid var(--abyss)}
 
-/* ─── PANELS (pages) ─── */
+/* ─── PANELS ─── */
 .panel-page{display:none;padding:2rem;flex:1;flex-direction:column;gap:1.5rem;animation:fadeUp .35s var(--ease)}
 .panel-page.active{display:flex}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── TRUEASSIST CHAT ─── */
+.ta-msg{display:flex;gap:.65rem;align-items:flex-start}
+.ta-msg-user{flex-direction:row-reverse}
+.ta-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--sky),var(--cyan));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:.72rem;color:var(--abyss);flex-shrink:0}
+.ta-msg-user .ta-avatar{background:linear-gradient(135deg,var(--gold),#ff8c00)}
+.ta-bubble{background:rgba(6,29,53,.7);border:1px solid rgba(0,212,255,.12);border-radius:12px 12px 12px 4px;padding:.65rem 1rem;font-size:.845rem;color:rgba(255,255,255,.88);line-height:1.55;max-width:80%;word-break:break-word}
+.ta-msg-user .ta-bubble{background:rgba(0,100,180,.25);border-color:rgba(0,212,255,.2);border-radius:12px 12px 4px 12px}
+.ta-thinking .ta-bubble::after{content:'...';animation:dots 1.2s steps(3,end) infinite}
+@keyframes dots{0%,100%{opacity:.2}50%{opacity:1}}
 
 /* ─── CARDS ─── */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;backdrop-filter:blur(12px)}
@@ -207,22 +221,135 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .card-action:hover{opacity:.7}
 .card-body{padding:1.5rem}
 
-/* ─── KPI ROW ─── */
+/* ─── KPI ROW — Glassmorphism ─── */
 .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.15rem}
 @media(max-width:1100px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
-.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.35rem;position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
-.kpi-card:hover{border-color:rgba(0,212,255,0.25);transform:translateY(-2px)}
-.kpi-card::after{content:'';position:absolute;top:0;right:0;width:60%;height:100%;background:radial-gradient(circle at 100% 0%,rgba(0,212,255,0.04),transparent);pointer-events:none}
-.kpi-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:.85rem}
-.kpi-icon.blue{background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2)}
-.kpi-icon.gold{background:rgba(255,179,71,0.1);border:1px solid rgba(255,179,71,0.2)}
-.kpi-icon.green{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2)}
-.kpi-icon.purple{background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2)}
-.kpi-label{font-size:.7rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem}
+
+.kpi-card{
+  background:rgba(6,29,53,0.55);
+  backdrop-filter:blur(24px) saturate(160%);
+  -webkit-backdrop-filter:blur(24px) saturate(160%);
+  border:1px solid rgba(0,212,255,0.14);
+  border-radius:var(--radius);
+  padding:1.5rem;
+  position:relative;
+  overflow:hidden;
+  transition:border-color .25s,transform .2s,box-shadow .25s;
+  box-shadow:0 8px 32px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.kpi-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(0,212,255,0.35),transparent);
+}
+.kpi-card::after{
+  content:'';position:absolute;top:0;right:0;width:55%;height:100%;
+  background:radial-gradient(circle at 100% 0%,rgba(0,212,255,0.05),transparent 65%);
+  pointer-events:none;
+}
+.kpi-card:hover{
+  border-color:rgba(0,212,255,0.28);
+  transform:translateY(-3px);
+  box-shadow:0 16px 48px rgba(0,0,0,0.45),0 0 0 1px rgba(0,212,255,0.08),inset 0 1px 0 rgba(255,255,255,0.07);
+}
+
+/* Gold variant — Account Balance */
+.kpi-card.gold-variant{
+  border-color:rgba(255,179,71,0.22);
+  background:rgba(12,26,45,0.6);
+}
+.kpi-card.gold-variant::before{
+  background:linear-gradient(90deg,#C8922A,#E8B94F 35%,#FFE99A 55%,#E8B94F 75%,#C8922A);
+}
+.kpi-card.gold-variant::after{
+  background:radial-gradient(circle at 100% 0%,rgba(255,179,71,0.07),transparent 65%);
+}
+.kpi-card.gold-variant:hover{
+  border-color:rgba(255,179,71,0.4);
+  box-shadow:0 16px 48px rgba(0,0,0,0.45),0 0 24px rgba(255,179,71,0.08),inset 0 1px 0 rgba(255,179,71,0.08);
+}
+
+.kpi-svg-icon{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:.9rem;flex-shrink:0;
+}
+.kpi-svg-icon.cyan{background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:var(--cyan)}
+.kpi-svg-icon.gold{background:rgba(255,179,71,0.1);border:1px solid rgba(255,179,71,0.2);color:var(--gold)}
+.kpi-svg-icon.green{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:var(--success)}
+.kpi-svg-icon.blue{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);color:#93c5fd}
+
+.kpi-label{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.4rem}
 .kpi-value{font-family:var(--font-display);font-size:2rem;font-weight:900;letter-spacing:-.04em;line-height:1;margin-bottom:.35rem}
+.kpi-card.gold-variant .kpi-value{
+  background:linear-gradient(180deg,#FFE99A 0%,#E8B94F 50%,#C8922A 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
 .kpi-delta{font-size:.72rem;font-weight:600;color:var(--success);display:flex;align-items:center;gap:.25rem}
 .kpi-delta.down{color:var(--error)}
 .kpi-delta.neutral{color:var(--muted)}
+
+/* ─── WELCOME ANIMATION ─── */
+@keyframes welcomeIn{
+  from{opacity:0;transform:translateY(-12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes welcomeOut{
+  from{opacity:1;transform:translateY(0)}
+  to{opacity:0;transform:translateY(-6px)}
+}
+.welcome-anim-wrap{
+  overflow:hidden;
+  transition:max-height .55s var(--ease),margin-bottom .55s var(--ease),opacity .5s ease-in;
+  max-height:0;opacity:0;margin-bottom:0;
+}
+.welcome-anim-wrap.show{
+  max-height:160px;opacity:1;margin-bottom:1.25rem;
+  animation:welcomeIn .8s var(--ease) both;
+}
+.welcome-anim-wrap.dismiss{
+  max-height:0;opacity:0;margin-bottom:0;
+  transition:max-height .6s ease-in,margin-bottom .6s ease-in,opacity .45s ease-in;
+}
+.welcome-anim-card{
+  background:linear-gradient(135deg,rgba(11,30,58,0.7) 0%,rgba(0,212,255,0.05) 100%);
+  border:1px solid rgba(0,212,255,0.2);
+  border-radius:var(--radius);
+  padding:1.5rem 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1.5rem;position:relative;overflow:hidden;
+}
+.welcome-anim-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,#C8922A,#E8B94F 35%,#FFE99A 55%,#E8B94F 75%,#C8922A);
+}
+.welcome-anim-card::after{
+  content:'';position:absolute;right:-30px;top:-30px;
+  width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,212,255,0.07),transparent 65%);
+  pointer-events:none;
+}
+.welcome-anim-eyebrow{
+  font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(0,212,255,0.55);font-weight:700;margin-bottom:.3rem;
+}
+.welcome-anim-headline{
+  font-family:var(--font-display);font-size:1.25rem;font-weight:900;
+  letter-spacing:-.025em;line-height:1.2;
+}
+.welcome-anim-headline span{color:var(--cyan)}
+.welcome-anim-rule{
+  width:48px;height:2px;margin:.7rem 0;
+  background:linear-gradient(90deg,#C8922A,#FFE99A 50%,#C8922A);
+  border-radius:2px;
+}
+.welcome-anim-sub{font-size:.8rem;color:var(--muted);line-height:1.5}
+
+/* ─── WELCOME BANNER (persistent) ─── */
+.welcome-banner{background:linear-gradient(135deg,rgba(10,58,107,0.5),rgba(0,212,255,0.08));border:1px solid rgba(0,212,255,0.18);border-radius:var(--radius);padding:1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:relative;overflow:hidden}
+.welcome-banner::before{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,255,0.08),transparent);pointer-events:none}
+.welcome-heading{font-family:var(--font-display);font-size:1.3rem;font-weight:900;letter-spacing:-.02em;margin-bottom:.3rem}
+.welcome-heading span{color:var(--cyan)}
+.welcome-sub{font-size:.82rem;color:var(--muted)}
 
 /* ─── GRID LAYOUTS ─── */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:1.15rem}
@@ -264,7 +391,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 /* ─── DELIVERABLE ITEM ─── */
 .deliv-item{display:flex;align-items:center;gap:1rem;padding:.85rem 0;border-bottom:1px solid rgba(255,255,255,0.05)}
 .deliv-item:last-child{border-bottom:none}
-.deliv-icon{width:38px;height:38px;border-radius:10px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.15);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.deliv-icon{width:38px;height:38px;border-radius:10px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--cyan)}
 .deliv-info{flex:1}
 .deliv-name{font-size:.85rem;font-weight:600;margin-bottom:.15rem}
 .deliv-meta{font-size:.72rem;color:var(--muted)}
@@ -298,13 +425,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .btn-outline{padding:.65rem 1.35rem;border-radius:10px;background:transparent;color:var(--cyan);border:1px solid rgba(0,212,255,0.3);font-family:var(--font-display);font-weight:700;font-size:.8rem;cursor:pointer;transition:all .2s}
 .btn-outline:hover{background:rgba(0,212,255,0.08)}
 
-/* ─── WELCOME BANNER ─── */
-.welcome-banner{background:linear-gradient(135deg,rgba(10,58,107,0.5),rgba(0,212,255,0.08));border:1px solid rgba(0,212,255,0.18);border-radius:var(--radius);padding:1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:relative;overflow:hidden}
-.welcome-banner::before{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,255,0.08),transparent);pointer-events:none}
-.welcome-heading{font-family:var(--font-display);font-size:1.3rem;font-weight:900;letter-spacing:-.02em;margin-bottom:.3rem}
-.welcome-heading span{color:var(--cyan)}
-.welcome-sub{font-size:.82rem;color:var(--muted)}
-
 /* ─── ACTIVITY FEED ─── */
 .activity-item{display:flex;gap:.85rem;padding:.7rem 0;border-bottom:1px solid rgba(255,255,255,0.04);align-items:flex-start}
 .activity-item:last-child{border-bottom:none}
@@ -332,11 +452,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 /* ─── EMPTY STATE ─── */
 .empty-state{text-align:center;padding:3rem 1rem}
-.empty-icon{font-size:2.5rem;margin-bottom:.75rem;opacity:.4}
+.empty-icon{display:flex;align-items:center;justify-content:center;margin-bottom:.75rem;opacity:.35;color:var(--muted)}
 .empty-title{font-family:var(--font-display);font-weight:700;font-size:.95rem;color:rgba(255,255,255,.5);margin-bottom:.3rem}
 .empty-sub{font-size:.78rem;color:var(--dim)}
 
-/* ─── LOADING SKELETON ─── */
+/* ─── SKELETON ─── */
 .skel{background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
@@ -346,7 +466,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .toast.success{border-color:rgba(34,197,94,0.3)}
 .toast.error{border-color:rgba(239,68,68,0.3)}
 .toast.info{border-color:rgba(0,212,255,0.3)}
-.toast-icon{font-size:1rem;flex-shrink:0}
+.toast-icon{display:flex;align-items:center;flex-shrink:0}
 @keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
 
 /* ─── LOADING OVERLAY ─── */
@@ -355,7 +475,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .loader-logo{width:70px;height:70px;border-radius:50%;filter:drop-shadow(0 0 20px rgba(0,212,255,0.5));animation:pulse 1.5s ease-in-out infinite}
 @keyframes pulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 20px rgba(0,212,255,0.5))}50%{transform:scale(1.06);filter:drop-shadow(0 0 30px rgba(0,212,255,0.8))}}
 
-/* ─── MOBILE SIDEBAR TOGGLE ─── */
+/* ─── MOBILE ─── */
 .mobile-menu-btn{display:none;width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
 @media(max-width:768px){
   .mobile-menu-btn{display:flex}
@@ -369,20 +489,30 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   .sched-grid{gap:2px}
   .sched-cell{font-size:.7rem}
 }
+
+/* === SVG Icon overrides === */
+[class$="-icon"] svg,[class*="-icon "] svg{width:24px;height:24px;transition:transform 0.25s ease,opacity 0.25s ease}
+[class$="-icon"]:hover svg,[class*="-icon "]:hover svg{transform:scale(1.15);opacity:0.9}
+.del-icon,.deliv-icon,.fw-icon,.fmt-icon,.highlight-icon,.inc-icon,.perk-icon,.pillar-icon,.support-icon,.svc-icon,.tier-icon,.ws-icon,.wvc-icon{font-size:0!important}
+.fit-card h3 svg,.good-fit h3 svg{color:#22c55e}
+
 </style>
 </head>
 <body>
 
 <!-- LOADING OVERLAY -->
 <div id="loading-overlay">
-  <img src="assets/images/mgc-logo-transparent.png" alt="MGC" class="loader-logo">
+  <img src="assets/mgc-logo-transparent.png" alt="MGC" class="loader-logo">
 </div>
+
+<!-- GOLD TOP STRIPE (shows with portal) -->
+<div id="portal-stripe"></div>
 
 <!-- AUTH SCREEN -->
 <div id="auth-screen">
   <div class="auth-card">
     <div class="auth-logo">
-      <img src="assets/images/mgc-logo-transparent.png" alt="MGC" class="auth-logo-img">
+      <img src="assets/mgc-logo-transparent.png" alt="MGC" class="auth-logo-img">
       <div>
         <div class="auth-logo-text">MGC <span>Global</span></div>
         <div class="auth-logo-sub">Client Portal</div>
@@ -446,11 +576,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 <!-- PORTAL APP -->
 <div id="portal-app">
 
-  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-top">
       <a href="index.html" class="s-logo">
-        <img src="assets/images/mgc-logo-transparent.png" alt="MGC" class="s-logo-img">
+        <img src="assets/mgc-logo-transparent.png" alt="MGC" class="s-logo-img">
         <div class="s-logo-label">MGC Global <span>Client Portal</span></div>
       </a>
       <div class="s-user">
@@ -495,6 +624,26 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <span class="nav-pill" style="background:rgba(139,92,246,.15);color:#a78bfa">AI</span>
       </button>
 
+      <div class="nav-group-label">Tools</div>
+      <button class="s-nav-item" data-panel="trueassist" onclick="showPanel('trueassist',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 8v4l3 3"/><circle cx="19" cy="5" r="3" fill="var(--cyan)" stroke="none"/></svg>
+        TrueAssist
+        <span class="nav-pill" style="background:rgba(0,212,255,.12);color:var(--cyan)">AI</span>
+      </button>
+      <button class="s-nav-item" data-panel="inbox" onclick="showPanel('inbox',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Messages
+        <span class="nav-pill" id="inbox-count" style="display:none">!</span>
+      </button>
+      <button class="s-nav-item" data-panel="uploads" onclick="showPanel('uploads',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Uploads
+      </button>
+      <button class="s-nav-item" data-panel="questionnaire" onclick="showPanel('questionnaire',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Business Profile
+      </button>
+
       <div class="nav-group-label">Workspace</div>
       <button class="s-nav-item" data-panel="schedule" onclick="showPanel('schedule',this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -528,8 +677,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         </div>
       </div>
       <div class="topbar-right">
+        <div style="display:flex;align-items:center;gap:.4rem;padding:.35rem .8rem;border-radius:99px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);font-size:.65rem;font-weight:700;color:#86efac;letter-spacing:.06em">
+          <span style="width:6px;height:6px;border-radius:50%;background:#22C55E;box-shadow:0 0 8px #22C55E;animation:agentPulse 2.5s ease-in-out infinite;display:inline-block"></span>
+          LIVE
+        </div>
         <button class="btn-schedule" onclick="showPanel('schedule',null)">
-          📅 Request Session
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Request Session
         </button>
         <button class="notif-btn" title="Notifications">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -540,39 +694,72 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
     <!-- ── OVERVIEW PANEL ── -->
     <section class="panel-page active" id="panel-overview">
-      <div class="welcome-banner">
-        <div>
-          <div class="welcome-heading">Welcome back, <span id="welcome-name">Client</span> 👋</div>
-          <div class="welcome-sub">Here's what's happening across your MGC engagement.</div>
+
+      <!-- WELCOME ANIMATION (auto-dismiss) -->
+      <div class="welcome-anim-wrap" id="welcome-anim-wrap">
+        <div class="welcome-anim-card">
+          <div>
+            <div class="welcome-anim-eyebrow">Welcome to</div>
+            <div class="welcome-anim-headline">MGC <span>Global</span></div>
+            <div class="welcome-anim-rule"></div>
+            <div class="welcome-anim-sub">Good to have you back, <strong id="welcome-anim-name" style="color:white">–</strong></div>
+          </div>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(0,212,255,0.25)" stroke-width="1"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
         </div>
-        <button class="btn-primary" onclick="showPanel('schedule',null)">Book a Strategy Call →</button>
       </div>
 
+      <!-- WELCOME BANNER -->
+      <div class="welcome-banner">
+        <div>
+          <div class="welcome-heading">Welcome back, <span id="welcome-name">Client</span></div>
+          <div class="welcome-sub">Here's what's happening across your MGC engagement.</div>
+        </div>
+        <button class="btn-primary" onclick="showPanel('schedule',null)">Book a Strategy Call &rarr;</button>
+      </div>
+
+      <!-- KPI ROW — 4 Glassmorphism Tiles -->
       <div class="kpi-row">
+
+        <!-- Active Strategy Phases -->
         <div class="kpi-card">
-          <div class="kpi-icon blue">📊</div>
-          <div class="kpi-label">Active Projects</div>
+          <div class="kpi-svg-icon cyan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+          </div>
+          <div class="kpi-label">Active Strategy Phases</div>
           <div class="kpi-value" id="kpi-projects">–</div>
           <div class="kpi-delta neutral" id="kpi-projects-sub">Loading…</div>
         </div>
+
+        <!-- Next Session -->
         <div class="kpi-card">
-          <div class="kpi-icon green">✅</div>
-          <div class="kpi-label">Deliverables Ready</div>
-          <div class="kpi-value" id="kpi-deliverables">–</div>
-          <div class="kpi-delta" id="kpi-deliverables-sub">Ready to download</div>
+          <div class="kpi-svg-icon blue">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="12" cy="16" r="1.5"/></svg>
+          </div>
+          <div class="kpi-label">Next Session</div>
+          <div class="kpi-value" id="kpi-next-session" style="font-size:1.5rem">–</div>
+          <div class="kpi-delta neutral" id="kpi-next-session-sub">Loading…</div>
         </div>
+
+        <!-- Open Deliverables -->
         <div class="kpi-card">
-          <div class="kpi-icon gold">💳</div>
-          <div class="kpi-label">Outstanding Balance</div>
+          <div class="kpi-svg-icon green">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/><line x1="9" y1="14" x2="15" y2="14"/><line x1="9" y1="18" x2="13" y2="18"/></svg>
+          </div>
+          <div class="kpi-label">Open Deliverables</div>
+          <div class="kpi-value" id="kpi-deliverables">–</div>
+          <div class="kpi-delta neutral" id="kpi-deliverables-sub">Pending review</div>
+        </div>
+
+        <!-- Account Balance -->
+        <div class="kpi-card gold-variant">
+          <div class="kpi-svg-icon gold">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div class="kpi-label">Account Balance</div>
           <div class="kpi-value" id="kpi-balance">–</div>
           <div class="kpi-delta neutral" id="kpi-balance-sub">–</div>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-icon purple">🤖</div>
-          <div class="kpi-label">AI Automations</div>
-          <div class="kpi-value">12</div>
-          <div class="kpi-delta">↑ 3 this month</div>
-        </div>
+
       </div>
 
       <div class="g2">
@@ -583,7 +770,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
               <div class="card-title">Active Projects</div>
               <div class="card-sub">Your current engagements</div>
             </div>
-            <button class="card-action" onclick="showPanel('projects',null)">View All →</button>
+            <button class="card-action" onclick="showPanel('projects',null)">View All &rarr;</button>
           </div>
           <div class="card-body" id="overview-projects-list">
             <div class="skel" style="height:60px;margin-bottom:10px;border-radius:10px"></div>
@@ -615,7 +802,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
             <div class="card-title">Pending Deliverables</div>
             <div class="card-sub">Items ready for your review</div>
           </div>
-          <button class="card-action" onclick="showPanel('deliverables',null)">View All →</button>
+          <button class="card-action" onclick="showPanel('deliverables',null)">View All &rarr;</button>
         </div>
         <div class="card-body" id="overview-deliverables"></div>
       </div>
@@ -692,7 +879,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <button class="btn-primary" style="font-size:.78rem;padding:.6rem 1.2rem" onclick="openNewNote()">+ New Note</button>
       </div>
       <div class="kb-layout">
-        <!-- Sidebar -->
         <div class="kb-sidebar">
           <div class="kb-search">
             <input type="text" id="kb-search-input" placeholder="Search notes…" oninput="filterKbNotes(this.value)">
@@ -707,10 +893,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           </div>
           <div class="kb-note-list" id="kb-note-list"></div>
         </div>
-        <!-- Viewer -->
         <div class="kb-viewer" id="kb-viewer">
           <div class="kb-empty">
-            <div class="kb-empty-icon">📖</div>
+            <div class="kb-empty-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            </div>
             <div class="kb-empty-text">Select a note to read</div>
           </div>
         </div>
@@ -724,59 +911,70 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">AI-powered research tools, NotebookLM workspace, and saved resources</div>
       </div>
 
-      <!-- Tools Grid -->
       <div class="hub-section-title">Quick Access</div>
       <div class="hub-grid">
         <a href="https://notebooklm.google.com" target="_blank" class="hub-tool">
-          <div class="hub-tool-icon purple">🧠</div>
+          <div class="hub-tool-icon purple">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.75"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
           <div class="hub-tool-name">NotebookLM</div>
           <div class="hub-tool-desc">AI-powered research synthesis and document analysis</div>
           <span class="hub-tool-badge">Google AI</span>
         </a>
         <a href="https://claude.ai" target="_blank" class="hub-tool">
-          <div class="hub-tool-icon cyan">✦</div>
+          <div class="hub-tool-icon cyan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.75"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
           <div class="hub-tool-name">Claude AI</div>
           <div class="hub-tool-desc">Advanced reasoning and strategy analysis assistant</div>
           <span class="hub-tool-badge">Anthropic</span>
         </a>
         <a href="https://perplexity.ai" target="_blank" class="hub-tool">
-          <div class="hub-tool-icon blue">🔭</div>
+          <div class="hub-tool-icon blue">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="1.75"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
           <div class="hub-tool-name">Perplexity</div>
           <div class="hub-tool-desc">Real-time AI search with cited sources</div>
           <span class="hub-tool-badge">Live Search</span>
         </a>
         <a href="https://chatgpt.com" target="_blank" class="hub-tool">
-          <div class="hub-tool-icon green">⚡</div>
+          <div class="hub-tool-icon green">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="1.75"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
           <div class="hub-tool-name">ChatGPT</div>
           <div class="hub-tool-desc">Versatile AI for drafts, analysis, and brainstorming</div>
           <span class="hub-tool-badge">OpenAI</span>
         </a>
         <a href="https://obsidian.md" target="_blank" class="hub-tool">
-          <div class="hub-tool-icon gold">💎</div>
+          <div class="hub-tool-icon gold">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.75"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/></svg>
+          </div>
           <div class="hub-tool-name">Obsidian</div>
           <div class="hub-tool-desc">Open your local Obsidian vault for deep-linked notes</div>
           <span class="hub-tool-badge">Local</span>
         </a>
         <a href="https://scholar.google.com" target="_blank" class="hub-tool">
-          <div class="hub-tool-icon orange">📚</div>
+          <div class="hub-tool-icon orange">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fdba74" stroke-width="1.75"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
           <div class="hub-tool-name">Google Scholar</div>
           <div class="hub-tool-desc">Academic papers and research literature</div>
           <span class="hub-tool-badge">Research</span>
         </a>
       </div>
 
-      <!-- Workspace Tabs -->
       <div class="hub-workspace">
         <div class="hub-workspace-tabs">
-          <button class="hub-tab active" onclick="switchHubTab('notebook',this)">📓 NotebookLM</button>
-          <button class="hub-tab" onclick="switchHubTab('links',this)">🔗 Saved Links</button>
-          <button class="hub-tab" onclick="switchHubTab('scratch',this)">✏️ Scratchpad</button>
+          <button class="hub-tab active" onclick="switchHubTab('notebook',this)">NotebookLM</button>
+          <button class="hub-tab" onclick="switchHubTab('links',this)">Saved Links</button>
+          <button class="hub-tab" onclick="switchHubTab('scratch',this)">Scratchpad</button>
         </div>
 
-        <!-- NotebookLM Tab -->
         <div class="hub-tab-body active" id="hub-tab-notebook">
           <div class="hub-embed-placeholder" id="hub-nlm-placeholder">
-            <div class="icon">🧠</div>
+            <div class="icon">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="12" r="10"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
             <p>Paste your <strong>NotebookLM shared notebook URL</strong> below to embed your workspace directly in the portal.</p>
           </div>
           <div class="hub-link-input" style="margin-top:0">
@@ -788,18 +986,14 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           </div>
         </div>
 
-        <!-- Saved Links Tab -->
         <div class="hub-tab-body" id="hub-tab-links">
           <div class="hub-link-input">
             <input type="url" id="hub-new-link-url" placeholder="https://...">
             <button onclick="saveResearchLink()">Save Link</button>
           </div>
-          <div class="hub-saved-links" id="hub-saved-links-list">
-            <!-- populated by JS -->
-          </div>
+          <div class="hub-saved-links" id="hub-saved-links-list"></div>
         </div>
 
-        <!-- Scratchpad Tab -->
         <div class="hub-tab-body" id="hub-tab-scratch">
           <div style="margin-bottom:.75rem;font-size:.75rem;color:var(--muted)">Quick notes — auto-saved to your browser</div>
           <textarea class="hub-scratch" id="hub-scratch-area" placeholder="Research notes, ideas, strategy snippets…" oninput="saveScratch()"></textarea>
@@ -818,13 +1012,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">Book strategy calls and project check-ins</div>
       </div>
       <div class="g2">
-        <!-- CALENDAR -->
         <div class="card">
           <div class="card-header">
             <div class="card-title" id="cal-month-label">April 2026</div>
             <div style="display:flex;gap:.5rem">
-              <button class="card-action" onclick="changeMonth(-1)">‹ Prev</button>
-              <button class="card-action" onclick="changeMonth(1)">Next ›</button>
+              <button class="card-action" onclick="changeMonth(-1)">&lsaquo; Prev</button>
+              <button class="card-action" onclick="changeMonth(1)">Next &rsaquo;</button>
             </div>
           </div>
           <div class="card-body">
@@ -833,7 +1026,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           </div>
         </div>
 
-        <!-- REQUEST FORM -->
         <div class="card">
           <div class="card-header">
             <div class="card-title">Request a Session</div>
@@ -859,20 +1051,21 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
                 <textarea class="field-textarea" id="sched-msg" placeholder="What would you like to discuss?"></textarea>
               </div>
               <div id="sched-result" class="auth-success" style="margin:0"></div>
-              <button class="btn-primary" type="submit">Request Session →</button>
+              <button class="btn-primary" type="submit">Request Session &rarr;</button>
             </form>
           </div>
         </div>
       </div>
 
-      <!-- UPCOMING BOOKINGS -->
       <div class="card">
         <div class="card-header">
           <div class="card-title">Upcoming Sessions</div>
         </div>
         <div class="card-body" id="upcoming-bookings">
           <div class="empty-state">
-            <div class="empty-icon">📅</div>
+            <div class="empty-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
             <div class="empty-title">No sessions scheduled</div>
             <div class="empty-sub">Request a session using the form above</div>
           </div>
@@ -888,7 +1081,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       </div>
 
       <div class="g2">
-        <!-- PROFILE FORM -->
         <div class="card">
           <div class="card-header">
             <div class="card-title">Profile Information</div>
@@ -917,7 +1109,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           </div>
         </div>
 
-        <!-- PREFERENCES -->
         <div class="card">
           <div class="card-header">
             <div class="card-title">Notifications</div>
@@ -961,15 +1152,140 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         </div>
       </div>
 
-      <!-- MEMBERSHIP TIER -->
       <div class="card" style="background:linear-gradient(135deg,rgba(255,179,71,0.08),rgba(201,138,42,0.04));border-color:var(--border-gold)">
         <div class="card-body" style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
-          <div style="font-size:2.5rem">⬡</div>
+          <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,179,71,0.12);border:1px solid rgba(255,179,71,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.75"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
           <div style="flex:1">
             <div style="font-family:var(--font-display);font-weight:800;font-size:1rem;color:var(--gold)" id="tier-name">Enterprise Partner</div>
             <div style="font-size:.8rem;color:var(--muted);margin-top:.25rem">Full access to AI automation, CRM optimization, systems design, and dedicated strategy support.</div>
           </div>
-          <a href="membership.html" class="btn-primary" style="text-decoration:none;white-space:nowrap">Upgrade Tier →</a>
+          <a href="membership.html" class="btn-primary" style="text-decoration:none;white-space:nowrap">Upgrade Tier &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TRUEASSIST PANEL ── -->
+    <section class="panel-page" id="panel-trueassist">
+      <div>
+        <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:900;letter-spacing:-.02em">TrueAssist</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">Your MGC AI advisor — strategy, automation, and business intelligence</div>
+      </div>
+      <div class="card" style="flex:1;display:flex;flex-direction:column;min-height:500px">
+        <div id="ta-messages" style="flex:1;overflow-y:auto;padding:1.25rem;display:flex;flex-direction:column;gap:.85rem;max-height:420px">
+          <div class="ta-msg ta-msg-ai">
+            <div class="ta-avatar">T</div>
+            <div class="ta-bubble">Hi! I'm TrueAssist, your MGC Global AI advisor. Ask me anything about your business automation, CRM strategy, AI readiness, or your engagement with MGC. How can I help you today?</div>
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding:1rem;display:flex;gap:.75rem;align-items:flex-end">
+          <textarea id="ta-input" placeholder="Ask TrueAssist anything…" rows="2" style="flex:1;background:rgba(1,12,26,.7);border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;color:white;font-family:var(--font-body);font-size:.875rem;resize:none;outline:none;transition:border-color .2s" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendTA()}"></textarea>
+          <button onclick="sendTA()" style="padding:.7rem 1.25rem;background:linear-gradient(135deg,var(--sky),var(--cyan));color:var(--abyss);border:none;border-radius:10px;font-family:var(--font-display);font-weight:800;font-size:.82rem;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0">Send</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── INBOX PANEL ── -->
+    <section class="panel-page" id="panel-inbox">
+      <div>
+        <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:900;letter-spacing:-.02em">Messages</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">Send a message, report an issue, or request a modification</div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">New Message</div></div>
+        <div class="card-body">
+          <form id="inbox-form" onsubmit="submitInbox(event)" style="display:flex;flex-direction:column;gap:1rem">
+            <div id="inbox-result" class="auth-success" style="display:none;margin:0"></div>
+            <div class="g2">
+              <div class="field-group">
+                <label class="field-label">Category</label>
+                <select id="inbox-cat" class="field-input" style="cursor:pointer">
+                  <option value="general">General Question</option>
+                  <option value="modification">Modification Request</option>
+                  <option value="issue">Issue / Bug</option>
+                  <option value="urgent">Urgent</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Subject</label>
+                <input class="field-input" type="text" id="inbox-subject" placeholder="Brief summary…" maxlength="120">
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Message</label>
+              <textarea class="field-input" id="inbox-message" rows="5" placeholder="Describe your request in detail…" style="resize:vertical"></textarea>
+            </div>
+            <button class="btn-primary" type="submit" id="inbox-btn">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── UPLOADS PANEL ── -->
+    <section class="panel-page" id="panel-uploads">
+      <div>
+        <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:900;letter-spacing:-.02em">File Uploads</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">Share images and assets with the MGC team · 10 MB per file · 5 files at a time</div>
+      </div>
+      <div class="card">
+        <div class="card-body" style="display:flex;flex-direction:column;gap:1.25rem">
+          <div id="upload-result" class="auth-success" style="display:none;margin:0"></div>
+          <div id="upload-zone" onclick="document.getElementById('upload-file').click()" ondragover="event.preventDefault();this.style.borderColor='var(--cyan)'" ondragleave="this.style.borderColor=''" ondrop="handleDrop(event)" style="border:2px dashed rgba(0,212,255,.25);border-radius:14px;padding:2.5rem;text-align:center;cursor:pointer;transition:border-color .2s">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="var(--cyan)" stroke-width="1.5" style="margin:0 auto .75rem;display:block;opacity:.6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div style="font-family:var(--font-display);font-weight:700;color:rgba(255,255,255,.8);margin-bottom:.3rem">Drop files here or click to browse</div>
+            <div style="font-size:.75rem;color:var(--muted)">PNG, JPG, PDF, ZIP — max 10 MB per file</div>
+          </div>
+          <input type="file" id="upload-file" multiple accept="image/*,.pdf,.zip,.doc,.docx" style="display:none" onchange="handleFiles(this.files)">
+          <div class="field-group">
+            <label class="field-label">Description (optional)</label>
+            <input class="field-input" type="text" id="upload-desc" placeholder="What are these files for?">
+          </div>
+          <button class="btn-primary" onclick="doUpload()" id="upload-btn">Upload Files</button>
+          <div id="upload-list" style="display:flex;flex-direction:column;gap:.5rem"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── QUESTIONNAIRE PANEL ── -->
+    <section class="panel-page" id="panel-questionnaire">
+      <div>
+        <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:900;letter-spacing:-.02em">Business Profile</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">Help us understand your business so we can build the right solutions for you</div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <form id="q-form" onsubmit="submitQuestionnaire(event)" style="display:flex;flex-direction:column;gap:1.5rem">
+            <div id="q-result" class="auth-success" style="display:none;margin:0"></div>
+            <div class="field-group">
+              <label class="field-label">1. What type of business do you operate and who is your primary target market?</label>
+              <textarea class="field-input" id="q1" rows="3" placeholder="e.g. B2B SaaS company serving mid-market healthcare providers…" style="resize:vertical"></textarea>
+            </div>
+            <div class="field-group">
+              <label class="field-label">2. What are your biggest operational pain points or bottlenecks right now?</label>
+              <textarea class="field-input" id="q2" rows="3" placeholder="e.g. Manual data entry, slow client onboarding, disconnected tools…" style="resize:vertical"></textarea>
+            </div>
+            <div class="field-group">
+              <label class="field-label">3. What specific outcomes do you want to achieve in the next 90 days?</label>
+              <textarea class="field-input" id="q3" rows="3" placeholder="e.g. Automate 3 core workflows, launch a new CRM system, reduce response time by 50%…" style="resize:vertical"></textarea>
+            </div>
+            <div class="field-group">
+              <label class="field-label">4. What tools does your team currently use and how tech-savvy are they?</label>
+              <textarea class="field-input" id="q4" rows="3" placeholder="e.g. HubSpot, Slack, QuickBooks — team is comfortable with software but no dev background…" style="resize:vertical"></textarea>
+            </div>
+            <div class="field-group">
+              <label class="field-label">5. What is your approximate investment range for this engagement?</label>
+              <select id="q5" class="field-input" style="cursor:pointer">
+                <option value="">Select a range…</option>
+                <option value="under-2k">Under $2,000</option>
+                <option value="2k-5k">$2,000 – $5,000</option>
+                <option value="5k-10k">$5,000 – $10,000</option>
+                <option value="10k-25k">$10,000 – $25,000</option>
+                <option value="25k-plus">$25,000+</option>
+              </select>
+            </div>
+            <button class="btn-primary" type="submit" id="q-btn">Submit Business Profile</button>
+          </form>
         </div>
       </div>
     </section>
@@ -992,12 +1308,10 @@ let currentProfile = null;
 
 // ── INIT ──
 window.addEventListener('DOMContentLoaded', async () => {
-  // Hide loading overlay after fonts load
   setTimeout(() => {
     document.getElementById('loading-overlay').classList.add('hide');
   }, 800);
 
-  // Auth state listener
   sb.auth.onAuthStateChange(async (event, session) => {
     if (session && session.user) {
       currentUser = session.user;
@@ -1008,7 +1322,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  // Initial session check
   const { data: { session } } = await sb.auth.getSession();
   if (session && session.user) {
     currentUser = session.user;
@@ -1017,9 +1330,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     showAuthScreen();
   }
 
-  // Calendar init
   renderCalendar();
-  // Set min date for schedule form
   const d = new Date();
   d.setDate(d.getDate() + 1);
   document.getElementById('sched-date').min = d.toISOString().split('T')[0];
@@ -1031,11 +1342,13 @@ function showAuthScreen() {
   document.getElementById('loading-overlay').classList.add('hide');
   document.getElementById('auth-screen').style.display = 'flex';
   document.getElementById('portal-app').classList.remove('show');
+  document.getElementById('portal-stripe').style.display = 'none';
 }
 
 function showPortal() {
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('portal-app').classList.add('show');
+  document.getElementById('portal-stripe').style.display = 'block';
 }
 
 function switchTab(tab) {
@@ -1052,10 +1365,8 @@ async function doLogin() {
   const errEl = document.getElementById('login-error');
   errEl.classList.remove('show');
   if (!email || !pass) { showErr(errEl, 'Please fill in all fields.'); return; }
-
   const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
   if (error) { showErr(errEl, error.message); return; }
-  // onAuthStateChange will handle portal init
 }
 
 // ── SIGNUP ──
@@ -1079,13 +1390,18 @@ async function doSignup() {
   if (error) { showErr(errEl, error.message); return; }
   succEl.textContent = 'Account created! Check your email to confirm, then sign in.';
   succEl.classList.add('show');
+  // Clear all signup fields so only the success message is visible
+  document.getElementById('signup-name').value = '';
+  document.getElementById('signup-company').value = '';
+  document.getElementById('signup-email').value = '';
+  document.getElementById('signup-pass').value = '';
 }
 
 // ── GOOGLE AUTH ──
 async function doGoogleAuth() {
   await sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: window.location.href }
+    options: { redirectTo: 'https://mgcglobalconsulting.com/dashboard' }
   });
 }
 
@@ -1096,11 +1412,22 @@ async function doLogout() {
   toast('Signed out successfully', 'info');
 }
 
+// ── WELCOME ANIMATION ──
+function showWelcomeAnimation(firstName) {
+  const wrap = document.getElementById('welcome-anim-wrap');
+  document.getElementById('welcome-anim-name').textContent = firstName;
+  wrap.classList.remove('dismiss');
+  requestAnimationFrame(() => { wrap.classList.add('show'); });
+  setTimeout(() => {
+    wrap.classList.remove('show');
+    wrap.classList.add('dismiss');
+  }, 4500);
+}
+
 // ── PORTAL INIT ──
 async function initPortal(user) {
   showPortal();
 
-  // Load profile
   const { data: profile } = await sb
     .from('mgc_client_profiles')
     .select('*')
@@ -1112,27 +1439,29 @@ async function initPortal(user) {
   const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
   const tier = profile?.membership_tier || 'Enterprise Client';
 
-  // Update UI
   document.getElementById('s-user-name').textContent = name;
   document.getElementById('s-user-tier').textContent = tier;
   document.getElementById('s-avatar').textContent = initials;
   document.getElementById('welcome-name').textContent = name.split(' ')[0];
-  document.getElementById('topbar-sub').textContent = `Last seen: Today`;
+  document.getElementById('topbar-sub').textContent = 'Last seen: Today';
 
-  // Pre-fill settings
   document.getElementById('profile-name').value = profile?.full_name || '';
   document.getElementById('profile-company').value = profile?.company || '';
   document.getElementById('profile-phone').value = profile?.phone || '';
   document.getElementById('profile-email').value = user.email;
   document.getElementById('tier-name').textContent = tier;
 
-  // Load data
-  await Promise.all([loadProjects(), loadDeliverables(), loadInvoices()]);
+  // Trigger welcome animation
+  showWelcomeAnimation(name.split(' ')[0]);
 
-  // Activity ping
+  // Load all data in parallel
+  await Promise.all([loadProjects(), loadDeliverables(), loadInvoices(), loadNextSession()]);
+
   addActivity('Portal session started', 'cyan');
-
   document.getElementById('loading-overlay').classList.add('hide');
+
+  // Start real-time channel subscriptions for live updates
+  startRealtimeSubscriptions();
 }
 
 // ── LOAD PROJECTS ──
@@ -1146,13 +1475,12 @@ async function loadProjects() {
 
   const activeProjects = projects?.filter(p => p.status === 'active') || [];
   document.getElementById('kpi-projects').textContent = activeProjects.length || 0;
-  document.getElementById('kpi-projects-sub').textContent = `${projects?.length || 0} total engagements`;
+  document.getElementById('kpi-projects-sub').textContent = `${projects?.length || 0} total engagement${projects?.length !== 1 ? 's' : ''}`;
   document.getElementById('projects-count').textContent = projects?.length || 0;
 
-  // Overview mini-list
   const ovList = document.getElementById('overview-projects-list');
   if (!projects || projects.length === 0) {
-    ovList.innerHTML = `<div class="empty-state"><div class="empty-icon">📁</div><div class="empty-title">No projects yet</div><div class="empty-sub">Your MGC projects will appear here</div></div>`;
+    ovList.innerHTML = `<div class="empty-state"><div class="empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="empty-title">No projects yet</div><div class="empty-sub">Your MGC projects will appear here</div></div>`;
   } else {
     ovList.innerHTML = projects.slice(0,3).map(p => `
       <div class="proj-card" onclick="showPanel('projects',null)" style="margin-bottom:.75rem">
@@ -1167,10 +1495,9 @@ async function loadProjects() {
     `).join('');
   }
 
-  // Full projects grid
   const projGrid = document.getElementById('projects-grid');
   if (!projects || projects.length === 0) {
-    projGrid.innerHTML = `<div class="empty-state g-full"><div class="empty-icon">📁</div><div class="empty-title">No projects yet</div><div class="empty-sub">Your MGC projects will appear here once your engagement begins</div></div>`;
+    projGrid.innerHTML = `<div class="empty-state g-full"><div class="empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="empty-title">No projects yet</div><div class="empty-sub">Your MGC projects will appear here once your engagement begins</div></div>`;
   } else {
     projGrid.innerHTML = projects.map(p => `
       <div class="proj-card">
@@ -1193,6 +1520,31 @@ async function loadProjects() {
   addActivity(`Loaded ${projects?.length || 0} project(s)`, 'blue');
 }
 
+// ── LOAD NEXT SESSION ──
+async function loadNextSession() {
+  if (!currentUser) return;
+  const today = new Date().toISOString().split('T')[0];
+  const { data, error } = await sb
+    .from('mgc_bookings')
+    .select('requested_date, service, status')
+    .eq('email', currentUser.email)
+    .eq('status', 'confirmed')
+    .gte('requested_date', today)
+    .order('requested_date', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (data && data.requested_date) {
+    const d = new Date(data.requested_date + 'T12:00:00');
+    const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    document.getElementById('kpi-next-session').textContent = label;
+    document.getElementById('kpi-next-session-sub').textContent = data.service || 'Strategy Call';
+  } else {
+    document.getElementById('kpi-next-session').textContent = '–';
+    document.getElementById('kpi-next-session-sub').textContent = 'None scheduled';
+  }
+}
+
 // ── LOAD DELIVERABLES ──
 async function loadDeliverables() {
   if (!currentUser) return;
@@ -1202,13 +1554,16 @@ async function loadDeliverables() {
     .eq('client_id', currentUser.id)
     .order('created_at', { ascending: false });
 
-  const ready = delivs?.filter(d => d.status === 'ready') || [];
-  document.getElementById('kpi-deliverables').textContent = ready.length;
+  const open = delivs?.filter(d => d.status !== 'completed') || [];
+  document.getElementById('kpi-deliverables').textContent = open.length;
+  document.getElementById('kpi-deliverables-sub').textContent = open.length > 0 ? `${open.length} pending review` : 'All complete';
   document.getElementById('deliverables-count').textContent = delivs?.length || 0;
+
+  const fileIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>`;
 
   const renderDelivItem = d => `
     <div class="deliv-item">
-      <div class="deliv-icon">${d.file_type === 'pdf' ? '📄' : d.file_type === 'video' ? '🎬' : d.file_type === 'design' ? '🎨' : '📦'}</div>
+      <div class="deliv-icon">${fileIcon}</div>
       <div class="deliv-info">
         <div class="deliv-name">${escHtml(d.title)}</div>
         <div class="deliv-meta">${d.description || ''} · ${formatDate(d.created_at)}</div>
@@ -1218,21 +1573,13 @@ async function loadDeliverables() {
     </div>
   `;
 
-  // Overview pending
-  const ovDel = document.getElementById('overview-deliverables');
-  if (!delivs || delivs.length === 0) {
-    ovDel.innerHTML = `<div class="empty-state"><div class="empty-icon">📦</div><div class="empty-title">No deliverables yet</div><div class="empty-sub">Completed project assets will appear here</div></div>`;
-  } else {
-    ovDel.innerHTML = delivs.slice(0,4).map(renderDelivItem).join('');
-  }
+  const emptyDelivHtml = `<div class="empty-state"><div class="empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div><div class="empty-title">No deliverables yet</div><div class="empty-sub">Completed project assets will appear here</div></div>`;
 
-  // Full list
+  const ovDel = document.getElementById('overview-deliverables');
+  ovDel.innerHTML = (!delivs || delivs.length === 0) ? emptyDelivHtml : delivs.slice(0,4).map(renderDelivItem).join('');
+
   const delivList = document.getElementById('deliverables-list');
-  if (!delivs || delivs.length === 0) {
-    delivList.innerHTML = `<div class="empty-state"><div class="empty-icon">📦</div><div class="empty-title">No deliverables yet</div><div class="empty-sub">Your project assets and documents will appear here</div></div>`;
-  } else {
-    delivList.innerHTML = delivs.map(renderDelivItem).join('');
-  }
+  delivList.innerHTML = (!delivs || delivs.length === 0) ? emptyDelivHtml : delivs.map(renderDelivItem).join('');
 }
 
 // ── LOAD INVOICES ──
@@ -1247,13 +1594,13 @@ async function loadInvoices() {
   const unpaid = invs?.filter(i => i.status === 'unpaid') || [];
   const total = unpaid.reduce((sum, i) => sum + (i.amount_cents || 0), 0);
   document.getElementById('kpi-balance').textContent = total > 0 ? '$' + (total/100).toLocaleString() : '$0';
-  document.getElementById('kpi-balance-sub').textContent = unpaid.length > 0 ? `${unpaid.length} invoice${unpaid.length > 1 ? 's' : ''} due` : 'All paid up!';
+  document.getElementById('kpi-balance-sub').textContent = unpaid.length > 0 ? `${unpaid.length} invoice${unpaid.length > 1 ? 's' : ''} due` : 'All paid up';
   document.getElementById('invoices-count').textContent = unpaid.length || 0;
   if (unpaid.length === 0) document.getElementById('invoices-count').className = 'nav-pill';
 
   const tbody = document.getElementById('invoices-tbody');
   if (!invs || invs.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state" style="padding:2rem"><div class="empty-icon">🧾</div><div class="empty-title">No invoices yet</div></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state" style="padding:2rem"><div class="empty-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div><div class="empty-title">No invoices yet</div></div></td></tr>`;
     return;
   }
 
@@ -1291,12 +1638,9 @@ async function submitSchedule(e) {
     status: 'pending'
   });
 
-  if (error) {
-    toast('Failed to submit request. Please try again.', 'error');
-    return;
-  }
+  if (error) { toast('Failed to submit request. Please try again.', 'error'); return; }
 
-  resultEl.textContent = '✓ Session request submitted! We\'ll confirm within 24 hours.';
+  resultEl.textContent = 'Session request submitted! We\'ll confirm within 24 hours.';
   resultEl.classList.add('show');
   document.getElementById('schedule-form').reset();
   toast('Session request submitted!', 'success');
@@ -1320,7 +1664,7 @@ async function saveProfile(e) {
   const { error } = await sb.from('mgc_client_profiles').upsert({ id: currentUser.id, ...updates });
   if (error) { toast('Error saving profile', 'error'); return; }
 
-  resultEl.textContent = '✓ Profile updated successfully';
+  resultEl.textContent = 'Profile updated successfully';
   resultEl.classList.add('show');
   document.getElementById('s-user-name').textContent = updates.full_name || currentUser.email;
   toast('Profile saved', 'success');
@@ -1330,7 +1674,7 @@ async function saveProfile(e) {
 async function sendPasswordReset() {
   if (!currentUser) return;
   const { error } = await sb.auth.resetPasswordForEmail(currentUser.email, {
-    redirectTo: window.location.href
+    redirectTo: 'https://mgcglobalconsulting.com/dashboard'
   });
   if (error) { toast('Failed to send reset email', 'error'); return; }
   toast('Password reset email sent!', 'success');
@@ -1349,12 +1693,11 @@ function showPanel(panelId, btnEl) {
     if (btn) btn.classList.add('active');
   }
 
-  const titles = { overview:'Overview', projects:'Projects', deliverables:'Deliverables', invoices:'Invoices', knowledge:'Knowledge Base', research:'Research Hub', schedule:'Schedule', settings:'Settings' };
+  const titles = { overview:'Overview', projects:'Projects', deliverables:'Deliverables', invoices:'Invoices', knowledge:'Knowledge Base', research:'Research Hub', trueassist:'TrueAssist', inbox:'Messages', uploads:'File Uploads', questionnaire:'Business Profile', schedule:'Schedule', settings:'Settings' };
   if (panelId === 'knowledge') initKnowledgeBase();
   if (panelId === 'research') initResearchHub();
   document.getElementById('topbar-title').textContent = titles[panelId] || panelId;
 
-  // Close mobile sidebar
   document.getElementById('sidebar').classList.remove('open');
 }
 
@@ -1377,8 +1720,8 @@ function renderCalendar() {
   const days = new Date(calYear, calMonth + 1, 0).getDate();
   const today = new Date();
   const gridEl = document.getElementById('cal-grid');
-  let cells = '';
 
+  let cells = '';
   for (let i = 0; i < first; i++) cells += `<div class="sched-cell empty"></div>`;
   for (let d = 1; d <= days; d++) {
     const isToday = d === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear();
@@ -1422,15 +1765,24 @@ function addActivity(text, dotClass = 'cyan') {
 
 // ── TOAST ──
 function toast(msg, type = 'info') {
-  const icons = { success:'✅', error:'❌', info:'ℹ️', warning:'⚠️' };
+  const icons = {
+    success: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',
+    error:   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+    info:    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    warning: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fcd34d" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+  };
   const el = document.createElement('div');
   el.className = `toast ${type}`;
-  el.innerHTML = `<span class="toast-icon">${icons[type]||'ℹ️'}</span><span>${escHtml(msg)}</span>`;
+  el.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><span>${escHtml(msg)}</span>`;
   document.getElementById('toast-container').appendChild(el);
   setTimeout(() => { el.style.transition='opacity .3s'; el.style.opacity='0'; setTimeout(()=>el.remove(), 300); }, 3500);
 }
 
 // ── KNOWLEDGE BASE ──
+let kbCurrentTag = 'all';
+let kbCurrentNote = null;
+let kbInitialized = false;
+
 const KB_NOTES = [
   {
     id:1, title:'AI Automation Fundamentals', tag:'ai', updated:'Apr 2026',
@@ -1577,34 +1929,24 @@ Most businesses track metrics that *feel* good. MGC focuses on metrics that *pre
 - **Deliverable:** Findings report + Priority matrix
 
 ### Phase 2: Architecture (Days 15-45)
-- Design target-state systems
-- Select and configure technology stack
-- Build automation blueprints
-- **Deliverable:** Systems Architecture Document + Implementation roadmap
+- Systems design — CRM, automation, reporting architecture
+- Tool selection and vendor negotiation
+- Quick wins implementation (2-3 high-ROI automations)
+- **Deliverable:** Systems blueprint + Implementation roadmap
 
-### Phase 3: Build (Days 46-75)
-- Execute top-priority automations
-- CRM optimization and data migration
-- Team training and adoption plan
-- **Deliverable:** Live systems + Training documentation
+### Phase 3: Build & Launch (Days 46-75)
+- Full automation stack deployment
+- Team training and adoption program
+- Integration testing with real data
+- **Deliverable:** Live system + Training documentation
 
 ### Phase 4: Optimize (Days 76-90)
-- Measure baseline metrics
-- Identify quick-win improvements
-- Establish ongoing reporting cadence
-- **Deliverable:** 90-day performance report + Next-90 roadmap
-
-## Keys to Engagement Success
-1. **Executive sponsorship** — Someone with authority must own the initiative
-2. **Weekly check-ins** — Velocity dies without accountability
-3. **Data access** — We need real numbers, not estimates
-4. **Implementation speed** — Perfect is the enemy of shipped`
+- Performance review against baseline metrics
+- Iteration on highest-impact workflows
+- Handoff documentation
+- **Deliverable:** Optimization report + Ongoing support plan`
   }
 ];
-
-let kbCurrentTag = 'all';
-let kbCurrentNote = null;
-let kbInitialized = false;
 
 function initKnowledgeBase() {
   if (kbInitialized) return;
@@ -1631,7 +1973,6 @@ function openKbNote(id) {
   kbCurrentNote = KB_NOTES.find(n => n.id === id);
   if (!kbCurrentNote) return;
   renderKbList(KB_NOTES);
-  const tagColor = { ai:'rgba(139,92,246,.15)', strategy:'rgba(0,212,255,.1)', crm:'rgba(34,197,94,.1)', growth:'rgba(249,115,22,.1)', automation:'rgba(59,130,246,.1)' };
   const viewer = document.getElementById('kb-viewer');
   viewer.innerHTML = `
     <div class="kb-viewer-title">${escHtml(kbCurrentNote.title)}</div>
@@ -1651,8 +1992,8 @@ function renderMarkdown(md) {
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/`([^`]+)`/g, '<code>$1</code>')
     .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
-    .replace(/^\- \[x\] (.+)$/gm, '<li>☑ $1</li>')
-    .replace(/^\- \[ \] (.+)$/gm, '<li>☐ $1</li>')
+    .replace(/^\- \[x\] (.+)$/gm, '<li>&#x2611; $1</li>')
+    .replace(/^\- \[ \] (.+)$/gm, '<li>&#x2610; $1</li>')
     .replace(/^\- (.+)$/gm, '<li>$1</li>')
     .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
     .replace(/(<li>.*<\/li>\n?)+/g, m => `<ul>${m}</ul>`)
@@ -1691,12 +2032,8 @@ let researchInitialized = false;
 function initResearchHub() {
   if (researchInitialized) return;
   researchInitialized = true;
-
-  // Load scratch
   const saved = localStorage.getItem('mgc_scratch');
   if (saved) document.getElementById('hub-scratch-area').value = saved;
-
-  // Load saved links
   renderSavedLinks();
 }
 
@@ -1745,7 +2082,7 @@ function renderSavedLinks() {
         <div class="hub-saved-link-title">${escHtml(l.title)}</div>
         <div class="hub-saved-link-url">${escHtml(l.url)}</div>
       </div>
-      <button onclick="event.preventDefault();removeLink(${i})" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:.85rem;flex-shrink:0">✕</button>
+      <button onclick="event.preventDefault();removeLink(${i})" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:.85rem;flex-shrink:0">&times;</button>
     </a>
   `).join('');
 }
@@ -1763,7 +2100,7 @@ function saveScratch() {
   document.getElementById('scratch-saved-status').textContent = 'Saving…';
   scratchTimeout = setTimeout(() => {
     localStorage.setItem('mgc_scratch', document.getElementById('hub-scratch-area').value);
-    document.getElementById('scratch-saved-status').textContent = 'Saved ✓';
+    document.getElementById('scratch-saved-status').textContent = 'Saved';
   }, 800);
 }
 
@@ -1772,6 +2109,236 @@ function clearScratch() {
   document.getElementById('hub-scratch-area').value = '';
   localStorage.removeItem('mgc_scratch');
   document.getElementById('scratch-saved-status').textContent = 'Cleared';
+}
+
+// ── REALTIME SUBSCRIPTIONS ──
+// Live project status updates — badge refreshes without page reload
+function startRealtimeSubscriptions() {
+  if (!currentUser) return;
+
+  sb.channel('mgc-projects-rt')
+    .on('postgres_changes', {
+      event: '*',
+      schema: 'public',
+      table: 'mgc_projects',
+      filter: `client_id=eq.${currentUser.id}`
+    }, payload => {
+      // Reload projects panel and overview on any change
+      loadProjects();
+      toast('Project updated in real time', 'info');
+      addActivity('Project status changed', 'cyan');
+    })
+    .subscribe();
+
+  sb.channel('mgc-invoices-rt')
+    .on('postgres_changes', {
+      event: '*',
+      schema: 'public',
+      table: 'mgc_invoices',
+      filter: `client_id=eq.${currentUser.id}`
+    }, payload => {
+      loadInvoices();
+      toast('Invoice updated', 'info');
+    })
+    .subscribe();
+
+  sb.channel('mgc-deliverables-rt')
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'mgc_deliverables',
+      filter: `client_id=eq.${currentUser.id}`
+    }, payload => {
+      loadDeliverables();
+      toast('New deliverable available', 'success');
+      addActivity('New deliverable uploaded', 'green');
+    })
+    .subscribe();
+}
+
+// ── TRUEASSIST ──
+let taHistory = [];
+
+function sendTA() {
+  const input = document.getElementById('ta-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  appendTAMsg(msg, 'user');
+  taHistory.push({ role: 'user', content: msg });
+
+  const thinking = appendTAMsg('Thinking…', 'ai', true);
+
+  fetch('/.netlify/functions/trueassist', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: taHistory, clientName: currentProfile?.full_name || 'Client', company: currentProfile?.company || '' })
+  })
+    .then(r => r.json())
+    .then(data => {
+      thinking.remove();
+      const reply = data.reply || 'Sorry, I could not get a response. Please try again.';
+      appendTAMsg(reply, 'ai');
+      taHistory.push({ role: 'assistant', content: reply });
+    })
+    .catch(() => {
+      thinking.remove();
+      appendTAMsg('Connection error. Please check your network and try again.', 'ai');
+    });
+}
+
+function appendTAMsg(text, role, isThinking = false) {
+  const container = document.getElementById('ta-messages');
+  const div = document.createElement('div');
+  div.className = `ta-msg ta-msg-${role}${isThinking ? ' ta-thinking' : ''}`;
+  const initial = role === 'ai' ? 'T' : (currentProfile?.full_name?.[0]?.toUpperCase() || 'U');
+  div.innerHTML = `<div class="ta-avatar">${initial}</div><div class="ta-bubble">${isThinking ? '' : escHtml(text).replace(/\n/g,'<br>')}</div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+// ── INBOX ──
+async function submitInbox(e) {
+  e.preventDefault();
+  const btn = document.getElementById('inbox-btn');
+  const result = document.getElementById('inbox-result');
+  const subject = document.getElementById('inbox-subject').value.trim();
+  const message = document.getElementById('inbox-message').value.trim();
+  const category = document.getElementById('inbox-cat').value;
+
+  if (!subject || !message) { toast('Please fill in subject and message', 'error'); return; }
+
+  btn.disabled = true; btn.textContent = 'Sending…';
+  result.style.display = 'none';
+
+  const { error } = await sb.from('mgc_messages').insert({
+    client_id: currentUser.id,
+    client_name: currentProfile?.full_name || currentUser.email,
+    company: currentProfile?.company || '',
+    category,
+    subject,
+    message,
+    status: 'unread'
+  });
+
+  btn.disabled = false; btn.textContent = 'Send Message';
+
+  if (error) { toast('Failed to send message: ' + error.message, 'error'); return; }
+
+  result.textContent = 'Message sent! The MGC team will follow up with you shortly.';
+  result.style.display = 'block';
+  document.getElementById('inbox-subject').value = '';
+  document.getElementById('inbox-message').value = '';
+  addActivity('Message sent to MGC team', 'cyan');
+}
+
+// ── UPLOADS ──
+let uploadFiles = [];
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').style.borderColor = '';
+  handleFiles(e.dataTransfer.files);
+}
+
+function handleFiles(fileList) {
+  const MAX = 10 * 1024 * 1024;
+  const allowed = Array.from(fileList).filter(f => {
+    if (f.size > MAX) { toast(`${f.name} exceeds 10 MB limit`, 'error'); return false; }
+    return true;
+  }).slice(0, 5);
+
+  uploadFiles = allowed;
+  const list = document.getElementById('upload-list');
+  list.innerHTML = allowed.map(f => `
+    <div style="display:flex;align-items:center;gap:.6rem;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12);border-radius:8px;padding:.5rem .9rem">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span style="font-size:.78rem;flex:1;color:rgba(255,255,255,.8)">${escHtml(f.name)}</span>
+      <span style="font-size:.7rem;color:var(--muted)">${(f.size/1024).toFixed(0)} KB</span>
+    </div>
+  `).join('');
+}
+
+async function doUpload() {
+  if (!uploadFiles.length) { toast('Select at least one file', 'error'); return; }
+  const btn = document.getElementById('upload-btn');
+  const result = document.getElementById('upload-result');
+  const desc = document.getElementById('upload-desc').value.trim();
+
+  btn.disabled = true; btn.textContent = 'Uploading…';
+  result.style.display = 'none';
+
+  let errors = 0;
+  for (const file of uploadFiles) {
+    const path = `${currentUser.id}/${Date.now()}_${file.name}`;
+    const { error: upErr } = await sb.storage.from('mgc-client-uploads').upload(path, file, { upsert: false });
+    if (upErr) { errors++; continue; }
+    const { data: { publicUrl } } = sb.storage.from('mgc-client-uploads').getPublicUrl(path);
+    await sb.from('mgc_uploads').insert({
+      client_id: currentUser.id,
+      file_name: file.name,
+      file_url: publicUrl,
+      file_size: file.size,
+      description: desc || null
+    });
+  }
+
+  btn.disabled = false; btn.textContent = 'Upload Files';
+
+  if (errors > 0 && errors === uploadFiles.length) {
+    toast('Upload failed. Check file types and try again.', 'error');
+    return;
+  }
+
+  result.textContent = errors > 0
+    ? `${uploadFiles.length - errors} of ${uploadFiles.length} files uploaded. Some failed.`
+    : `${uploadFiles.length} file${uploadFiles.length > 1 ? 's' : ''} uploaded successfully.`;
+  result.style.display = 'block';
+  uploadFiles = [];
+  document.getElementById('upload-list').innerHTML = '';
+  document.getElementById('upload-desc').value = '';
+  document.getElementById('upload-file').value = '';
+  addActivity(`${uploadFiles.length || 'Files'} uploaded`, 'green');
+}
+
+// ── QUESTIONNAIRE ──
+async function submitQuestionnaire(e) {
+  e.preventDefault();
+  const btn = document.getElementById('q-btn');
+  const result = document.getElementById('q-result');
+
+  const answers = {
+    q1: document.getElementById('q1').value.trim(),
+    q2: document.getElementById('q2').value.trim(),
+    q3: document.getElementById('q3').value.trim(),
+    q4: document.getElementById('q4').value.trim(),
+    q5: document.getElementById('q5').value
+  };
+
+  if (!answers.q1 || !answers.q2 || !answers.q3 || !answers.q4 || !answers.q5) {
+    toast('Please answer all questions before submitting', 'error'); return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Submitting…';
+  result.style.display = 'none';
+
+  const { error } = await sb.from('mgc_questionnaires').insert({
+    client_id: currentUser.id,
+    client_name: currentProfile?.full_name || currentUser.email,
+    company: currentProfile?.company || '',
+    ...answers
+  });
+
+  btn.disabled = false; btn.textContent = 'Submit Business Profile';
+
+  if (error) { toast('Submission failed: ' + error.message, 'error'); return; }
+
+  result.textContent = 'Business profile submitted. The MGC team will review it before your next session.';
+  result.style.display = 'block';
+  btn.disabled = true;
+  addActivity('Business profile submitted', 'green');
 }
 
 // ── HELPERS ──

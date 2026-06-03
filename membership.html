@@ -11,16 +11,32 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --navy-deep:#0A1628;--navy:#112A60;--primary:#135997;--cyan:#4AAFCF;
-  --gold:#C9A84C;--gold-light:#F0D98A;--white:#FFFFFF;--off-white:#F8F9FC;
-  --text:#1A2235;--muted:#6B7899;--border:#E2E8F0;
-  --font-display:'Sora',system-ui,sans-serif;--font-body:'Plus Jakarta Sans',system-ui,sans-serif;
+  /* ── Aligned with index.html palette ── */
+  --abyss:    #010C1A;
+  --deep:     #010C1A;
+  --navy-deep:#010C1A;
+  --navy:     #041C35;
+  --sky:      #0A3A6B;
+  --royal:    #0055CC;
+  --primary:  #0066FF;
+  --cyan:     #00D4FF;
+  --ice:      #A8E6FF;
+  --bright:   #E8F4FF;
+  --gold:     #FFB347;
+  --gold-dim: #C98A2A;
+  --gold-light:#FFD580;
+  --text:     rgba(255,255,255,0.92);
+  --t-mid:    rgba(255,255,255,0.55);
+  --t-dim:    rgba(255,255,255,0.35);
+  --white:#FFFFFF;
+  --font-display:'Raleway',system-ui,sans-serif;
+  --font-body:'Plus Jakarta Sans',system-ui,sans-serif;
   --ease:cubic-bezier(0.16,1,0.3,1);
   /* Tier accent colours */
-  --starter:#2A9D8F;--pro:#135997;--elite:#C9A84C;
+  --starter:#00D4FF;--pro:#0066FF;--elite:#FFB347;
 }
 html{font-size:16px;scroll-behavior:smooth}
-body{font-family:var(--font-body);color:var(--text);background:var(--navy-deep);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-body);color:var(--text);background:var(--abyss);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 a{text-decoration:none;color:inherit}
 
 /* ── NAV ── */
@@ -55,20 +71,20 @@ nav{position:sticky;top:0;z-index:100;padding:1.25rem 2rem;display:flex;align-it
 .tier-card:hover{transform:translateY(-6px)}
 
 /* Starter */
-.tier-starter{background:linear-gradient(160deg,#0d2035,#0a1628);border:1px solid rgba(42,157,143,0.25)}
+.tier-starter{background:linear-gradient(160deg,#041C35,#010C1A);border:1px solid rgba(0,212,255,0.2)}
 .tier-starter:hover{box-shadow:0 24px 60px rgba(42,157,143,0.15)}
 .tier-starter .tier-accent{color:var(--starter)}
 .tier-starter .tier-btn{background:transparent;border:1.5px solid var(--starter);color:var(--starter)}
 .tier-starter .tier-btn:hover{background:var(--starter);color:white}
 
 /* Pro (featured) */
-.tier-pro{background:linear-gradient(160deg,#112A60,#0e2050);border:1px solid rgba(74,175,207,0.35);box-shadow:0 0 0 1px rgba(74,175,207,0.2),0 32px 80px rgba(19,89,151,0.3)}
+.tier-pro{background:linear-gradient(160deg,#041C35,#0066FF18);border:1px solid rgba(0,212,255,0.35);box-shadow:0 0 0 1px rgba(0,212,255,0.15),0 32px 80px rgba(0,102,255,0.25)}
 .tier-pro .tier-accent{color:var(--cyan)}
 .tier-pro .tier-btn{background:linear-gradient(135deg,var(--primary),var(--cyan));color:white;border:none}
 .tier-pro .tier-btn:hover{opacity:0.9;transform:translateY(-2px);box-shadow:0 8px 24px rgba(19,89,151,0.4)}
 
 /* Elite */
-.tier-elite{background:linear-gradient(160deg,#1a1200,#0A1628);border:1px solid rgba(201,168,76,0.3)}
+.tier-elite{background:linear-gradient(160deg,#120A00,#010C1A);border:1px solid rgba(255,179,71,0.3)}
 .tier-elite:hover{box-shadow:0 24px 60px rgba(201,168,76,0.12)}
 .tier-elite .tier-accent{color:var(--gold)}
 .tier-elite .tier-btn{background:linear-gradient(135deg,var(--gold),#e8c76a);color:#1a1200;font-weight:800;border:none}
@@ -79,7 +95,12 @@ nav{position:sticky;top:0;z-index:100;padding:1.25rem 2rem;display:flex;align-it
 .tier-badge.prestige{background:rgba(201,168,76,0.15);color:var(--gold);border:1px solid rgba(201,168,76,0.3)}
 .tier-badge.growth{background:rgba(42,157,143,0.15);color:var(--starter);border:1px solid rgba(42,157,143,0.3)}
 
-.tier-icon{font-size:2.25rem;margin-bottom:0.75rem;display:block}
+.tier-icon{width:52px;height:52px;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:center;border-radius:14px;transition:transform 0.35s cubic-bezier(.34,1.56,.64,1),box-shadow 0.35s ease}
+.tier-icon svg{width:28px;height:28px}
+.tier-card:hover .tier-icon{transform:scale(1.12) rotate(-3deg)}
+.tier-starter .tier-icon{background:rgba(42,157,143,0.15);border:1px solid rgba(42,157,143,0.3);box-shadow:0 4px 20px rgba(42,157,143,0.12);color:var(--starter)}
+.tier-pro .tier-icon{background:rgba(74,175,207,0.15);border:1px solid rgba(74,175,207,0.3);box-shadow:0 4px 20px rgba(74,175,207,0.15);color:var(--cyan)}
+.tier-elite .tier-icon{background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);box-shadow:0 4px 20px rgba(201,168,76,0.15);color:var(--gold)}
 .tier-name{font-family:var(--font-display);font-size:0.8rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:1rem}
 .tier-price-row{display:flex;align-items:baseline;gap:0.4rem;margin-bottom:0.4rem}
 .tier-price{font-family:var(--font-display);font-size:3.5rem;font-weight:800;color:white;letter-spacing:-0.04em;line-height:1}
@@ -126,6 +147,13 @@ footer a:hover{color:var(--cyan)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s var(--ease),transform 0.7s var(--ease)}
 .reveal.visible{opacity:1;transform:none}
+
+/* === SVG Icon overrides === */
+[class$="-icon"] svg,[class*="-icon "] svg{width:24px;height:24px;transition:transform 0.25s ease,opacity 0.25s ease}
+[class$="-icon"]:hover svg,[class*="-icon "]:hover svg{transform:scale(1.15);opacity:0.9}
+.del-icon,.deliv-icon,.fw-icon,.fmt-icon,.highlight-icon,.inc-icon,.perk-icon,.pillar-icon,.support-icon,.svc-icon,.tier-icon,.ws-icon,.wvc-icon{font-size:0!important}
+.fit-card h3 svg,.good-fit h3 svg{color:#22c55e}
+
 </style>
 </head>
 <body>
@@ -133,7 +161,7 @@ footer a:hover{color:var(--cyan)}
 <nav class="nav" id="mainNav" style="position:fixed;top:0;left:0;right:0;z-index:10000;padding:1.35rem 0;background:rgba(10,22,40,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 4px 40px rgba(0,0,0,0.25);">
   <div class="nav-inner" style="max-width:1200px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;">
     <a class="nav-logo" href="index.html" style="display:flex;align-items:center;gap:0.7rem;flex-shrink:0;text-decoration:none;">
-      <img src="assets/images/mgc-logo-transparent.png" alt="MGC Global Consulting" style="width:46px;height:46px;object-fit:contain;filter:brightness(1.15) drop-shadow(0 0 10px rgba(0,187,255,0.5));flex-shrink:0">
+      <img src="assets/mgc-logo-transparent.png" alt="MGC Global Consulting" style="width:58px;height:58px;object-fit:contain;filter:drop-shadow(0 0 14px rgba(0,212,255,0.5)) drop-shadow(0 2px 8px rgba(0,0,0,0.7));flex-shrink:0;transition:filter 0.3s ease" onmouseover="this.style.filter='drop-shadow(0 0 22px rgba(0,212,255,0.75)) drop-shadow(0 2px 8px rgba(0,0,0,0.6))'" onmouseout="this.style.filter='drop-shadow(0 0 14px rgba(0,212,255,0.5)) drop-shadow(0 2px 8px rgba(0,0,0,0.7))'">
       <div class="nav-logo-text" style="display:flex;flex-direction:column">
         <span class="nav-logo-name" style="font-family:var(--font-display);font-weight:800;font-size:0.92rem;color:white;letter-spacing:-0.02em;white-space:nowrap">MGC Global Consulting</span>
         <span class="nav-logo-sub" style="font-size:0.6rem;color:rgba(255,255,255,0.4);letter-spacing:2px;text-transform:uppercase;font-weight:600;white-space:nowrap">Making Global Connections</span>
@@ -171,8 +199,13 @@ footer a:hover{color:var(--cyan)}
 
     <!-- STARTER -->
     <div class="tier-card tier-starter reveal">
-      <div class="tier-badge growth">🌱 Foundation</div>
-      <span class="tier-icon">🌱</span>
+      <div class="tier-badge growth">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><path d="M12 22V12M12 12C12 7 7 4 2 4c0 5 3 9 10 8M12 12c0-5 5-8 10-8-1 6-5 9-10 8"/></svg>
+        Foundation
+      </div>
+      <span class="tier-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12M12 12C12 7 7 4 2 4c0 5 3 9 10 8M12 12c0-5 5-8 10-8-1 6-5 9-10 8"/></svg>
+      </span>
       <div class="tier-name tier-accent">Starter</div>
       <div class="tier-price-row">
         <div class="tier-price">$199</div>
@@ -207,8 +240,13 @@ footer a:hover{color:var(--cyan)}
 
     <!-- PRO -->
     <div class="tier-card tier-pro reveal">
-      <div class="tier-badge most-popular">⚡ Most Popular</div>
-      <span class="tier-icon">⚡</span>
+      <div class="tier-badge most-popular">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="11" height="11"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Most Popular
+      </div>
+      <span class="tier-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </span>
       <div class="tier-name tier-accent">Pro</div>
       <div class="tier-price-row">
         <div class="tier-price">$499</div>
@@ -247,8 +285,13 @@ footer a:hover{color:var(--cyan)}
 
     <!-- ELITE -->
     <div class="tier-card tier-elite reveal">
-      <div class="tier-badge prestige">👑 Prestige</div>
-      <span class="tier-icon">👑</span>
+      <div class="tier-badge prestige">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><path d="M3 18h18M5 18l-2-9 5 4 4-7 4 7 5-4-2 9"/></svg>
+        Prestige
+      </div>
+      <span class="tier-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h18M5 18l-2-9 5 4 4-7 4 7 5-4-2 9"/></svg>
+      </span>
       <div class="tier-name tier-accent">Elite</div>
       <div class="tier-price-row">
         <div class="tier-price">$1,299</div>

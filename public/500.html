@@ -180,7 +180,19 @@
       .update-panel, .wait-section, .support-card { padding: 1.5rem; }
       .support-card { flex-direction: column; }
     }
-  </style>
+  
+/* === SVG Icon overrides === */
+[class$="-icon"] svg, [class*="-icon "] svg { width:24px;height:24px;transition:transform 0.25s ease,opacity 0.25s ease; }
+[class$="-icon"]:hover svg, [class*="-icon "]:hover svg { transform:scale(1.15);opacity:0.9; }
+.del-icon, .deliv-icon, .fw-icon, .fmt-icon, .highlight-icon,
+.inc-icon, .perk-icon, .pillar-icon, .support-icon,
+.svc-icon, .tier-icon, .ws-icon, .wvc-icon {
+  font-size: 0 !important;
+}
+/* Inline check icon in headings/list items */
+.fit-card h3 svg, .good-fit h3 svg { color:#22c55e; }
+
+</style>
 </head>
 <body>
 

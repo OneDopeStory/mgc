@@ -1,3 +1,21 @@
 {
-	"siteId": "07dc7dd7-37b2-4044-8503-64e8ca7a9044"
+	"siteId": "07dc7dd7-37b2-4044-8503-64e8ca7a9044",
+	"geolocation": {
+		"data": {
+			"city": "Parkton",
+			"country": {
+				"code": "US",
+				"name": "United States"
+			},
+			"subdivision": {
+				"code": "MD",
+				"name": "Maryland"
+			},
+			"timezone": "America/New_York",
+			"latitude": 39.644,
+			"longitude": -76.6695,
+			"postalCode": "21120"
+		},
+		"timestamp": 1780448716302
+	}
 }

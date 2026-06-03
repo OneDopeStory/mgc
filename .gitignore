@@ -13,3 +13,20 @@ node_modules
 *.jpg
 *.gif
 *.webp
+.vercel
+
+# Local Netlify folder
+.netlify
+
+# AI agent tooling (not site code)
+.agents/
+skills-lock.json
+.mcp.json
+
+# Editor state
+.obsidian/workspace.json
+*.canvas
+
+# Stray files
+deno.lock
+app/

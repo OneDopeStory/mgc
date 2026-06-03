@@ -369,6 +369,18 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   .sched-grid{gap:2px}
   .sched-cell{font-size:.7rem}
 }
+
+/* === SVG Icon overrides === */
+[class$="-icon"] svg, [class*="-icon "] svg { width:24px;height:24px;transition:transform 0.25s ease,opacity 0.25s ease; }
+[class$="-icon"]:hover svg, [class*="-icon "]:hover svg { transform:scale(1.15);opacity:0.9; }
+.del-icon, .deliv-icon, .fw-icon, .fmt-icon, .highlight-icon,
+.inc-icon, .perk-icon, .pillar-icon, .support-icon,
+.svc-icon, .tier-icon, .ws-icon, .wvc-icon {
+  font-size: 0 !important;
+}
+/* Inline check icon in headings/list items */
+.fit-card h3 svg, .good-fit h3 svg { color:#22c55e; }
+
 </style>
 </head>
 <body>
@@ -550,13 +562,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
       <div class="kpi-row">
         <div class="kpi-card">
-          <div class="kpi-icon blue">📊</div>
+          <div class="kpi-icon blue"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg></div>
           <div class="kpi-label">Active Projects</div>
           <div class="kpi-value" id="kpi-projects">–</div>
           <div class="kpi-delta neutral" id="kpi-projects-sub">Loading…</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-icon green">✅</div>
+          <div class="kpi-icon green"><span class="svg-check"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-3px;flex-shrink:0;margin-right:6px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span></div>
           <div class="kpi-label">Deliverables Ready</div>
           <div class="kpi-value" id="kpi-deliverables">–</div>
           <div class="kpi-delta" id="kpi-deliverables-sub">Ready to download</div>
@@ -568,7 +580,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <div class="kpi-delta neutral" id="kpi-balance-sub">–</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-icon purple">🤖</div>
+          <div class="kpi-icon purple"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><line x1="8" y1="15" x2="8" y2="17"/><line x1="16" y1="15" x2="16" y2="17"/><line x1="9" y1="21" x2="9" y2="21"/><line x1="15" y1="21" x2="15" y2="21"/><path d="M7 11V9a5 5 0 0 1 10 0v2"/></svg></div>
           <div class="kpi-label">AI Automations</div>
           <div class="kpi-value">12</div>
           <div class="kpi-delta">↑ 3 this month</div>
@@ -746,13 +758,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <span class="hub-tool-badge">Live Search</span>
         </a>
         <a href="https://chatgpt.com" target="_blank" class="hub-tool">
-          <div class="hub-tool-icon green">⚡</div>
+          <div class="hub-tool-icon green"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
           <div class="hub-tool-name">ChatGPT</div>
           <div class="hub-tool-desc">Versatile AI for drafts, analysis, and brainstorming</div>
           <span class="hub-tool-badge">OpenAI</span>
         </a>
         <a href="https://obsidian.md" target="_blank" class="hub-tool">
-          <div class="hub-tool-icon gold">💎</div>
+          <div class="hub-tool-icon gold"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41L13.7 2.71a2.41 2.41 0 0 0-3.41 0z"/><line x1="2.7" y1="10.3" x2="21.3" y2="10.3"/><line x1="8" y1="2.7" x2="12" y2="10.3"/><line x1="16" y1="2.7" x2="12" y2="10.3"/><line x1="5" y1="17" x2="12" y2="10.3"/><line x1="19" y1="17" x2="12" y2="10.3"/></svg></div>
           <div class="hub-tool-name">Obsidian</div>
           <div class="hub-tool-desc">Open your local Obsidian vault for deep-linked notes</div>
           <span class="hub-tool-badge">Local</span>
@@ -1221,7 +1233,7 @@ async function loadDeliverables() {
   // Overview pending
   const ovDel = document.getElementById('overview-deliverables');
   if (!delivs || delivs.length === 0) {
-    ovDel.innerHTML = `<div class="empty-state"><div class="empty-icon">📦</div><div class="empty-title">No deliverables yet</div><div class="empty-sub">Completed project assets will appear here</div></div>`;
+    ovDel.innerHTML = `<div class="empty-state"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg></div><div class="empty-title">No deliverables yet</div><div class="empty-sub">Completed project assets will appear here</div></div>`;
   } else {
     ovDel.innerHTML = delivs.slice(0,4).map(renderDelivItem).join('');
   }
@@ -1229,7 +1241,7 @@ async function loadDeliverables() {
   // Full list
   const delivList = document.getElementById('deliverables-list');
   if (!delivs || delivs.length === 0) {
-    delivList.innerHTML = `<div class="empty-state"><div class="empty-icon">📦</div><div class="empty-title">No deliverables yet</div><div class="empty-sub">Your project assets and documents will appear here</div></div>`;
+    delivList.innerHTML = `<div class="empty-state"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg></div><div class="empty-title">No deliverables yet</div><div class="empty-sub">Your project assets and documents will appear here</div></div>`;
   } else {
     delivList.innerHTML = delivs.map(renderDelivItem).join('');
   }
@@ -1422,7 +1434,7 @@ function addActivity(text, dotClass = 'cyan') {
 
 // ── TOAST ──
 function toast(msg, type = 'info') {
-  const icons = { success:'✅', error:'❌', info:'ℹ️', warning:'⚠️' };
+  const icons = { success:'<span class="svg-check"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-3px;flex-shrink:0;margin-right:6px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>', error:'❌', info:'ℹ️', warning:'⚠️' };
   const el = document.createElement('div');
   el.className = `toast ${type}`;
   el.innerHTML = `<span class="toast-icon">${icons[type]||'ℹ️'}</span><span>${escHtml(msg)}</span>`;

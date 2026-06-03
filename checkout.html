@@ -3,52 +3,280 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Standardizing Secure Checkout — MGC Global</title>
+<title>Secure Checkout — MGC Global Consulting</title>
+<meta name="robots" content="noindex,nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --navy-deep:#0A1628;--navy:#112A60;--primary:#135997;--cyan:#4AAFCF;
-  --gold:#C9A84C;--white:#FFFFFF;--ease:cubic-bezier(0.16,1,0.3,1);
+  --abyss:#010C1A;--navy:#041428;--ocean:#061D35;
+  --cyan:#00D4FF;--gold:#FFB347;--white:#FFFFFF;
+  --muted:rgba(255,255,255,0.55);--dim:rgba(255,255,255,0.25);
+  --border:rgba(0,212,255,0.15);--surface:rgba(6,29,53,0.85);
+  --error:#EF4444;
+  --font-display:'Raleway',sans-serif;
+  --font-body:'Plus Jakarta Sans',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
 }
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--navy-deep);color:white;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
-.checkout-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);padding:3rem;border-radius:24px;max-width:480px;width:90%;text-align:center;backdrop-filter:blur(20px)}
-.logo-mark{width:60px;height:60px;background:linear-gradient(135deg,var(--primary),var(--cyan));border-radius:15px;margin:0 auto 1.5rem;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:800;font-size:1.5rem}
-h1{font-family:'Sora',sans-serif;font-size:1.5rem;margin-bottom:1rem}
-p{color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:2rem}
-.spinner{width:40px;height:40px;border:3px solid rgba(74,175,207,0.25);border-top-color:var(--cyan);border-radius:50%;margin:0 auto 2rem;animation:spin 1s linear infinite}
+html{height:100%}
+body{
+  font-family:var(--font-body);
+  background:var(--abyss);
+  color:var(--white);
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;margin:0;
+  background-image:
+    radial-gradient(ellipse 70% 60% at 50% 0%,rgba(0,212,255,0.07),transparent),
+    radial-gradient(ellipse 50% 40% at 80% 80%,rgba(14,84,148,0.06),transparent);
+}
+
+.checkout-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:3rem 2.5rem;
+  border-radius:20px;
+  max-width:480px;
+  width:90%;
+  text-align:center;
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  box-shadow:0 32px 80px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.logo-mark{
+  width:64px;height:64px;
+  background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(0,212,255,0.05));
+  border:1.5px solid rgba(0,212,255,0.25);
+  border-radius:16px;
+  margin:0 auto 1.75rem;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.logo-mark img{width:48px;height:48px;object-fit:contain}
+
+h1{
+  font-family:var(--font-display);
+  font-size:1.35rem;font-weight:800;
+  letter-spacing:-0.02em;
+  margin-bottom:0.75rem;
+  color:var(--white);
+}
+.sub{
+  color:var(--muted);
+  font-size:0.875rem;
+  line-height:1.65;
+  margin-bottom:2rem;
+}
+
+.spinner{
+  width:44px;height:44px;
+  border:3px solid rgba(0,212,255,0.15);
+  border-top-color:var(--cyan);
+  border-radius:50%;
+  margin:0 auto 2rem;
+  animation:spin 0.9s linear infinite;
+}
 @keyframes spin{to{transform:rotate(360deg)}}
-.btn-back{color:var(--cyan);text-decoration:none;font-weight:600;font-size:0.9rem}
+
+.error-icon{
+  width:44px;height:44px;
+  border-radius:50%;
+  background:rgba(239,68,68,0.12);
+  border:1.5px solid rgba(239,68,68,0.3);
+  display:none;align-items:center;justify-content:center;
+  margin:0 auto 1.5rem;
+}
+.error-icon svg{width:22px;height:22px;stroke:var(--error);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+.error-box{
+  background:rgba(239,68,68,0.08);
+  border:1px solid rgba(239,68,68,0.25);
+  border-radius:10px;
+  padding:0.875rem 1rem;
+  font-size:0.82rem;
+  color:#fca5a5;
+  line-height:1.55;
+  display:none;
+  margin-bottom:1.5rem;
+}
+
+.tier-badge{
+  display:inline-block;
+  background:rgba(0,212,255,0.1);
+  border:1px solid rgba(0,212,255,0.2);
+  border-radius:8px;
+  padding:0.35rem 0.85rem;
+  font-family:var(--font-display);
+  font-size:0.78rem;
+  font-weight:700;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  color:var(--cyan);
+  margin-bottom:1.5rem;
+}
+.tier-badge.elite{
+  background:rgba(255,179,71,0.1);
+  border-color:rgba(255,179,71,0.2);
+  color:var(--gold);
+}
+
+.btn-back{
+  display:inline-block;
+  color:var(--muted);
+  text-decoration:none;
+  font-size:0.82rem;
+  font-weight:600;
+  transition:color 0.2s;
+}
+.btn-back:hover{color:var(--cyan)}
+
+.btn-retry{
+  display:inline-block;
+  background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(0,212,255,0.08));
+  border:1px solid rgba(0,212,255,0.25);
+  color:var(--cyan);
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:0.85rem;
+  padding:0.7rem 1.5rem;
+  border-radius:10px;
+  text-decoration:none;
+  cursor:pointer;
+  transition:all 0.2s;
+  margin-bottom:1rem;
+  display:none;
+}
+.btn-retry:hover{background:rgba(0,212,255,0.15);border-color:rgba(0,212,255,0.4)}
+
+/* SVG icon overrides — match global rule */
+[class$="-icon"] svg,[class*="-icon "] svg{width:24px;height:24px;transition:transform 0.25s ease,opacity 0.25s ease}
 </style>
 </head>
 <body>
+
 <div class="checkout-card">
-  <div class="logo-mark">MGC</div>
-  <h1>Secure Redirect</h1>
-  <p id="checkout-msg">Redirecting you to our secure Stripe checkout portal...</p>
-  <div class="spinner"></div>
-  <a href="services.html" class="btn-back">← Back to Solutions</a>
+
+  <div class="logo-mark">
+    <img src="assets/mgc-logo-transparent.png" alt="MGC Global">
+  </div>
+
+  <div id="tier-badge-wrap" style="display:none"></div>
+
+  <h1 id="checkout-heading">Preparing Secure Checkout</h1>
+  <p class="sub" id="checkout-msg">Connecting to our secure Stripe payment portal. You will be redirected momentarily.</p>
+
+  <div class="spinner" id="spinner"></div>
+
+  <div class="error-icon" id="error-icon">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  </div>
+
+  <div class="error-box" id="error-box"></div>
+
+  <button class="btn-retry" id="btn-retry" onclick="startCheckout()">Try Again</button>
+
+  <a href="services.html" class="btn-back" id="btn-back">← Back to Solutions</a>
+
 </div>
 
 <script>
-// Simulate Stripe Redirect for demo purposes
-// In a real environment, this would call your Netlify function to create a Checkout Session
-document.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(window.location.search);
-    const service = params.get('service') || 'AI Assessment';
-    const amount = params.get('amount') || '750';
-    
-    document.getElementById('checkout-msg').innerHTML = `Redirecting you to secure checkout for: <br><strong>${service} — $${amount}</strong>`;
-    
-    // Auto-redirect simulation
-    setTimeout(() => {
-        // Here you would normally do:
-        // window.location.href = `https://checkout.stripe.com/pay/...`;
-        alert("Redirecting to Stripe... (Integration Pending API Key Config)");
-        window.location.href = "services.html";
-    }, 2500);
-});
+const TIER_LABELS = {
+  starter: 'Starter — $199/mo',
+  pro:     'Pro — $499/mo',
+  elite:   'Elite — $1,299/mo',
+};
+
+function showError(msg) {
+  document.getElementById('spinner').style.display = 'none';
+  document.getElementById('error-icon').style.display = 'flex';
+  document.getElementById('checkout-heading').textContent = 'Checkout Unavailable';
+  document.getElementById('checkout-msg').style.display = 'none';
+  const box = document.getElementById('error-box');
+  box.textContent = msg;
+  box.style.display = 'block';
+  document.getElementById('btn-retry').style.display = 'inline-block';
+}
+
+async function startCheckout() {
+  // Reset UI
+  document.getElementById('spinner').style.display = 'block';
+  document.getElementById('error-icon').style.display = 'none';
+  document.getElementById('error-box').style.display = 'none';
+  document.getElementById('btn-retry').style.display = 'none';
+  document.getElementById('checkout-heading').textContent = 'Preparing Secure Checkout';
+  document.getElementById('checkout-msg').style.display = 'block';
+
+  const params = new URLSearchParams(window.location.search);
+
+  // Cancelled flow — user hit back on Stripe
+  if (params.get('cancelled') === 'true') {
+    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('checkout-heading').textContent = 'Checkout Cancelled';
+    document.getElementById('checkout-msg').textContent =
+      'No charge was made. You can return to our solutions or try again.';
+    document.getElementById('btn-back').textContent = '← Return to Solutions';
+    return;
+  }
+
+  const priceId = params.get('priceId') || null;
+  const mode    = params.get('mode') || 'payment';
+  const tier    = (params.get('tier') || sessionStorage.getItem('mgc_tier') || '').toLowerCase();
+
+  // Show tier badge if membership flow
+  if (tier && TIER_LABELS[tier]) {
+    const wrap = document.getElementById('tier-badge-wrap');
+    const cls  = tier === 'elite' ? 'tier-badge elite' : 'tier-badge';
+    wrap.innerHTML = `<div class="${cls}">Membership: ${TIER_LABELS[tier]}</div>`;
+    wrap.style.display = 'block';
+    document.getElementById('btn-back').href = 'membership.html';
+    document.getElementById('btn-back').textContent = '← Back to Membership';
+  }
+
+  // Must have either priceId or tier
+  if (!priceId && !tier) {
+    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('checkout-heading').textContent = 'No Service Selected';
+    document.getElementById('checkout-msg').textContent =
+      'Please select a service or membership plan to continue.';
+    document.getElementById('btn-back').textContent = '← Browse Solutions';
+    return;
+  }
+
+  try {
+    const payload = priceId
+      ? { priceId, mode }
+      : { tier, mode: 'subscription' };
+
+    const res = await fetch('/.netlify/functions/create-checkout', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.url) {
+      throw new Error(data.error || 'Checkout session could not be created.');
+    }
+
+    // Clear tier from sessionStorage before redirect
+    sessionStorage.removeItem('mgc_tier');
+
+    window.location.href = data.url;
+
+  } catch (err) {
+    console.error('[checkout]', err);
+    showError(
+      `Unable to start checkout: ${err.message} ` +
+      `Please email mark@mgcglobalconsulting.com or call 410.952.2846.`
+    );
+  }
+}
+
+// Kick off on load
+startCheckout();
 </script>
 </body>
 </html>

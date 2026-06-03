@@ -8,6 +8,13 @@
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
+// Membership tier → price ID mapping (resolved server-side so client never sees IDs)
+const TIER_PRICES = {
+  starter: process.env.STRIPE_PRICE_MEMBERSHIP_STARTER,
+  pro:     process.env.STRIPE_PRICE_MEMBERSHIP_PRO,
+  elite:   process.env.STRIPE_PRICE_MEMBERSHIP_ELITE,
+};
+
 const ALLOWED_PRICES = new Set([
   // Membership tiers
   process.env.STRIPE_PRICE_MEMBERSHIP_STARTER,
@@ -22,7 +29,7 @@ const ALLOWED_PRICES = new Set([
   process.env.STRIPE_PRICE_CRM_BUILD,
   process.env.STRIPE_PRICE_WORKSHOP_HALF,
   process.env.STRIPE_PRICE_WORKSHOP_FULL,
-  process.env.STRIPE_PRICE_RETAINER,
+  process.env.STRIPE_PRICE_MONTHLY_RETAINER,
   process.env.STRIPE_PRICE_SYSTEMS_DESIGN,
 ]);
 
@@ -47,7 +54,13 @@ exports.handler = async (event) => {
     return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Invalid JSON' }) };
   }
 
-  const { priceId, mode = 'payment', customerEmail, metadata = {} } = body;
+  let { priceId, mode = 'payment', tier, customerEmail, metadata = {} } = body;
+
+  // Resolve priceId from tier for membership flows (client never needs to know price IDs)
+  if (!priceId && tier) {
+    priceId = TIER_PRICES[tier?.toLowerCase()];
+    mode = 'subscription';
+  }
 
   // Allowlist check — never let arbitrary price IDs through
   if (!priceId || !ALLOWED_PRICES.has(priceId)) {

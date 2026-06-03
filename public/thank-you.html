@@ -70,6 +70,18 @@ h1{font-family:var(--font-display);font-size:clamp(1.75rem,4vw,2.5rem);font-weig
 
 /* ── BG GLOW ── */
 .bg-glow{position:fixed;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(74,175,207,0.15),transparent),radial-gradient(ellipse 40% 40% at 80% 80%,rgba(201,168,76,0.08),transparent);pointer-events:none;z-index:0}
+
+/* === SVG Icon overrides === */
+[class$="-icon"] svg, [class*="-icon "] svg { width:24px;height:24px;transition:transform 0.25s ease,opacity 0.25s ease; }
+[class$="-icon"]:hover svg, [class*="-icon "]:hover svg { transform:scale(1.15);opacity:0.9; }
+.del-icon, .deliv-icon, .fw-icon, .fmt-icon, .highlight-icon,
+.inc-icon, .perk-icon, .pillar-icon, .support-icon,
+.svc-icon, .tier-icon, .ws-icon, .wvc-icon {
+  font-size: 0 !important;
+}
+/* Inline check icon in headings/list items */
+.fit-card h3 svg, .good-fit h3 svg { color:#22c55e; }
+
 </style>
 </head>
 <body>
