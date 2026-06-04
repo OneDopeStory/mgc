@@ -2098,9 +2098,6 @@ document.getElementById('bkSubmit').addEventListener('click', async () => {
 
   const dateStr = MONTHS[calSelected.getMonth()] + ' ' + calSelected.getDate() + ', ' + calSelected.getFullYear();
 
-  // ZAP-01 / ZAP-12: Send to Zapier webhook
-  // TODO: Replace with actual Zapier catch hook URL
-  const ZAPIER_URL = 'https://hooks.zapier.com/hooks/catch/YOUR_ZAP_01_HOOK/';
   const payload = {
     name, email, company, service, message,
     requested_date: dateStr,
@@ -2109,12 +2106,11 @@ document.getElementById('bkSubmit').addEventListener('click', async () => {
   };
 
   try {
-    if (ZAPIER_URL.includes('YOUR_ZAP')) {
-      // No webhook set yet — just show success
-      console.log('Booking payload (Zapier not configured):', payload);
-    } else {
-      await fetch(ZAPIER_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-    }
+    await fetch('/.netlify/functions/lead-intake', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
     document.getElementById('formArea').style.display = 'none';
     document.getElementById('formSuccess').style.display = 'block';
   } catch (err) {

@@ -43,6 +43,56 @@ async function findOrCreateCompany(name) {
   return created.id;
 }
 
+/* ── Close open Lead deal, or create a Closed Won deal directly ─────── */
+async function closeOrCreateDeal(session, companyId, contactId) {
+  const today = new Date().toISOString().split('T')[0];
+  const service = session.metadata?.source || 'Website Purchase';
+  const amount = session.amount_total / 100;
+
+  // Look for an open Lead deal tied to this company
+  const search = companyId
+    ? await notion(
+        `databases/${process.env.NOTION_DEALS_DATABASE_ID}/query`,
+        'POST',
+        {
+          filter: {
+            and: [
+              { property: 'Company', relation: { contains: companyId } },
+              { property: 'Stage', select: { equals: 'Lead' } },
+            ],
+          },
+          sorts: [{ timestamp: 'created_time', direction: 'descending' }],
+          page_size: 1,
+        }
+      )
+    : { results: [] };
+
+  if (search.results?.length) {
+    await notion(`pages/${search.results[0].id}`, 'PATCH', {
+      properties: {
+        'Stage': { select: { name: 'Closed Won' } },
+        'Close Date': { date: { start: today } },
+        'Deal Value': { number: amount },
+      },
+    });
+    console.log('[Notion] Deal closed (Won):', search.results[0].id, `$${amount}`);
+  } else {
+    const created = await notion('pages', 'POST', {
+      parent: { database_id: process.env.NOTION_DEALS_DATABASE_ID },
+      properties: {
+        'Deal Name': { title: [{ text: { content: `${service} — Payment` } }] },
+        'Stage': { select: { name: 'Closed Won' } },
+        'Source': { select: { name: 'Stripe Payment' } },
+        'Company': { relation: companyId ? [{ id: companyId }] : [] },
+        'Contact': { relation: contactId ? [{ id: contactId }] : [] },
+        'Deal Value': { number: amount },
+        'Close Date': { date: { start: today } },
+      },
+    });
+    console.log('[Notion] Deal created (Closed Won):', created.id, `$${amount}`);
+  }
+}
+
 /* ── Find or create a Contact record ───────────────────────────────── */
 async function findOrCreateContact(session, companyId) {
   const email = session.customer_email || '';
@@ -137,9 +187,10 @@ exports.handler = async (event) => {
   try {
     const customerName = session.customer_details?.name || session.customer_email || 'Unknown';
     const companyId = await findOrCreateCompany(customerName);
+    const contactId = await findOrCreateContact(session, companyId);
     await Promise.allSettled([
-      findOrCreateContact(session, companyId),
       createInvoice(session, companyId),
+      closeOrCreateDeal(session, companyId, contactId),
     ]);
     console.log('[Webhook] Notion sync complete for', session.id);
   } catch (err) {

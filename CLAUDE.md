@@ -225,18 +225,18 @@ This is Stripe Workflows, not the separate Workflow SDK reference later in this 
 ## Notion CRM
 
 **Integration name:** MGC Global Consulting
-**Parent page:** MGC CRM PAGE (`26f5be72-69e0-493d-815a-2e27aee26f4c`)
+**Parent page:** MGC CRM PAGE (ID stored in `NOTION_PARENT_PAGE_ID`)
 **Set up:** 2026-06-02
 
 ### Databases
 
-| Database | ID | Purpose |
+| Database | Env Var | Purpose |
 |---|---|---|
-| Companies | `3742ca25-fa3b-81e0-80ee-f00e79a2574d` | Accounts — industry, revenue, status |
-| Contacts | `3742ca25-fa3b-8190-843c-d36bd23532c8` | People — email, phone, source, follow-up dates |
-| Deals | `3742ca25-fa3b-81bc-b390-fd54a8cee823` | Pipeline — stage, value, service type, close dates |
-| Projects | `3742ca25-fa3b-8127-bb78-e28336cc6eed` | Delivery — status, progress %, budget vs spent |
-| Invoices | `3742ca25-fa3b-8109-9c23-ea18908fe0d5` | Billing — linked to Stripe payment intent IDs |
+| Companies | `NOTION_COMPANIES_DATABASE_ID` | Accounts — industry, revenue, status |
+| Contacts | `NOTION_CONTACTS_DATABASE_ID` | People — email, phone, source, follow-up dates |
+| Deals | `NOTION_DEALS_DATABASE_ID` | Pipeline — stage, value, service type, close dates |
+| Projects | `NOTION_PROJECTS_DATABASE_ID` | Delivery — status, progress %, budget vs spent |
+| Invoices | `NOTION_INVOICES_DATABASE_ID` | Billing — linked to Stripe payment intent IDs |
 
 ### Webhook behavior (payment-webhook.js)
 On `checkout.session.completed`:
@@ -550,3 +550,24 @@ await resumeHook(hook.token, { approved: true });
 **Steps have full Node.js access** — move all I/O, `fs`, `http`, timers, etc. into step functions.
 
 **Docs:** https://workflow-sdk.dev/docs/api-reference
+
+---
+
+## MGC Global Consulting LLC - AI Growth Log
+**Last Updated:** June 2026
+**Current Session Token Target:** <43% (Maintained)
+
+### Current Project State
+- **Infrastructure:** Supabase Free Nano (us-east-1)
+- **Authentication:** Google OAuth configuration initiated.
+- **Frontend Deployment:** Vercel environment live at `https://mgc-lyart.vercel.app`
+
+### Completed Increments
+- [x] Initial Stack Definition (Supabase + Obsidian + Claude via MCP)
+- [x] Whitelisted production redirect URL (`/dashboard`) in Supabase URL Configuration.
+
+### Next Incremental Milestone
+- [ ] Test the live Google OAuth login flow on the Vercel deployment to confirm the handshake works seamlessly.
+
+### Context Memory Cache
+Database and Vercel hosting are linked via OAuth redirect configurations. The environment is ready for live user testing. Next session will focus on verifying active token generation upon successful user login.
