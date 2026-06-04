@@ -54,7 +54,8 @@ mgc-site-complete_1/
 ├── netlify/
 │   └── functions/
 │       ├── create-checkout.js  # POST — Stripe checkout session
-│       ├── payment-webhook.js  # POST — Stripe webhook (5-system fan-out)
+│       ├── payment-webhook.js  # POST — Stripe webhook → Notion CRM fan-out
+│       ├── lead-intake.js      # POST — Booking form submissions
 │       └── request-invoice.js  # POST — Custom invoice request
 │
 ├── hs-breeze-bridge.js         # HubSpot Breeze integration script
@@ -111,6 +112,11 @@ Writes to **Notion CRM only** (QuickBooks, Sheets, Slack, WhatsApp removed 2026-
 1. **Find or create Company** — matched by customer name
 2. **Find or create Contact** — matched by email, updates status → Active
 3. **Create Invoice** — paid, linked to Company, includes Stripe payment intent ID
+
+### `POST /.netlify/functions/lead-intake`
+Handles booking form submissions from `index.html`.
+**Body:** `{ name, email, company, service, message, requested_date, source }`
+Writes lead to Notion CRM (Contacts + Deals pipeline).
 
 ### `POST /.netlify/functions/request-invoice`
 Handles custom invoice requests.
@@ -268,6 +274,12 @@ Copy `.env.template` → `.env.local` and fill real values. **Never commit `.env
 | `TWILIO_WHATSAPP_FROM` | Twilio WhatsApp sender number |
 | `NOTION_API_KEY` | Notion integration secret |
 | `NOTION_CLIENTS_DATABASE_ID` | Notion clients database ID |
+| `NOTION_PARENT_PAGE_ID` | Notion CRM parent page ID |
+| `NOTION_COMPANIES_DATABASE_ID` | Notion Companies database |
+| `NOTION_CONTACTS_DATABASE_ID` | Notion Contacts database |
+| `NOTION_DEALS_DATABASE_ID` | Notion Deals database |
+| `NOTION_PROJECTS_DATABASE_ID` | Notion Projects database |
+| `NOTION_INVOICES_DATABASE_ID` | Notion Invoices database |
 | `SITE_URL` | `https://www.mgcglobalconsulting.com` |
 
 ---
@@ -302,6 +314,7 @@ git push origin main
 - **Stripe price IDs** must always be validated against the server-side allowlist in `create-checkout.js`
 - **Anon key only** in `dashboard.html` — never embed the Supabase service role key in client code
 - **`.env.local` is gitignored** — never commit secrets
+- **Notion database IDs must never be hard-coded** in CLAUDE.md or any committed file — Netlify's secret scanner will block the build. Always reference via env vars (see Environment Variables table)
 
 ---
 
