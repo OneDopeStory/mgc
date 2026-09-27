@@ -4,17 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "7eac1fc407b485c9",
+        "id": "7b3b7715e8e41b8b",
         "type": "tabs",
         "children": [
           {
-            "id": "65b2e74049c42989",
+            "id": "fb9f606d31516518",
             "type": "leaf",
             "state": {
-              "type": "graph",
+              "type": "empty",
               "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "icon": "lucide-file",
+              "title": "New tab"
             }
           }
         ]
@@ -177,8 +177,21 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "65b2e74049c42989",
+  "active": "fb9f606d31516518",
   "lastOpenFiles": [
+    "2026-04-07.md",
+    "Untitled 3.canvas",
+    "docs/claude_usage_limits.md",
+    "public/vercel.json",
+    "index.html",
+    "public/thank-you.html",
+    "public/systems-design.html",
+    "public/success.html",
+    "public/services.html",
+    "public/retainer-support.html",
+    "public/partner-success.html",
+    "public/membership.html",
+    "public/dashboard.html",
     "public/assets/unify-1.png",
     "public/assets/unified-ecosystem.jpeg",
     "public/assets/official-M-logo.png",
@@ -189,16 +202,8 @@
     "public/assets/mgc-logo-full.png",
     "public/assets/mgc-globe-pic.jpeg",
     "public/assets/mgc-global-image-2.jpg",
-    "public/assets/mgc-ai-city.png",
-    "public/assets/m-one-shot.mp4",
-    "public/assets/globe-connected.mp4",
-    "public/index.html",
-    "public/assets",
-    "public",
-    "vercel.json",
     "Untitled 2.canvas",
     "docs/taste-skill-README.md",
-    "docs/claude_usage_limits.md",
     "Untitled 1.canvas",
     "Untitled.canvas",
     "README.md",

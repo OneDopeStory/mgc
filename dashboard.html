@@ -1301,34 +1301,30 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 const SUPABASE_URL = 'https://zppuzfvchqxkzprfkhfz.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwcHV6ZnZjaHF4a3pwcmZraGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1NzYwNTksImV4cCI6MjA5MDE1MjA1OX0.-DGVDEIuWqivnMB3f8Hbi_GcIfR7EQ6_O_QGknDVXqI';
 const { createClient } = supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON, {
+  auth: { detectSessionInUrl: true, persistSession: true, autoRefreshToken: true }
+});
 
 let currentUser = null;
 let currentProfile = null;
+let portalInitialized = false;
 
 // ── INIT ──
 window.addEventListener('DOMContentLoaded', async () => {
-  setTimeout(() => {
-    document.getElementById('loading-overlay').classList.add('hide');
-  }, 800);
-
+  // Keep loading overlay visible while auth resolves — don't use a fixed timeout
+  // onAuthStateChange fires for: existing session, OAuth callback, token refresh, sign-out
   sb.auth.onAuthStateChange(async (event, session) => {
-    if (session && session.user) {
+    if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') && session?.user) {
+      if (portalInitialized) return; // prevent double-init on token refresh
+      portalInitialized = true;
       currentUser = session.user;
       await initPortal(session.user);
-    } else {
+    } else if (event === 'SIGNED_OUT' || (!session && event === 'INITIAL_SESSION')) {
+      portalInitialized = false;
       currentUser = null;
       showAuthScreen();
     }
   });
-
-  const { data: { session } } = await sb.auth.getSession();
-  if (session && session.user) {
-    currentUser = session.user;
-    await initPortal(session.user);
-  } else {
-    showAuthScreen();
-  }
 
   renderCalendar();
   const d = new Date();
@@ -1407,6 +1403,9 @@ async function doGoogleAuth() {
 
 // ── LOGOUT ──
 async function doLogout() {
+  portalInitialized = false;
+  currentUser = null;
+  currentProfile = null;
   await sb.auth.signOut();
   showAuthScreen();
   toast('Signed out successfully', 'info');
