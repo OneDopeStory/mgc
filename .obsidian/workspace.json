@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "7b3b7715e8e41b8b",
+        "id": "4d3141a83ad3735a",
         "type": "tabs",
         "children": [
           {
-            "id": "fb9f606d31516518",
+            "id": "97ff35afb80768e7",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -74,7 +74,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "de689966abde1ef4",
@@ -157,13 +158,23 @@
               "icon": "lucide-list",
               "title": "Outline"
             }
+          },
+          {
+            "id": "98a1569e47b5413d",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
           }
-        ]
+        ],
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -177,7 +188,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "fb9f606d31516518",
+  "active": "97ff35afb80768e7",
   "lastOpenFiles": [
     "2026-04-07.md",
     "Untitled 3.canvas",

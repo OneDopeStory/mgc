@@ -220,9 +220,23 @@ async function startCheckout() {
     return;
   }
 
+  const SERVICE_LABELS = {
+    'ai-assessment':      'AI Readiness Assessment',
+    'ai-roadmap':         '90-Day AI Roadmap',
+    'automation-starter': 'Automation Starter Pack',
+    'automation-full':    'Full Automation Build',
+    'crm-audit':          'CRM Audit & Cleanup',
+    'crm-build':          'Full CRM Build + Training',
+    'workshop-half':      'Half-Day AI Briefing',
+    'workshop-full':      'Full-Day AI Bootcamp',
+    'systems-design':     'Systems Design Engagement',
+    'monthly-retainer':   'Monthly Retainer',
+  };
+
   const priceId = params.get('priceId') || null;
   const mode    = params.get('mode') || 'payment';
   const tier    = (params.get('tier') || sessionStorage.getItem('mgc_tier') || '').toLowerCase();
+  const service = (params.get('service') || '').toLowerCase();
 
   // Show tier badge if membership flow
   if (tier && TIER_LABELS[tier]) {
@@ -232,10 +246,16 @@ async function startCheckout() {
     wrap.style.display = 'block';
     document.getElementById('btn-back').href = 'membership.html';
     document.getElementById('btn-back').textContent = '← Back to Membership';
+  } else if (service && SERVICE_LABELS[service]) {
+    const wrap = document.getElementById('tier-badge-wrap');
+    wrap.innerHTML = `<div class="tier-badge">Service: ${SERVICE_LABELS[service]}</div>`;
+    wrap.style.display = 'block';
+    document.getElementById('btn-back').href = 'services.html';
+    document.getElementById('btn-back').textContent = '← Back to Services';
   }
 
-  // Must have either priceId or tier
-  if (!priceId && !tier) {
+  // Must have either priceId, tier, or service
+  if (!priceId && !tier && !service) {
     document.getElementById('spinner').style.display = 'none';
     document.getElementById('checkout-heading').textContent = 'No Service Selected';
     document.getElementById('checkout-msg').textContent =
@@ -245,9 +265,14 @@ async function startCheckout() {
   }
 
   try {
-    const payload = priceId
-      ? { priceId, mode }
-      : { tier, mode: 'subscription' };
+    let payload;
+    if (priceId) {
+      payload = { priceId, mode };
+    } else if (tier) {
+      payload = { tier, mode: 'subscription' };
+    } else {
+      payload = { service, mode: service === 'monthly-retainer' ? 'subscription' : 'payment' };
+    }
 
     const res = await fetch('/.netlify/functions/create-checkout', {
       method:  'POST',

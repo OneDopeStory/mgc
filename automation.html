@@ -103,6 +103,9 @@ a{text-decoration:none;color:inherit}
 .reality-card.solution li{color:#334155}
 .reality-card.problem li::before{content:'✕';position:absolute;left:0;color:#DC2626;font-weight:800;font-size:0.8rem}
 .reality-card.solution li::before{content:'✓';position:absolute;left:0;color:var(--primary);font-weight:800}
+.dot-indicator{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;vertical-align:middle;flex-shrink:0}
+.dot-indicator.alert{background:#DC2626;box-shadow:0 0 10px rgba(220,38,38,0.6)}
+.dot-indicator.active{background:var(--cyan);box-shadow:0 0 10px rgba(0,212,255,0.6)}
 
 /* MARKET INTELLIGENCE */
 .intel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
@@ -271,7 +274,7 @@ a{text-decoration:none;color:inherit}
 <nav class="nav" id="navbar">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">
-      <img src="assets/images/mgc-logo-transparent.png" alt="MGC Global Consulting" class="nav-logo-img">
+      <img src="assets/mgc-logo-transparent.png" alt="MGC Global Consulting" class="nav-logo-img">
       <div class="nav-logo-text">
         <span class="nav-logo-name">MGC Global</span>
         <span class="nav-logo-sub">Consulting</span>
@@ -279,10 +282,11 @@ a{text-decoration:none;color:inherit}
     </a>
     <div class="nav-links" id="navLinks">
       <a href="index.html">Home</a>
-      <a href="index.html#services">Services</a>
+      <a href="services.html">Services</a>
+      <a href="membership.html">Membership</a>
+      <a href="onboarding-assistant.html">AI Assessment</a>
       <a href="index.html#process">Process</a>
       <a href="index.html#why-mgc">About</a>
-      <a href="index.html#booking">Contact</a>
       <a href="index.html#booking" class="nav-cta">Start a Project</a>
     </div>
     <div class="hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('active')">
@@ -296,14 +300,14 @@ a{text-decoration:none;color:inherit}
   <div class="container">
     <div class="hero-breadcrumb reveal">
       <a href="index.html">Home</a><span>›</span>
-      <a href="index.html#services">Services</a><span>›</span>
+      <a href="services.html">Services</a><span>›</span>
       <span class="current">Automation Architecture</span>
     </div>
     <div class="section-label reveal">Service Deep Dive</div>
     <h1 class="reveal">Stop Duct-Taping <span class="gradient-text">Your Systems</span></h1>
     <p class="hero-lead reveal">Two out of three businesses invest in automation — but 82% say their automation is already becoming outdated. The problem isn't the tools. It's that nobody designed the system. You bought Zapier. Now what? That's where we come in.</p>
     <div class="hero-actions reveal">
-      <a href="index.html#booking" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0066FF,#00D4FF);color:white;padding:14px 32px;border-radius:100px;font-weight:700;font-size:0.9rem;text-decoration:none;white-space:nowrap">Book Your Automation Audit</a> <a href="checkout.html" style="display:inline-flex;align-items:center;gap:8px;background:rgba(0,102,255,0.12);color:#00D4FF;padding:14px 32px;border-radius:100px;font-weight:700;font-size:0.9rem;text-decoration:none;white-space:nowrap;border:1px solid rgba(0,187,255,0.3);margin-left:12px">Invest Now &rarr;</a>
+      <a href="index.html#booking" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0066FF,#00D4FF);color:white;padding:14px 32px;border-radius:100px;font-weight:700;font-size:0.9rem;text-decoration:none;white-space:nowrap">Book Your Automation Audit</a> <a href="checkout.html?service=process-automation" style="display:inline-flex;align-items:center;gap:8px;background:rgba(0,102,255,0.12);color:#00D4FF;padding:14px 32px;border-radius:100px;font-weight:700;font-size:0.9rem;text-decoration:none;white-space:nowrap;border:1px solid rgba(0,187,255,0.3);margin-left:12px">Invest Now &rarr;</a>
       <a href="#layers" class="btn-outline">
         <span>See the Architecture</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
@@ -340,7 +344,7 @@ a{text-decoration:none;color:inherit}
     </div>
     <div class="reality-grid">
       <div class="reality-card problem reveal-left">
-        <div class="card-label">🔴 What We Keep Seeing</div>
+        <div class="card-label"><span class="dot-indicator alert"></span>What We Keep Seeing</div>
         <h3>The Franken-Stack Problem</h3>
         <ul>
           <li>Zapier "Zaps" built by five different people with no documentation, naming conventions, or error handling</li>
@@ -352,7 +356,7 @@ a{text-decoration:none;color:inherit}
         </ul>
       </div>
       <div class="reality-card solution reveal-right">
-        <div class="card-label">🔵 What Should Be Happening</div>
+        <div class="card-label"><span class="dot-indicator active"></span>What Should Be Happening</div>
         <h3>Architecture Before Automation</h3>
         <ul>
           <li>A complete process map of every workflow before a single automation is built</li>
@@ -575,7 +579,7 @@ a{text-decoration:none;color:inherit}
             <li>ROI projections per workflow</li>
           </ul>
         </div>
-        <div class="fw-visual"><div class="fw-icon">📐</div></div>
+        <div class="fw-visual"><div class="fw-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div></div>
       </div>
       <div class="fw-step reveal">
         <div class="fw-dot">3</div>
@@ -746,7 +750,7 @@ a{text-decoration:none;color:inherit}
     <div class="footer-grid">
       <div class="footer-brand">
         <a href="index.html" class="nav-logo" style="margin-bottom:0.5rem">
-          <img src="assets/images/mgc-logo-transparent.png" alt="MGC Global Consulting" class="nav-logo-img">
+          <img src="assets/mgc-logo-transparent.png" alt="MGC Global Consulting" class="nav-logo-img">
           <div class="nav-logo-text">
             <span class="nav-logo-name">MGC Global</span>
             <span class="nav-logo-sub">Consulting</span>

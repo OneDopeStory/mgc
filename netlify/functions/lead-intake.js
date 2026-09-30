@@ -80,10 +80,20 @@ async function findOrUpdateContact(name, email, companyId) {
   return created.id;
 }
 
-async function createDeal(name, service, message, requestedDate, companyId, contactId) {
+async function createDeal(name, service, message, requestedDate, companyId, contactId, extras) {
   const today = new Date().toISOString().split('T')[0];
-  const notes = [requestedDate && `Requested date: ${requestedDate}`, message]
-    .filter(Boolean).join('\n\n');
+
+  const noteLines = [
+    requestedDate && `Requested date: ${requestedDate}`,
+    message && `Challenge: ${message}`,
+    extras.visitorType && `Visitor type: ${extras.visitorType}`,
+    extras.assignedSubAgent && `Assigned sub-agent: ${extras.assignedSubAgent}`,
+    extras.recommendedNextStep && `Recommended next step: ${extras.recommendedNextStep}`,
+    extras.readinessScore !== undefined && `Readiness score: ${extras.readinessScore}/100 — ${extras.readinessCategory || ''}`,
+    extras.timeline && `Timeline: ${extras.timeline}`,
+    extras.budgetRange && `Budget range: ${extras.budgetRange}`,
+    extras.source && `Source: ${extras.source}`,
+  ].filter(Boolean).join('\n');
 
   const created = await notion('pages', 'POST', {
     parent: { database_id: process.env.NOTION_DEALS_DATABASE_ID },
@@ -91,11 +101,11 @@ async function createDeal(name, service, message, requestedDate, companyId, cont
       'Deal Name': { title: [{ text: { content: `${service} — ${name}` } }] },
       'Stage': { select: { name: 'Lead' } },
       'Service Type': { select: { name: service } },
-      'Source': { select: { name: 'Website Form' } },
+      'Source': { select: { name: extras.source || 'Website Form' } },
       'Company': { relation: companyId ? [{ id: companyId }] : [] },
       'Contact': { relation: contactId ? [{ id: contactId }] : [] },
       'Created Date': { date: { start: today } },
-      ...(notes && { 'Notes': { rich_text: [{ text: { content: notes } }] } }),
+      ...(noteLines && { 'Notes': { rich_text: [{ text: { content: noteLines } }] } }),
     },
   });
   console.log('[Lead Intake] Deal created:', created.id);
@@ -123,7 +133,11 @@ exports.handler = async (event) => {
     return { statusCode: 400, headers: corsHeaders, body: 'Invalid JSON' };
   }
 
-  const { name, email, company, service, message, requested_date } = body;
+  const {
+    name, email, company, service, message, requested_date,
+    visitor_type, assigned_sub_agent, readiness_score, readiness_category,
+    recommended_next_step, challenge, timeline, budget_range, source,
+  } = body;
 
   if (!name || !email || !service) {
     return { statusCode: 400, headers: corsHeaders, body: 'Missing required fields' };
@@ -131,10 +145,21 @@ exports.handler = async (event) => {
 
   console.log('[Lead Intake] Processing submission from', email);
 
+  const extras = {
+    visitorType: visitor_type || '',
+    assignedSubAgent: assigned_sub_agent || '',
+    readinessScore: readiness_score,
+    readinessCategory: readiness_category || '',
+    recommendedNextStep: recommended_next_step || '',
+    timeline: timeline || '',
+    budgetRange: budget_range || '',
+    source: source || 'Website Form',
+  };
+
   try {
     const companyId = await findOrCreateCompany(company || null);
     const contactId = await findOrUpdateContact(name, email, companyId);
-    await createDeal(name, service, message, requested_date, companyId, contactId);
+    await createDeal(name, service, challenge || message, requested_date, companyId, contactId, extras);
     console.log('[Lead Intake] Notion sync complete for', email);
   } catch (err) {
     console.error('[Lead Intake] Notion sync failed:', err.message);

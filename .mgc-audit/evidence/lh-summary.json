@@ -1,0 +1,54 @@
+{
+ "home-mobile": {
+  "v": "12.8.2",
+  "t": "2026-09-30T04:32:01.654Z",
+  "perf": 28,
+  "a11y": 83,
+  "bp": 96,
+  "seo": 100,
+  "LCP": "76.4 s",
+  "CLS": "0.006",
+  "TBT": "7,270 ms",
+  "FCP": "3.9 s",
+  "weight": "Total size was 71,413 KiB"
+ },
+ "home-desktop": {
+  "v": "12.8.2",
+  "t": "2026-09-30T04:35:09.257Z",
+  "perf": 95,
+  "a11y": 83,
+  "bp": 96,
+  "seo": 100,
+  "LCP": "1.1 s",
+  "CLS": "0.009",
+  "TBT": "0 ms",
+  "FCP": "1.1 s",
+  "weight": "Total size was 71,412 KiB"
+ },
+ "services-mobile": {
+  "v": "12.8.2",
+  "t": "2026-09-30T04:35:32.696Z",
+  "perf": 48,
+  "a11y": 93,
+  "bp": 75,
+  "seo": 100,
+  "LCP": "4.1 s",
+  "CLS": "0",
+  "TBT": "6,140 ms",
+  "FCP": "2.9 s",
+  "weight": "Total size was 151 KiB"
+ },
+ "aicons-mobile": {
+  "v": "12.8.2",
+  "t": "2026-09-30T04:35:52.189Z",
+  "perf": 53,
+  "a11y": 89,
+  "bp": 75,
+  "seo": 100,
+  "LCP": "4.1 s",
+  "CLS": "0.002",
+  "TBT": "2,780 ms",
+  "FCP": "2.7 s",
+  "weight": "Total size was 155 KiB"
+ }
+}

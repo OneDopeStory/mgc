@@ -1,0 +1,1918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Operations Front Door — MGC Global Consulting</title>
+<meta name="description" content="Score your operational readiness in 4 minutes. Find your exact starting point and get a personalized AI strategy roadmap from MGC Global Consulting.">
+<link rel="canonical" href="https://www.mgcglobalconsulting.com/onboarding-assistant">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════
+   1. RESET & ROOT
+   ═══════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --abyss:    #010C1A;
+  --ocean:    #02111F;
+  --deep:     #031525;
+  --navy:     #041C35;
+  --mid:      #062B52;
+  --royal:    #0047CC;
+  --electric: #0066FF;
+  --sky:      #0099FF;
+  --bright:   #00BBFF;
+  --cyan:     #00D4FF;
+  --ice:      #B8D8F0;
+  --fog:      #7AB8E0;
+  --white:    #FFFFFF;
+  --gold:     #FFB347;
+  --gold-dim: #C98A2A;
+  --emerald:  #10B981;
+  --rose:     #F43F5E;
+  --t-dim:  rgba(180,215,240,0.45);
+  --t-mid:  rgba(180,215,240,0.72);
+  --t-hi:   rgba(180,215,240,0.92);
+  --b-lo:   rgba(0,153,255,0.07);
+  --b-mid:  rgba(0,153,255,0.16);
+  --b-hi:   rgba(0,187,255,0.32);
+  --b-gold: rgba(255,179,71,0.25);
+  --glow:      rgba(0,102,255,0.35);
+  --glow-sky:  rgba(0,153,255,0.28);
+  --glow-cyan: rgba(0,212,255,0.22);
+  --display: 'Raleway', sans-serif;
+  --ui:      'Plus Jakarta Sans', sans-serif;
+  --mono:    'JetBrains Mono', monospace;
+  --radius:  20px;
+  --r-sm:    12px;
+  --pill:    100px;
+  --ease:    cubic-bezier(0.16,1,0.3,1);
+}
+
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--ui);color:var(--t-hi);background:var(--abyss);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+img{max-width:100%;display:block}
+.container{max-width:1100px;margin:0 auto;padding:0 2.5rem}
+.container-wide{max-width:1280px;margin:0 auto;padding:0 2.5rem}
+
+.sky-text{
+  background:linear-gradient(135deg,#FFFFFF 0%,var(--bright) 40%,var(--cyan) 75%,var(--ice) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.gold-text{
+  background:linear-gradient(135deg,var(--gold) 0%,#FFD580 50%,var(--gold-dim) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* ═══════════════════════════════════════════════════
+   2. SCROLL PROGRESS
+   ═══════════════════════════════════════════════════ */
+#scrollBar{position:fixed;top:0;left:0;height:2px;width:0;z-index:10001;
+  background:linear-gradient(90deg,var(--royal),var(--sky),var(--cyan));
+  transition:width 0.05s linear}
+
+/* ═══════════════════════════════════════════════════
+   3. NAVIGATION
+   ═══════════════════════════════════════════════════ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:10000;padding:1.5rem 0;transition:all 0.45s var(--ease)}
+.nav.scrolled{
+  background:rgba(1,12,26,0.95);
+  backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
+  padding:1rem 0;
+  border-bottom:1px solid var(--b-mid);
+  box-shadow:0 4px 60px rgba(0,0,0,0.7);
+}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:0.75rem}
+.nav-logo-img{width:58px;height:58px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 0 12px rgba(0,187,255,0.45)) drop-shadow(0 2px 8px rgba(0,0,0,0.6));transition:filter 0.3s var(--ease)}
+.nav-logo-img:hover{filter:drop-shadow(0 0 20px rgba(0,212,255,0.7)) drop-shadow(0 2px 8px rgba(0,0,0,0.5))}
+.nav-logo-text{display:flex;flex-direction:column;gap:0.1rem}
+.nav-logo-name{font-family:var(--ui);font-weight:700;font-size:0.88rem;color:white;letter-spacing:-0.01em}
+.nav-logo-sub{font-size:0.57rem;color:var(--t-dim);letter-spacing:2.5px;text-transform:uppercase;font-weight:500}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-family:var(--ui);font-size:0.8rem;font-weight:500;color:var(--t-mid);letter-spacing:0.02em;transition:color 0.3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1.5px;background:var(--sky);transform:scaleX(0);transition:transform 0.3s var(--ease);transform-origin:left}
+.nav-links a:hover{color:white}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-portal{color:var(--gold)!important;font-weight:600!important;background:linear-gradient(135deg,rgba(255,179,71,0.15),rgba(201,138,42,0.1))!important;border:1px solid rgba(255,179,71,0.4)!important;border-radius:var(--pill)!important;padding:.42rem 1.1rem!important}
+.nav-portal:hover{filter:brightness(1.2)}
+.nav-cta{
+  font-family:var(--ui)!important;font-size:0.78rem!important;font-weight:700!important;
+  letter-spacing:0.06em!important;text-transform:uppercase!important;
+  background:linear-gradient(135deg,var(--royal),var(--sky))!important;
+  color:white!important;border:none!important;
+  padding:0.58rem 1.5rem;border-radius:var(--pill);
+  transition:all 0.35s var(--ease)!important;
+  box-shadow:0 4px 20px var(--glow),0 0 0 1px rgba(0,187,255,0.2)!important;
+}
+.nav-cta:hover{filter:brightness(1.15)!important;box-shadow:0 6px 30px var(--glow-sky),0 0 0 1px rgba(0,187,255,0.35)!important;transform:translateY(-1px)!important}
+.nav-cta::after{display:none!important}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;z-index:10002}
+.hamburger span{width:22px;height:1.5px;background:white;border-radius:2px;transition:all 0.3s var(--ease)}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(4.5px,4.5px)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(4.5px,-4.5px)}
+.mobile-menu{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(1,12,26,0.99);backdrop-filter:blur(30px);
+  flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;
+  opacity:0;pointer-events:none;transition:opacity 0.4s var(--ease);
+}
+.mobile-menu.open{opacity:1;pointer-events:all;display:flex}
+.mobile-menu a{font-family:var(--display);font-size:1.6rem;color:white;font-weight:700}
+.mobile-menu a:hover{color:var(--cyan)}
+
+/* ═══════════════════════════════════════════════════
+   4. HERO
+   ═══════════════════════════════════════════════════ */
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;align-items:center;
+  overflow:hidden;
+  padding:9rem 0 6rem;
+}
+
+/* Animated grid background */
+.hero::before{
+  content:'';
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(0,153,255,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,153,255,0.045) 1px, transparent 1px);
+  background-size:64px 64px;
+  animation:gridDrift 28s linear infinite;
+  pointer-events:none;
+}
+@keyframes gridDrift{
+  0%{transform:translate(0,0)}
+  100%{transform:translate(64px,64px)}
+}
+
+/* Glow orbs */
+.hero-glow-1{
+  position:absolute;top:-10%;left:-5%;
+  width:65vw;height:65vw;
+  background:radial-gradient(circle,rgba(0,71,204,0.22) 0%,transparent 65%);
+  pointer-events:none;
+  animation:orb1Float 16s ease-in-out infinite;
+}
+.hero-glow-2{
+  position:absolute;bottom:-20%;right:-10%;
+  width:55vw;height:55vw;
+  background:radial-gradient(circle,rgba(0,153,255,0.12) 0%,transparent 65%);
+  pointer-events:none;
+  animation:orb2Float 22s ease-in-out infinite;
+}
+@keyframes orb1Float{
+  0%,100%{transform:translate(0,0)}
+  33%{transform:translate(3%,-2%)}
+  66%{transform:translate(-2%,3%)}
+}
+@keyframes orb2Float{
+  0%,100%{transform:translate(0,0)}
+  40%{transform:translate(-4%,2%)}
+  75%{transform:translate(2%,-3%)}
+}
+
+/* Data stream lines */
+.hero-streams{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.hero-stream{
+  position:absolute;
+  width:1px;
+  background:linear-gradient(180deg,transparent,var(--b-mid),transparent);
+  animation:streamFall 6s ease-in-out infinite;
+  opacity:0;
+}
+@keyframes streamFall{
+  0%{opacity:0;transform:translateY(-100%)}
+  10%{opacity:1}
+  90%{opacity:0.4}
+  100%{opacity:0;transform:translateY(100vh)}
+}
+
+.hero-inner{
+  position:relative;z-index:2;
+  width:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5rem;
+  align-items:center;
+}
+.hero-content{display:flex;flex-direction:column;gap:0}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  font-family:var(--mono);font-size:0.65rem;font-weight:500;
+  color:var(--cyan);letter-spacing:3px;text-transform:uppercase;
+  margin-bottom:1.75rem;
+  padding:0.45rem 1rem;
+  background:rgba(0,212,255,0.06);
+  border:1px solid rgba(0,212,255,0.18);
+  border-radius:var(--pill);
+  width:fit-content;
+}
+.hero-eyebrow-dot{
+  width:5px;height:5px;border-radius:50%;background:var(--cyan);
+  box-shadow:0 0 8px var(--cyan);animation:blink 2s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.35}}
+
+.hero h1{
+  font-family:var(--display);
+  font-size:clamp(2.8rem,5.2vw,4.2rem);
+  font-weight:900;
+  line-height:1.04;
+  letter-spacing:-2px;
+  color:white;
+  margin-bottom:1.5rem;
+}
+.hero-sub{
+  font-family:var(--ui);
+  font-size:1.05rem;
+  color:var(--t-mid);
+  line-height:1.8;
+  font-weight:300;
+  max-width:500px;
+  margin-bottom:2.5rem;
+}
+
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3rem}
+.btn-hero-primary{
+  display:inline-flex;align-items:center;gap:0.65rem;
+  padding:0.95rem 2.2rem;
+  background:linear-gradient(135deg,var(--royal) 0%,var(--sky) 70%,var(--bright) 100%);
+  color:white;font-family:var(--ui);font-weight:700;font-size:0.9rem;
+  letter-spacing:0.05em;text-transform:uppercase;border-radius:var(--pill);
+  border:1px solid rgba(0,187,255,0.3);
+  box-shadow:0 6px 32px var(--glow),0 0 0 1px rgba(0,187,255,0.15),inset 0 1px 0 rgba(255,255,255,0.1);
+  transition:all 0.4s var(--ease);
+  cursor:pointer;
+}
+.btn-hero-primary:hover{
+  filter:brightness(1.12);
+  transform:translateY(-2px);
+  box-shadow:0 12px 48px var(--glow-sky),0 0 0 1px rgba(0,187,255,0.3);
+}
+.btn-hero-secondary{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  padding:0.9rem 2rem;
+  background:rgba(1,21,37,0.5);
+  color:var(--ice);
+  border:1px solid var(--b-hi);
+  font-family:var(--ui);font-weight:500;font-size:0.88rem;
+  letter-spacing:0.03em;border-radius:var(--pill);
+  backdrop-filter:blur(12px);
+  transition:all 0.35s var(--ease);
+}
+.btn-hero-secondary:hover{
+  border-color:var(--bright);color:white;
+  background:rgba(0,102,255,0.1);
+  box-shadow:0 0 24px rgba(0,187,255,0.12);
+}
+
+.hero-stats{
+  display:flex;gap:2.5rem;
+  padding-top:2rem;
+  border-top:1px solid var(--b-lo);
+}
+.hero-stat-item{display:flex;flex-direction:column;gap:0.25rem}
+.hero-stat-num{
+  font-family:var(--display);
+  font-size:1.9rem;font-weight:800;
+  color:white;line-height:1;
+  letter-spacing:-1px;
+}
+.hero-stat-num span{color:var(--cyan)}
+.hero-stat-label{
+  font-family:var(--mono);font-size:0.6rem;
+  color:var(--t-dim);letter-spacing:2px;text-transform:uppercase;
+  font-weight:500;
+}
+
+/* ── Hero Scan Card ── */
+.hero-card-wrap{
+  display:flex;justify-content:center;align-items:center;
+  position:relative;
+}
+.hero-scan-card{
+  width:100%;max-width:400px;
+  background:rgba(3,21,37,0.85);
+  border:1px solid var(--b-mid);
+  border-radius:var(--radius);
+  padding:1.75rem;
+  backdrop-filter:blur(24px);
+  box-shadow:0 0 0 1px rgba(0,187,255,0.08),0 24px 80px rgba(0,0,0,0.6),0 0 120px rgba(0,71,204,0.12);
+  position:relative;overflow:hidden;
+}
+.hero-scan-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--b-hi),transparent);
+}
+
+.scan-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1.5rem;
+}
+.scan-title-wrap{display:flex;align-items:center;gap:0.6rem}
+.scan-live-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--emerald);
+  box-shadow:0 0 10px rgba(16,185,129,0.7);
+  animation:pulse 2.2s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:0.6;transform:scale(0.85)}
+}
+.scan-title-text{font-family:var(--mono);font-size:0.62rem;font-weight:700;color:var(--t-hi);letter-spacing:2px;text-transform:uppercase}
+.scan-badge{
+  font-family:var(--mono);font-size:0.55rem;font-weight:700;
+  color:var(--emerald);letter-spacing:1.5px;text-transform:uppercase;
+  padding:0.2rem 0.6rem;
+  background:rgba(16,185,129,0.08);
+  border:1px solid rgba(16,185,129,0.25);
+  border-radius:var(--pill);
+}
+
+.scan-label{font-family:var(--ui);font-size:0.75rem;color:var(--t-dim);font-weight:400;margin-bottom:0.25rem}
+.scan-sub{font-family:var(--ui);font-size:0.82rem;color:var(--t-mid);font-weight:300;margin-bottom:1.5rem}
+
+.scan-bars{display:flex;flex-direction:column;gap:0.85rem;margin-bottom:1.5rem}
+.scan-bar-row{display:flex;flex-direction:column;gap:0.35rem}
+.scan-bar-meta{display:flex;justify-content:space-between;align-items:center}
+.scan-bar-name{font-family:var(--ui);font-size:0.72rem;color:var(--t-mid);font-weight:400}
+.scan-bar-pct{font-family:var(--mono);font-size:0.65rem;color:var(--t-dim);font-weight:500}
+.scan-bar-track{height:3px;background:var(--b-lo);border-radius:2px;overflow:hidden}
+.scan-bar-fill{
+  height:100%;border-radius:2px;
+  width:0;
+  animation:scanFill 1.8s var(--ease) forwards;
+}
+@keyframes scanFill{from{width:0}to{width:var(--w)}}
+.scan-bar-fill.b-cyan{background:linear-gradient(90deg,var(--royal),var(--cyan))}
+.scan-bar-fill.b-sky{background:linear-gradient(90deg,var(--royal),var(--sky))}
+.scan-bar-fill.b-gold{background:linear-gradient(90deg,var(--gold-dim),var(--gold))}
+.scan-bar-fill.b-em{background:linear-gradient(90deg,#0d9e6f,var(--emerald))}
+.scan-bar-fill.b-rose{background:linear-gradient(90deg,#c0284a,var(--rose))}
+
+.scan-alert{
+  display:flex;align-items:center;gap:0.7rem;
+  padding:0.85rem 1rem;
+  background:rgba(255,179,71,0.06);
+  border:1px solid rgba(255,179,71,0.22);
+  border-radius:var(--r-sm);
+  margin-bottom:1.25rem;
+}
+.scan-alert-icon{
+  width:28px;height:28px;border-radius:var(--r-sm);
+  background:rgba(255,179,71,0.12);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.scan-alert-icon svg{width:14px;height:14px;stroke:var(--gold);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.scan-alert-text{font-family:var(--ui);font-size:0.76rem;color:var(--gold);font-weight:500;line-height:1.4}
+
+.scan-footer{
+  display:flex;align-items:center;gap:0.5rem;
+  font-family:var(--mono);font-size:0.58rem;color:var(--t-dim);
+  letter-spacing:1.5px;text-transform:uppercase;
+}
+.scan-refresh-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--b-hi);
+  animation:blink 3s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════
+   5. MARQUEE
+   ═══════════════════════════════════════════════════ */
+.marquee-strip{
+  background:var(--ocean);
+  border-top:1px solid var(--b-lo);
+  border-bottom:1px solid var(--b-lo);
+  padding:1rem 0;
+  overflow:hidden;
+  white-space:nowrap;
+  position:relative;
+}
+.marquee-strip::before,.marquee-strip::after{
+  content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none;
+}
+.marquee-strip::before{left:0;background:linear-gradient(90deg,var(--ocean),transparent)}
+.marquee-strip::after{right:0;background:linear-gradient(270deg,var(--ocean),transparent)}
+.marquee-track{
+  display:inline-flex;gap:0;
+  animation:marqueeScroll 40s linear infinite;
+}
+.marquee-track:hover{animation-play-state:paused}
+.marquee-item{
+  display:inline-flex;align-items:center;gap:0.85rem;
+  padding:0 2.5rem;
+  font-family:var(--mono);font-size:0.62rem;color:var(--t-dim);
+  letter-spacing:2px;text-transform:uppercase;font-weight:500;
+  white-space:nowrap;
+}
+.marquee-dot{
+  width:3px;height:3px;border-radius:50%;
+  background:var(--b-hi);flex-shrink:0;
+}
+@keyframes marqueeScroll{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+
+/* ═══════════════════════════════════════════════════
+   6. WIZARD SECTION
+   ═══════════════════════════════════════════════════ */
+.wizard-section{
+  padding:7rem 0 6rem;
+  position:relative;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%,rgba(0,71,204,0.12) 0%,transparent 60%),
+    var(--abyss);
+}
+.wizard-section::before{
+  content:'';
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(0,153,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,153,255,0.025) 1px, transparent 1px);
+  background-size:80px 80px;
+  pointer-events:none;
+}
+
+/* ── Section header ── */
+.wizard-header{text-align:center;margin-bottom:4rem;position:relative;z-index:2}
+.wizard-eyebrow{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  font-family:var(--mono);font-size:0.63rem;font-weight:500;
+  color:var(--cyan);letter-spacing:3px;text-transform:uppercase;
+  margin-bottom:1.25rem;
+}
+.wizard-eyebrow-dot{
+  width:5px;height:5px;border-radius:50%;background:var(--cyan);
+  box-shadow:0 0 8px var(--cyan);animation:blink 2s ease-in-out infinite 0.5s;
+}
+.wizard-header h2{
+  font-family:var(--display);font-size:clamp(2rem,3.5vw,2.8rem);
+  font-weight:800;line-height:1.1;letter-spacing:-0.75px;color:white;
+  margin-bottom:1rem;
+}
+.wizard-header p{
+  font-family:var(--ui);font-size:1rem;color:var(--t-mid);
+  max-width:520px;margin:0 auto;line-height:1.75;font-weight:300;
+}
+
+/* ── Step indicator ── */
+.step-indicator{
+  display:flex;align-items:center;justify-content:center;
+  gap:0;margin-bottom:4rem;position:relative;z-index:2;
+}
+.step-dot{
+  display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+  position:relative;
+}
+.step-dot-num{
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:0.75rem;font-weight:700;
+  background:rgba(0,153,255,0.04);border:1.5px solid var(--b-lo);
+  color:rgba(180,215,240,0.3);transition:all 0.5s var(--ease);
+}
+.step-dot.active .step-dot-num{
+  background:linear-gradient(135deg,var(--royal),var(--sky));
+  border-color:var(--bright);color:white;
+  box-shadow:0 0 24px var(--glow),0 0 0 4px rgba(0,102,255,0.1);
+}
+.step-dot.done .step-dot-num{
+  background:rgba(0,212,255,0.1);border-color:rgba(0,212,255,0.4);color:var(--cyan);
+}
+.step-dot-label{
+  font-family:var(--ui);font-size:0.62rem;color:rgba(180,215,240,0.3);
+  letter-spacing:0.4px;white-space:nowrap;font-weight:500;transition:color 0.4s;
+}
+.step-dot.active .step-dot-label{color:var(--bright)}
+.step-dot.done .step-dot-label{color:var(--fog)}
+.step-line{
+  width:90px;height:1px;
+  background:var(--b-lo);
+  margin-bottom:1.3rem;transition:all 0.5s var(--ease);
+  position:relative;overflow:hidden;
+}
+.step-line::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(90deg,var(--cyan),transparent);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 0.5s var(--ease);
+}
+.step-line.done::after{transform:scaleX(1)}
+
+/* ── Step panels ── */
+.step-panel{display:none;animation:fadeUp 0.5s var(--ease) both;position:relative;z-index:2}
+.step-panel.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Back button ── */
+.btn-back{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  font-family:var(--ui);font-size:0.78rem;font-weight:500;
+  color:var(--t-dim);cursor:pointer;background:none;border:none;
+  padding:0.5rem 0;margin-bottom:2.5rem;transition:color 0.3s;
+}
+.btn-back:hover{color:var(--bright)}
+
+/* ═══════════════════════════════════════════════════
+   7. STEP 1 — VISITOR TYPE
+   ═══════════════════════════════════════════════════ */
+.step1-intro{text-align:center;margin-bottom:3rem}
+.step1-intro h3{font-family:var(--display);font-size:1.75rem;font-weight:700;color:white;margin-bottom:0.6rem}
+.step1-intro p{font-family:var(--ui);font-size:0.92rem;color:var(--t-mid);font-weight:300}
+
+.visitor-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1.1rem;
+}
+.visitor-card{
+  padding:1.75rem 1.4rem;
+  background:rgba(3,21,37,0.65);
+  border:1px solid var(--b-lo);
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:all 0.38s var(--ease);
+  display:flex;flex-direction:column;align-items:flex-start;gap:1rem;
+  text-align:left;
+  backdrop-filter:blur(16px);
+  position:relative;overflow:hidden;
+}
+.visitor-card::before{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,102,255,0.08),transparent);
+  opacity:0;transition:opacity 0.38s var(--ease);
+}
+.visitor-card:hover::before{opacity:1}
+.visitor-card:hover{
+  border-color:var(--b-hi);
+  transform:translateY(-4px);
+  box-shadow:0 12px 40px rgba(0,102,255,0.18),0 0 0 1px rgba(0,187,255,0.1);
+}
+.visitor-card.selected{
+  border-color:var(--cyan);
+  background:rgba(0,212,255,0.06);
+  box-shadow:0 0 0 1px rgba(0,212,255,0.3),0 12px 40px rgba(0,212,255,0.1);
+}
+.visitor-card.selected::before{opacity:0}
+.visitor-icon{
+  width:48px;height:48px;
+  background:linear-gradient(135deg,rgba(0,71,204,0.2),rgba(0,153,255,0.1));
+  border:1px solid var(--b-mid);
+  border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.38s var(--ease);
+  flex-shrink:0;
+}
+.visitor-card:hover .visitor-icon{
+  background:linear-gradient(135deg,rgba(0,71,204,0.35),rgba(0,153,255,0.2));
+  border-color:var(--b-hi);
+  box-shadow:0 0 16px rgba(0,153,255,0.15);
+}
+.visitor-card.selected .visitor-icon{
+  background:linear-gradient(135deg,rgba(0,212,255,0.18),rgba(0,153,255,0.1));
+  border-color:rgba(0,212,255,0.45);
+  box-shadow:0 0 16px rgba(0,212,255,0.2);
+}
+.visitor-icon svg{width:22px;height:22px;stroke:var(--sky);fill:none;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;transition:stroke 0.3s}
+.visitor-card:hover .visitor-icon svg,.visitor-card.selected .visitor-icon svg{stroke:var(--cyan)}
+.visitor-card-body{display:flex;flex-direction:column;gap:0.35rem}
+.visitor-card-label{font-family:var(--ui);font-size:0.88rem;font-weight:700;color:var(--t-hi);line-height:1.3}
+.visitor-card-sub{font-family:var(--ui);font-size:0.74rem;color:var(--t-dim);font-weight:300;line-height:1.55}
+.visitor-card-arrow{
+  margin-left:auto;color:var(--t-dim);transition:all 0.3s var(--ease);opacity:0;
+  transform:translateX(-6px);
+}
+.visitor-card:hover .visitor-card-arrow,.visitor-card.selected .visitor-card-arrow{
+  opacity:1;transform:translateX(0);color:var(--sky);
+}
+.visitor-card.selected .visitor-card-arrow{color:var(--cyan)}
+
+/* ═══════════════════════════════════════════════════
+   8. STEP 2 — READINESS SCORE
+   ═══════════════════════════════════════════════════ */
+.step2-header{text-align:center;margin-bottom:2.5rem}
+.step2-header h3{font-family:var(--display);font-size:1.75rem;font-weight:700;color:white;margin-bottom:0.6rem}
+.step2-header p{font-family:var(--ui);font-size:0.92rem;color:var(--t-mid);font-weight:300}
+
+.step2-body{display:grid;grid-template-columns:1fr 200px;gap:3rem;align-items:start;max-width:920px;margin:0 auto}
+
+.readiness-questions{display:flex;flex-direction:column;gap:0.8rem}
+.rq-row{
+  display:flex;align-items:center;justify-content:space-between;gap:1.5rem;
+  padding:1rem 1.4rem;
+  background:rgba(3,21,37,0.55);
+  border:1px solid var(--b-lo);
+  border-radius:var(--r-sm);
+  transition:all 0.3s var(--ease);
+}
+.rq-row.answered{border-color:var(--b-mid);background:rgba(4,28,53,0.7)}
+.rq-num{font-family:var(--mono);font-size:0.6rem;font-weight:700;color:var(--t-dim);min-width:20px;flex-shrink:0}
+.rq-text{font-family:var(--ui);font-size:0.86rem;color:var(--t-hi);font-weight:400;flex:1;line-height:1.45}
+.rq-buttons{display:flex;gap:0.45rem;flex-shrink:0}
+.rq-btn{
+  padding:0.35rem 0.95rem;border-radius:var(--pill);
+  font-family:var(--mono);font-size:0.68rem;font-weight:700;letter-spacing:0.05em;
+  cursor:pointer;border:1px solid var(--b-lo);
+  background:transparent;color:rgba(180,215,240,0.35);
+  transition:all 0.22s var(--ease);
+}
+.rq-btn:hover{border-color:var(--b-mid);color:var(--t-mid)}
+.rq-btn.yes-active{
+  background:rgba(0,212,255,0.1);border-color:rgba(0,212,255,0.4);color:var(--cyan);
+}
+.rq-btn.no-active{
+  background:rgba(244,63,94,0.08);border-color:rgba(244,63,94,0.3);color:rgba(244,63,94,0.8);
+}
+
+/* Live score ring */
+.score-ring-panel{
+  position:sticky;top:120px;
+  display:flex;flex-direction:column;align-items:center;gap:1rem;
+  padding:1.5rem 1rem;
+  background:rgba(3,21,37,0.65);
+  border:1px solid var(--b-mid);
+  border-radius:var(--radius);
+  backdrop-filter:blur(16px);
+}
+.score-ring-label{
+  font-family:var(--mono);font-size:0.58rem;color:var(--t-dim);
+  letter-spacing:2px;text-transform:uppercase;font-weight:700;
+}
+.score-ring-svg-wrap{position:relative;display:flex;align-items:center;justify-content:center}
+.score-ring-svg{overflow:visible}
+.score-ring-track{fill:none;stroke:var(--b-lo);stroke-width:6}
+.score-ring-arc{
+  fill:none;stroke:var(--cyan);stroke-width:6;stroke-linecap:round;
+  stroke-dasharray:263.9;stroke-dashoffset:263.9;
+  transform:rotate(-90deg);transform-origin:50% 50%;
+  transition:stroke-dashoffset 0.55s var(--ease),stroke 0.4s;
+}
+.score-ring-inner{
+  position:absolute;display:flex;flex-direction:column;align-items:center;
+}
+.score-ring-num{
+  font-family:var(--display);font-size:2rem;font-weight:900;color:white;line-height:1;
+  transition:color 0.4s;
+}
+.score-ring-slash{
+  font-family:var(--mono);font-size:0.58rem;color:var(--t-dim);letter-spacing:1px;
+}
+
+.score-ring-status{
+  font-family:var(--ui);font-size:0.72rem;color:var(--t-mid);font-weight:400;
+  text-align:center;line-height:1.4;
+}
+.score-ring-progress{
+  width:100%;
+  font-family:var(--mono);font-size:0.58rem;color:var(--t-dim);
+  letter-spacing:1.5px;text-transform:uppercase;text-align:center;
+}
+
+.step2-footer{max-width:920px;margin:2rem auto 0;text-align:center}
+
+/* ═══════════════════════════════════════════════════
+   9. STEP 3 — INTAKE FORM
+   ═══════════════════════════════════════════════════ */
+.step3-header{text-align:center;margin-bottom:2.5rem}
+.step3-header h3{font-family:var(--display);font-size:1.75rem;font-weight:700;color:white;margin-bottom:0.6rem}
+.step3-header p{font-family:var(--ui);font-size:0.92rem;color:var(--t-mid);font-weight:300}
+
+.intake-card{
+  max-width:680px;margin:0 auto;
+  background:rgba(3,21,37,0.72);
+  border:1px solid var(--b-mid);
+  border-radius:var(--radius);
+  padding:2.5rem;
+  backdrop-filter:blur(20px);
+  box-shadow:0 0 0 1px rgba(0,102,255,0.04),0 24px 64px rgba(0,0,0,0.4);
+  position:relative;overflow:hidden;
+}
+.intake-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--b-hi),transparent);
+}
+
+.intake-route-pill{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  font-family:var(--mono);font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:2rem;
+  padding:0.4rem 1rem;
+  background:rgba(0,212,255,0.06);
+  border:1px solid rgba(0,212,255,0.2);
+  border-radius:var(--pill);
+}
+.intake-route-pill svg{width:10px;height:10px;stroke:var(--cyan);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.form-row{margin-bottom:1rem}
+.form-row label{
+  display:block;font-family:var(--ui);font-size:0.7rem;font-weight:700;
+  color:var(--t-mid);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:0.5rem;
+}
+.form-row input,.form-row select,.form-row textarea{
+  width:100%;padding:0.8rem 1.1rem;
+  background:rgba(1,12,26,0.85);
+  border:1px solid var(--b-mid);
+  border-radius:var(--r-sm);
+  color:var(--t-hi);font-family:var(--ui);font-size:0.88rem;
+  transition:border-color 0.3s,box-shadow 0.3s;
+  outline:none;
+}
+.form-row input::placeholder,.form-row textarea::placeholder{color:var(--t-dim)}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{
+  border-color:var(--sky);
+  box-shadow:0 0 0 3px rgba(0,153,255,0.1);
+}
+.form-row select{appearance:none;cursor:pointer}
+.form-row select option{background:#031525;color:var(--t-hi)}
+.form-row textarea{resize:vertical;min-height:100px;line-height:1.6}
+
+.btn-submit{
+  width:100%;padding:1.05rem 2rem;margin-top:0.5rem;
+  background:linear-gradient(135deg,var(--royal) 0%,var(--sky) 60%,var(--bright) 100%);
+  color:white;font-family:var(--ui);font-weight:700;font-size:0.88rem;
+  letter-spacing:0.06em;text-transform:uppercase;border-radius:var(--pill);
+  border:none;cursor:pointer;
+  transition:all 0.4s var(--ease);
+  box-shadow:0 4px 28px var(--glow),0 0 0 1px rgba(0,187,255,0.12),inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.btn-submit:hover{filter:brightness(1.12);transform:translateY(-2px);box-shadow:0 8px 44px var(--glow-sky)}
+.btn-submit:disabled{opacity:0.55;cursor:not-allowed;transform:none;filter:none}
+
+/* ═══════════════════════════════════════════════════
+   10. STEP 4 — CONFIRMATION
+   ═══════════════════════════════════════════════════ */
+.step4-wrap{max-width:760px;margin:0 auto;text-align:center}
+
+.step4-check{
+  width:72px;height:72px;border-radius:50%;
+  background:rgba(0,212,255,0.08);border:2px solid rgba(0,212,255,0.4);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 2rem;
+  box-shadow:0 0 32px rgba(0,212,255,0.18),0 0 0 8px rgba(0,212,255,0.04);
+  animation:checkIn 0.6s var(--ease) both;
+}
+@keyframes checkIn{
+  from{opacity:0;transform:scale(0.6)}
+  to{opacity:1;transform:scale(1)}
+}
+.step4-check svg{width:30px;height:30px;stroke:var(--cyan);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+.step4-wrap h3{
+  font-family:var(--display);font-size:2.1rem;font-weight:800;
+  color:white;margin-bottom:0.75rem;letter-spacing:-0.5px;
+  animation:fadeUp 0.5s var(--ease) 0.1s both;
+}
+.step4-wrap > p{
+  font-family:var(--ui);font-size:0.95rem;color:var(--t-mid);
+  line-height:1.8;font-weight:300;margin-bottom:2.5rem;max-width:560px;margin-left:auto;margin-right:auto;
+  animation:fadeUp 0.5s var(--ease) 0.2s both;
+}
+
+/* Score reveal card */
+.score-reveal-card{
+  background:rgba(3,21,37,0.8);
+  border:1px solid var(--b-mid);
+  border-radius:var(--radius);
+  padding:2.25rem;
+  margin-bottom:1.5rem;
+  text-align:left;
+  animation:fadeUp 0.55s var(--ease) 0.25s both;
+  position:relative;overflow:hidden;
+}
+.score-reveal-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--b-hi),transparent);
+}
+.score-reveal-inner{display:flex;align-items:center;gap:2rem}
+
+/* Animated donut ring for step 4 */
+.score-donut-wrap{position:relative;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.score-donut-svg{overflow:visible}
+.score-donut-track{fill:none;stroke:var(--b-lo);stroke-width:7}
+.score-donut-arc{
+  fill:none;stroke-width:7;stroke-linecap:round;
+  stroke-dasharray:226.2;stroke-dashoffset:226.2;
+  transform:rotate(-90deg);transform-origin:50% 50%;
+  transition:stroke-dashoffset 1.2s cubic-bezier(0.34,1.2,0.64,1),stroke 0.5s;
+}
+.score-donut-inner{
+  position:absolute;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.score-donut-num{
+  font-family:var(--display);font-size:2.25rem;font-weight:900;
+  line-height:1;color:white;
+}
+.score-donut-pts{
+  font-family:var(--mono);font-size:0.58rem;color:var(--t-dim);
+  letter-spacing:2px;text-transform:uppercase;margin-top:2px;
+}
+
+.score-reveal-info{flex:1;min-width:0}
+.score-cat-badge{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  font-family:var(--mono);font-size:0.62rem;font-weight:700;
+  letter-spacing:0.04em;text-transform:uppercase;
+  padding:0.35rem 0.85rem;border-radius:var(--pill);
+  margin-bottom:0.85rem;
+  border:1px solid currentColor;
+  opacity:0.85;
+}
+.score-cat-badge::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:currentColor;flex-shrink:0;
+}
+.score-cat-name{
+  font-family:var(--ui);font-size:1.1rem;font-weight:700;
+  color:white;margin-bottom:0.5rem;
+}
+.score-cat-rec{font-family:var(--ui);font-size:0.84rem;color:var(--t-mid);line-height:1.65;font-weight:300}
+
+/* Next step card */
+.next-step-card{
+  background:linear-gradient(135deg,rgba(0,71,204,0.16),rgba(0,153,255,0.07));
+  border:1px solid var(--b-hi);
+  border-radius:var(--radius);
+  padding:1.85rem 2rem;
+  margin-bottom:1.5rem;
+  text-align:left;
+  animation:fadeUp 0.55s var(--ease) 0.35s both;
+}
+.next-step-label{
+  font-family:var(--mono);font-size:0.6rem;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--t-dim);margin-bottom:0.6rem;
+}
+.next-step-title{font-family:var(--display);font-size:1.2rem;font-weight:700;color:white;margin-bottom:0.4rem}
+.next-step-body{font-family:var(--ui);font-size:0.85rem;color:var(--t-mid);line-height:1.65;font-weight:300}
+
+/* CTA buttons */
+.step4-actions{
+  display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;
+  margin-bottom:2.5rem;
+  animation:fadeUp 0.55s var(--ease) 0.45s both;
+}
+.btn-cta-primary{
+  display:inline-flex;align-items:center;gap:0.7rem;
+  padding:0.95rem 2.2rem;
+  background:linear-gradient(135deg,var(--royal) 0%,var(--sky) 65%,var(--bright) 100%);
+  color:white;font-family:var(--ui);font-weight:700;font-size:0.84rem;
+  letter-spacing:0.05em;text-transform:uppercase;border-radius:var(--pill);
+  border:1px solid rgba(0,187,255,0.25);
+  transition:all 0.4s var(--ease);
+  box-shadow:0 4px 28px var(--glow);
+}
+.btn-cta-primary:hover{filter:brightness(1.15);transform:translateY(-2px);box-shadow:0 10px 44px var(--glow-sky)}
+.btn-cta-ghost{
+  display:inline-flex;align-items:center;gap:0.65rem;
+  padding:0.9rem 2rem;
+  background:rgba(1,21,37,0.6);color:var(--ice);
+  border:1px solid var(--b-hi);
+  font-family:var(--ui);font-weight:500;font-size:0.84rem;
+  letter-spacing:0.03em;border-radius:var(--pill);
+  backdrop-filter:blur(12px);
+  transition:all 0.35s var(--ease);
+}
+.btn-cta-ghost:hover{border-color:var(--bright);color:white;background:rgba(0,102,255,0.1)}
+
+/* What happens next */
+.what-next-block{
+  text-align:left;
+  padding:1.75rem 2rem;
+  background:rgba(3,21,37,0.5);
+  border:1px solid var(--b-lo);
+  border-radius:var(--radius);
+  animation:fadeUp 0.55s var(--ease) 0.5s both;
+}
+.what-next-block h4{
+  font-family:var(--mono);font-size:0.6rem;font-weight:700;color:var(--t-dim);
+  letter-spacing:2.5px;text-transform:uppercase;margin-bottom:1.25rem;
+}
+.what-next-steps{display:flex;flex-direction:column;gap:0.75rem}
+.what-next-item{
+  display:flex;align-items:flex-start;gap:0.85rem;
+  font-family:var(--ui);font-size:0.85rem;color:var(--t-mid);line-height:1.55;font-weight:300;
+}
+.wn-num{
+  font-family:var(--mono);font-size:0.65rem;font-weight:700;color:var(--sky);
+  min-width:24px;padding-top:0.05rem;flex-shrink:0;
+}
+
+/* ═══════════════════════════════════════════════════
+   11. FOOTER
+   ═══════════════════════════════════════════════════ */
+.footer{
+  background:rgba(1,8,18,1);
+  border-top:1px solid var(--b-mid);
+  padding:5rem 0 2.5rem;
+}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:4rem;margin-bottom:4rem}
+.footer-brand-desc{font-family:var(--ui);font-size:0.83rem;color:var(--t-dim);line-height:1.75;margin:1.25rem 0 1.75rem;max-width:280px;font-weight:300}
+.footer-social{display:flex;gap:0.6rem}
+.social-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(0,187,255,0.05);border:1px solid var(--b-mid);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.75rem;color:var(--t-dim);transition:all 0.3s;
+  font-family:var(--ui);
+}
+.social-btn:hover{background:rgba(0,102,255,0.18);border-color:var(--b-hi);color:var(--bright);box-shadow:0 0 12px rgba(0,187,255,0.2)}
+.footer-col h4{font-family:var(--mono);font-size:0.6rem;font-weight:700;color:var(--t-dim);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:1.5rem}
+.footer-col a,.footer-col span{display:block;font-family:var(--ui);font-size:0.83rem;color:var(--t-mid);margin-bottom:0.75rem;transition:color 0.3s;font-weight:300}
+.footer-col a:hover{color:var(--bright)}
+.footer-divider{border:none;border-top:1px solid var(--b-lo);margin-bottom:2rem}
+.footer-bottom{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:1.5rem}
+.footer-copyright{font-family:var(--ui);font-size:0.75rem;color:var(--t-dim);font-weight:300}
+.footer-legal{display:flex;gap:1.5rem}
+.footer-legal a{font-family:var(--ui);font-size:0.72rem;color:var(--t-dim);transition:color 0.3s}
+.footer-legal a:hover{color:var(--bright)}
+.footer-logo{display:flex;align-items:center;gap:0.8rem}
+.footer-logo-img{width:52px;height:52px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 0 10px rgba(0,187,255,0.35)) drop-shadow(0 2px 6px rgba(0,0,0,0.5))}
+
+/* ═══════════════════════════════════════════════════
+   12. RESPONSIVE
+   ═══════════════════════════════════════════════════ */
+@media(max-width:1024px){
+  .hero-inner{grid-template-columns:1fr;gap:4rem}
+  .hero-card-wrap{justify-content:flex-start}
+  .hero-scan-card{max-width:480px}
+  .hero h1{font-size:clamp(2.4rem,5.5vw,3.6rem)}
+}
+@media(max-width:900px){
+  .visitor-grid{grid-template-columns:repeat(2,1fr)}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:3rem}
+  .form-grid-2{grid-template-columns:1fr}
+  .step-line{width:48px}
+  .step2-body{grid-template-columns:1fr}
+  .score-ring-panel{display:none}
+  .score-reveal-inner{flex-direction:column;align-items:center;text-align:center}
+}
+@media(max-width:640px){
+  .visitor-grid{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .step-line{width:24px}
+  .step-dot-label{display:none}
+  .hero-stats{flex-direction:column;gap:1.5rem}
+  .hero h1{font-size:2.4rem;letter-spacing:-1px}
+  .step4-actions{flex-direction:column;align-items:stretch}
+  .btn-cta-primary,.btn-cta-ghost{justify-content:center}
+  .intake-card{padding:1.5rem}
+  .what-next-block{padding:1.25rem}
+  .score-reveal-inner{flex-direction:column;align-items:center;text-align:center}
+  .hero-actions{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<div id="scrollBar"></div>
+
+<!-- ═══════════════ NAVIGATION ═══════════════ -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="https://www.mgcglobalconsulting.com">
+      <img src="assets/mgc-logo-transparent.png" alt="MGC Global Consulting" class="nav-logo-img">
+      <div class="nav-logo-text">
+        <span class="nav-logo-name">MGC Global Consulting</span>
+        <span class="nav-logo-sub">Making Global Connections</span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#services">Solutions</a>
+      <a href="index.html#process">Process</a>
+      <a href="index.html#why-mgc">Philosophy</a>
+      <a href="membership.html">Membership</a>
+      <a href="dashboard.html" class="nav-portal">&#8279; Client Portal</a>
+      <a href="index.html#booking" class="nav-cta">Start a Project</a>
+    </div>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html#services" onclick="closeMenu()">Solutions</a>
+  <a href="index.html#process" onclick="closeMenu()">Process</a>
+  <a href="index.html#why-mgc" onclick="closeMenu()">Philosophy</a>
+  <a href="membership.html" onclick="closeMenu()">Membership</a>
+  <a href="dashboard.html" onclick="closeMenu()" style="color:var(--gold)">Client Portal</a>
+  <a href="index.html#booking" onclick="closeMenu()" style="color:var(--bright)">Start a Project</a>
+</div>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero" id="heroSection">
+  <div class="hero-glow-1"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-streams" id="heroStreams"></div>
+
+  <div class="container-wide">
+    <div class="hero-inner">
+
+      <!-- Left: content -->
+      <div class="hero-content">
+        <div class="hero-eyebrow">
+          <span class="hero-eyebrow-dot"></span>
+          MGC AI Operations Front Door
+        </div>
+
+        <h1>
+          Your Operations Are<br>
+          Costing You More<br>
+          <span class="sky-text">Than You Know.</span>
+        </h1>
+
+        <p class="hero-sub">
+          Score your business readiness in 4 minutes.
+          Find your exact starting point and receive a
+          personalized AI strategy roadmap — built around
+          how your business actually runs.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#wizard" class="btn-hero-primary">
+            Score My Operations
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="services.html" class="btn-hero-secondary">
+            View Services
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat-item">
+            <div class="hero-stat-num"><span class="counter" data-target="847">0</span><span style="color:var(--cyan)">+</span></div>
+            <div class="hero-stat-label">Businesses Scored</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-num"><span class="counter" data-target="94">0</span><span style="color:var(--gold)">%</span></div>
+            <div class="hero-stat-label">Found Critical Gaps</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-num" style="color:var(--cyan)">4</div>
+            <div class="hero-stat-label">Minutes to Complete</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: decorative scan card -->
+      <div class="hero-card-wrap">
+        <div class="hero-scan-card">
+          <div class="scan-header">
+            <div class="scan-title-wrap">
+              <div class="scan-live-dot"></div>
+              <div class="scan-title-text">MGC Analysis Engine</div>
+            </div>
+            <div class="scan-badge">Live</div>
+          </div>
+
+          <div class="scan-label">Operations Gap Analysis</div>
+          <div class="scan-sub">Running analysis #847...</div>
+
+          <div class="scan-bars">
+            <div class="scan-bar-row">
+              <div class="scan-bar-meta">
+                <span class="scan-bar-name">Workflow Automation</span>
+                <span class="scan-bar-pct">72%</span>
+              </div>
+              <div class="scan-bar-track">
+                <div class="scan-bar-fill b-cyan" style="--w:72%;animation-delay:0.3s"></div>
+              </div>
+            </div>
+            <div class="scan-bar-row">
+              <div class="scan-bar-meta">
+                <span class="scan-bar-name">CRM Infrastructure</span>
+                <span class="scan-bar-pct">58%</span>
+              </div>
+              <div class="scan-bar-track">
+                <div class="scan-bar-fill b-sky" style="--w:58%;animation-delay:0.55s"></div>
+              </div>
+            </div>
+            <div class="scan-bar-row">
+              <div class="scan-bar-meta">
+                <span class="scan-bar-name">AI Integration</span>
+                <span class="scan-bar-pct">41%</span>
+              </div>
+              <div class="scan-bar-track">
+                <div class="scan-bar-fill b-gold" style="--w:41%;animation-delay:0.8s"></div>
+              </div>
+            </div>
+            <div class="scan-bar-row">
+              <div class="scan-bar-meta">
+                <span class="scan-bar-name">Data Architecture</span>
+                <span class="scan-bar-pct">79%</span>
+              </div>
+              <div class="scan-bar-track">
+                <div class="scan-bar-fill b-em" style="--w:79%;animation-delay:1.05s"></div>
+              </div>
+            </div>
+            <div class="scan-bar-row">
+              <div class="scan-bar-meta">
+                <span class="scan-bar-name">Reporting Systems</span>
+                <span class="scan-bar-pct">31%</span>
+              </div>
+              <div class="scan-bar-track">
+                <div class="scan-bar-fill b-rose" style="--w:31%;animation-delay:1.3s"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="scan-alert">
+            <div class="scan-alert-icon">
+              <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div class="scan-alert-text">3 critical operational gaps identified across this business profile</div>
+          </div>
+
+          <div class="scan-footer">
+            <div class="scan-refresh-dot"></div>
+            Live &nbsp;·&nbsp; Based on 847 audits
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ MARQUEE ═══════════════ -->
+<div class="marquee-strip">
+  <div class="marquee-track" id="marqueeTrack">
+    <!-- JS duplicates these for seamless loop -->
+    <span class="marquee-item"><span class="marquee-dot"></span>AI Strategy &amp; Consulting</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Workflow Automation</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>CRM Architecture</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Notion Systems Design</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>AI Training &amp; Workshops</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Operational Systems Audit</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>HubSpot Integration</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Retainer &amp; Ongoing Support</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Supabase Client Portals</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Growth-Stage Readiness</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>AI Strategy &amp; Consulting</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Workflow Automation</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>CRM Architecture</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Notion Systems Design</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>AI Training &amp; Workshops</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Operational Systems Audit</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>HubSpot Integration</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Retainer &amp; Ongoing Support</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Supabase Client Portals</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Growth-Stage Readiness</span>
+  </div>
+</div>
+
+<!-- ═══════════════ WIZARD ═══════════════ -->
+<section class="wizard-section" id="wizard">
+  <div class="container">
+
+    <!-- Section header -->
+    <div class="wizard-header">
+      <div class="wizard-eyebrow">
+        <span class="wizard-eyebrow-dot"></span>
+        Operations Readiness Assessment
+      </div>
+      <h2>Find Your <span class="sky-text">Starting Point</span></h2>
+      <p>Answer three quick questions. We score your operations, match you to the right service, and route your intake directly to our team.</p>
+    </div>
+
+    <!-- Step indicator -->
+    <div class="step-indicator">
+      <div class="step-dot active" id="dot1">
+        <div class="step-dot-num">1</div>
+        <div class="step-dot-label">Who Are You?</div>
+      </div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-dot" id="dot2">
+        <div class="step-dot-num">2</div>
+        <div class="step-dot-label">Readiness Score</div>
+      </div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-dot" id="dot3">
+        <div class="step-dot-num">3</div>
+        <div class="step-dot-label">Your Info</div>
+      </div>
+      <div class="step-line" id="line3"></div>
+      <div class="step-dot" id="dot4">
+        <div class="step-dot-num">4</div>
+        <div class="step-dot-label">Your Plan</div>
+      </div>
+    </div>
+
+    <!-- ─── STEP 1 ─── -->
+    <div class="step-panel active" id="step1">
+      <div class="step1-intro">
+        <h3>What brings you here today?</h3>
+        <p>Select the option that best describes you. This routes you to the right path and the right MGC team member.</p>
+      </div>
+      <div class="visitor-grid">
+
+        <div class="visitor-card" onclick="selectVisitorType('new-client')" data-type="new-client">
+          <div class="visitor-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+          </div>
+          <div class="visitor-card-body">
+            <div class="visitor-card-label">New Business Client</div>
+            <div class="visitor-card-sub">AI strategy, automation, CRM setup, or operational systems design</div>
+          </div>
+          <div class="visitor-card-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+        <div class="visitor-card" onclick="selectVisitorType('referral-partner')" data-type="referral-partner">
+          <div class="visitor-icon">
+            <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="4"/><circle cx="18" cy="8" r="3"/><circle cx="18" cy="16" r="3"/><path d="M13 12h2"/><path d="M15 8.5l-2 1.5"/><path d="M15 15.5l-2-1.5"/></svg>
+          </div>
+          <div class="visitor-card-body">
+            <div class="visitor-card-label">Referral Partner</div>
+            <div class="visitor-card-sub">Refer clients, earn commissions, join the partner network</div>
+          </div>
+          <div class="visitor-card-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+        <div class="visitor-card" onclick="selectVisitorType('existing-client')" data-type="existing-client">
+          <div class="visitor-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="visitor-card-body">
+            <div class="visitor-card-label">Existing Client</div>
+            <div class="visitor-card-sub">Project update, portal access, or ongoing support request</div>
+          </div>
+          <div class="visitor-card-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+        <div class="visitor-card" onclick="selectVisitorType('automation')" data-type="automation">
+          <div class="visitor-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="visitor-card-body">
+            <div class="visitor-card-label">Automation Help</div>
+            <div class="visitor-card-sub">Diagnose manual processes, connect tools, build workflows</div>
+          </div>
+          <div class="visitor-card-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+        <div class="visitor-card" onclick="selectVisitorType('crm-notion')" data-type="crm-notion">
+          <div class="visitor-icon">
+            <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/><path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/></svg>
+          </div>
+          <div class="visitor-card-body">
+            <div class="visitor-card-label">CRM / Notion Help</div>
+            <div class="visitor-card-sub">Pipeline setup, dashboards, Notion database architecture</div>
+          </div>
+          <div class="visitor-card-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+        <div class="visitor-card" onclick="selectVisitorType('ai-training')" data-type="ai-training">
+          <div class="visitor-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="visitor-card-body">
+            <div class="visitor-card-label">AI Training Inquiry</div>
+            <div class="visitor-card-sub">Workshops, team enablement, prompt training, staff education</div>
+          </div>
+          <div class="visitor-card-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+        <div class="visitor-card" onclick="selectVisitorType('billing')" data-type="billing">
+          <div class="visitor-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="10" y2="15"/></svg>
+          </div>
+          <div class="visitor-card-body">
+            <div class="visitor-card-label">Billing / Invoice</div>
+            <div class="visitor-card-sub">Invoice request, estimate, retainer, or payment question</div>
+          </div>
+          <div class="visitor-card-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+        <div class="visitor-card" onclick="selectVisitorType('general')" data-type="general">
+          <div class="visitor-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="visitor-card-body">
+            <div class="visitor-card-label">General Inquiry</div>
+            <div class="visitor-card-sub">Not sure where to start — we will help you figure it out</div>
+          </div>
+          <div class="visitor-card-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ─── STEP 2 ─── -->
+    <div class="step-panel" id="step2">
+      <button class="btn-back" onclick="goToStep(1)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        Back
+      </button>
+      <div class="step2-header">
+        <h3>Operations Readiness Score</h3>
+        <p>Ten yes/no questions. We score your business systems and use the result to personalize your next steps.</p>
+      </div>
+
+      <div class="step2-body">
+        <div class="readiness-questions" id="readinessQuestions">
+          <!-- Questions injected by JS -->
+        </div>
+
+        <!-- Live score ring -->
+        <div class="score-ring-panel">
+          <div class="score-ring-label">Live Score</div>
+          <div class="score-ring-svg-wrap">
+            <svg class="score-ring-svg" viewBox="0 0 100 100" width="140" height="140">
+              <circle class="score-ring-track" cx="50" cy="50" r="42"/>
+              <circle class="score-ring-arc" id="scoreRingArc" cx="50" cy="50" r="42"/>
+            </svg>
+            <div class="score-ring-inner">
+              <div class="score-ring-num" id="scoreRingNum">0</div>
+              <div class="score-ring-slash">/ 100</div>
+            </div>
+          </div>
+          <div class="score-ring-status" id="scoreRingStatus">Answer all 10<br>questions to continue</div>
+          <div class="score-ring-progress" id="scoreRingProgress">0 of 10 answered</div>
+        </div>
+      </div>
+
+      <div class="step2-footer">
+        <button class="btn-submit" id="scoreNextBtn" onclick="completeScore()" style="max-width:360px;margin:0 auto" disabled>
+          See My Score &amp; Continue
+        </button>
+      </div>
+    </div>
+
+    <!-- ─── STEP 3 ─── -->
+    <div class="step-panel" id="step3">
+      <button class="btn-back" onclick="goToStep(2)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        Back
+      </button>
+      <div class="step3-header">
+        <h3>Tell Us About Your Business</h3>
+        <p>This goes directly to our team so we can reach out with the right solution for you.</p>
+      </div>
+
+      <div class="intake-card">
+        <div class="intake-route-pill" id="routePill">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          <span id="routePillLabel">Routing...</span>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-row">
+            <label>Full Name *</label>
+            <input type="text" id="intName" placeholder="Your name" required>
+          </div>
+          <div class="form-row">
+            <label>Email Address *</label>
+            <input type="email" id="intEmail" placeholder="you@company.com" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Company / Organization</label>
+          <input type="text" id="intCompany" placeholder="Company Inc.">
+        </div>
+        <div class="form-row">
+          <label>Biggest Operational Challenge</label>
+          <textarea id="intChallenge" placeholder="Describe the problem you are trying to solve or what is slowing your business down..."></textarea>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-row">
+            <label>Timeline</label>
+            <select id="intTimeline">
+              <option value="">— Select —</option>
+              <option value="ASAP — within 30 days">ASAP — within 30 days</option>
+              <option value="1–3 months">1–3 months</option>
+              <option value="3–6 months">3–6 months</option>
+              <option value="6+ months / Planning">6+ months / Planning</option>
+              <option value="Not sure yet">Not sure yet</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>Budget Range</label>
+            <select id="intBudget">
+              <option value="">— Select —</option>
+              <option value="Under $2,500">Under $2,500</option>
+              <option value="$2,500–$7,500">$2,500–$7,500</option>
+              <option value="$7,500–$20,000">$7,500–$20,000</option>
+              <option value="$20,000+">$20,000+</option>
+              <option value="Membership / Retainer">Membership / Retainer</option>
+              <option value="Not sure yet">Not sure yet</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-submit" id="intakeSubmitBtn" onclick="submitIntake()">
+          Submit &amp; See My Plan
+        </button>
+      </div>
+    </div>
+
+    <!-- ─── STEP 4 ─── -->
+    <div class="step-panel" id="step4">
+      <div class="step4-wrap">
+
+        <div class="step4-check">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+
+        <h3>You Are All Set.</h3>
+        <p>Your information has been received. A member of our team will follow up within one business day. Here is what our system found for you.</p>
+
+        <!-- Animated score reveal -->
+        <div class="score-reveal-card">
+          <div class="score-reveal-inner">
+            <div class="score-donut-wrap">
+              <svg class="score-donut-svg" viewBox="0 0 100 100" width="150" height="150">
+                <circle class="score-donut-track" cx="50" cy="50" r="36"/>
+                <circle class="score-donut-arc" id="scoreDonutArc" cx="50" cy="50" r="36"/>
+              </svg>
+              <div class="score-donut-inner">
+                <div class="score-donut-num" id="scoreDonutNum">0</div>
+                <div class="score-donut-pts">/ 100</div>
+              </div>
+            </div>
+            <div class="score-reveal-info">
+              <div class="score-cat-badge" id="scoreCatBadge">—</div>
+              <div class="score-cat-name" id="scoreCatName">—</div>
+              <div class="score-cat-rec" id="scoreCatRec">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="next-step-card">
+          <div class="next-step-label">Recommended Next Step</div>
+          <div class="next-step-title" id="nextStepTitle">—</div>
+          <div class="next-step-body" id="nextStepBody">—</div>
+        </div>
+
+        <div class="step4-actions">
+          <a class="btn-cta-primary" href="index.html#booking" id="step4CTA">
+            Book a Strategy Session
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </a>
+          <a class="btn-cta-ghost" href="services.html">
+            Explore Services
+          </a>
+        </div>
+
+        <div class="what-next-block">
+          <h4>What Happens Next</h4>
+          <div class="what-next-steps">
+            <div class="what-next-item"><span class="wn-num">01</span>Your intake summary is routed to the right MGC team member based on your visitor type and score.</div>
+            <div class="what-next-item"><span class="wn-num">02</span>We review your readiness score and operational challenge within one business day.</div>
+            <div class="what-next-item"><span class="wn-num">03</span>You receive a personalized follow-up with a recommended service path or a direct session link.</div>
+            <div class="what-next-item"><span class="wn-num">04</span>Urgent? Email us directly at <a href="mailto:info@mgcglobalconsulting.com" style="color:var(--bright);font-weight:500">info@mgcglobalconsulting.com</a>.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
+  <div class="container-wide">
+    <div class="footer-grid">
+      <div>
+        <a class="footer-logo" href="https://www.mgcglobalconsulting.com">
+          <img src="assets/mgc-logo-transparent.png" alt="MGC" class="footer-logo-img">
+          <div>
+            <div style="font-family:var(--ui);font-weight:700;font-size:0.9rem;color:white">MGC Global Consulting</div>
+            <div style="font-family:var(--mono);font-size:0.57rem;color:var(--t-dim);letter-spacing:2.5px;text-transform:uppercase">Making Global Connections</div>
+          </div>
+        </a>
+        <p class="footer-brand-desc">Enterprise-caliber AI strategy, automation architecture, and operational systems for growth-stage businesses. Based in Owings Mills, Maryland.</p>
+        <div class="footer-social">
+          <a class="social-btn" href="https://x.com/just_mgc" target="_blank" rel="noopener" title="X / Twitter">&#120143;</a>
+          <a class="social-btn" href="https://x.com/_onedopementor" target="_blank" rel="noopener" title="@_onedopementor">&#120143;</a>
+          <a class="social-btn" href="https://facebook.com/share/17imWSpAHB" target="_blank" rel="noopener" title="Facebook">f</a>
+          <a class="social-btn" href="https://www.youtube.com/@markcartwright-k8l" target="_blank" rel="noopener" title="YouTube">&#9654;</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <a href="ai-consulting.html">AI Consulting &amp; Strategy</a>
+        <a href="automation.html">Automation Architecture</a>
+        <a href="crm-optimization.html">CRM &amp; Pipeline</a>
+        <a href="systems-design.html">Systems Design</a>
+        <a href="ai-workshops.html">AI Workshops</a>
+        <a href="retainer-support.html">Retainer Support</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="membership.html">Membership Plans</a>
+        <a href="dashboard.html">Client Portal</a>
+        <a href="checkout.html">Pay Now</a>
+        <a href="partner-success.html">Partner Program</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:info@mgcglobalconsulting.com">info@mgcglobalconsulting.com</a>
+        <a href="mailto:billing@mgcglobalconsulting.com">billing@mgcglobalconsulting.com</a>
+        <a href="mailto:sales@mgcglobalconsulting.com">sales@mgcglobalconsulting.com</a>
+        <span>410-952-2846</span>
+        <span>Owings Mills, MD</span>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="footer-bottom">
+      <span class="footer-copyright">&copy; 2026 MGC Global Consulting LLC. All rights reserved.</span>
+      <div class="footer-legal">
+        <a href="https://www.mgcglobalconsulting.com/privacy">Privacy Policy</a>
+        <a href="https://www.mgcglobalconsulting.com/terms">Terms of Service</a>
+        <a href="sitemap.xml">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+'use strict';
+
+// ── Scroll progress ─────────────────────────────────────────────────────────
+const scrollBar = document.getElementById('scrollBar');
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+  scrollBar.style.width = Math.min(pct, 100) + '%';
+}, { passive: true });
+
+// ── Nav scroll ──────────────────────────────────────────────────────────────
+const mainNav = document.getElementById('mainNav');
+const handleNavScroll = () => mainNav.classList.toggle('scrolled', window.scrollY > 60);
+window.addEventListener('scroll', handleNavScroll, { passive: true });
+window.addEventListener('DOMContentLoaded', handleNavScroll);
+
+// ── Mobile menu ─────────────────────────────────────────────────────────────
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  mobileMenu.classList.toggle('open');
+  document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+});
+function closeMenu() {
+  hamburger.classList.remove('active');
+  mobileMenu.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── Hero data streams (decorative) ──────────────────────────────────────────
+(function buildStreams() {
+  const container = document.getElementById('heroStreams');
+  const count = 8;
+  for (let i = 0; i < count; i++) {
+    const s = document.createElement('div');
+    s.className = 'hero-stream';
+    s.style.cssText = [
+      'left:' + (Math.random() * 100) + '%',
+      'height:' + (80 + Math.random() * 180) + 'px',
+      'animation-duration:' + (5 + Math.random() * 8) + 's',
+      'animation-delay:' + (Math.random() * 12) + 's',
+      'opacity:' + (0.3 + Math.random() * 0.4),
+    ].join(';');
+    container.appendChild(s);
+  }
+})();
+
+// ── Hero counter animation ───────────────────────────────────────────────────
+function animateCounter(el, target, duration) {
+  const start = performance.now();
+  const update = (now) => {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.round(eased * target);
+    if (progress < 1) requestAnimationFrame(update);
+  };
+  requestAnimationFrame(update);
+}
+
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      animateCounter(el, parseInt(el.dataset.target), 1600);
+      counterObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.counter[data-target]').forEach(el => {
+  counterObserver.observe(el);
+});
+
+// ══════════════════════════════════════════════════════
+// WIZARD DATA
+// ══════════════════════════════════════════════════════
+
+const VISITOR_TYPES = {
+  'new-client':       { label:'New Business Client',        service:'AI Strategy Consultation',    subAgent:'New Client Intake Agent',     nextStep:'Book a Strategy Session',     slackChannel:'#mgc-new-leads' },
+  'referral-partner': { label:'Referral Partner',           service:'Referral Partner Onboarding', subAgent:'Referral Partner Agent',      nextStep:'Partner Onboarding Call',     slackChannel:'#mgc-referral-partners' },
+  'existing-client':  { label:'Existing Client / Member',   service:'Client Support',              subAgent:'Existing Client Agent',       nextStep:'Open Client Portal',          slackChannel:'#mgc-client-support', cta:{ label:'Open Client Portal', href:'dashboard.html' } },
+  'automation':       { label:'Automation Help',            service:'Automation Architecture',     subAgent:'Automation Audit Agent',      nextStep:'Automation Audit Session',    slackChannel:'#mgc-automation-audits' },
+  'crm-notion':       { label:'CRM / Notion Help',          service:'CRM & Notion Systems',        subAgent:'CRM/Notion Systems Agent',    nextStep:'CRM Discovery Call',          slackChannel:'#mgc-crm-systems' },
+  'ai-training':      { label:'AI Training Inquiry',        service:'AI Training & Workshops',     subAgent:'AI Training Inquiry Agent',   nextStep:'Training Needs Assessment',   slackChannel:'#mgc-agent-alerts' },
+  'billing':          { label:'Billing / Invoice Question', service:'Billing Support',             subAgent:'Billing & Accounts Agent',    nextStep:'Billing Support Review',      slackChannel:'#mgc-billing' },
+  'general':          { label:'General Inquiry',            service:'General Inquiry',             subAgent:'General Inquiry Agent',       nextStep:'Discovery Call',              slackChannel:'#mgc-new-leads' },
+};
+
+const READINESS_QUESTIONS = [
+  'Do you currently use a CRM to track your clients and leads?',
+  'Are all of your leads tracked in one central place?',
+  'Do you have automated follow-up sequences in place?',
+  'Do you have a client portal where clients can access their work?',
+  'Is your billing process connected to your client intake workflow?',
+  'Do you use QuickBooks or a dedicated accounting platform?',
+  'Do you use Slack or a team alert system for internal communications?',
+  'Does your team use Google Workspace (Gmail, Drive, Calendar, Meet)?',
+  'Are your internal workflows and SOPs documented?',
+  'Do you have dashboards or reporting systems to track business performance?',
+];
+
+const SCORE_CATEGORIES = [
+  { min:0,  max:30,  label:'Manual Operations Risk',          color:'#F43F5E', rec:'Your business is running primarily on manual effort. MGC can build a connected systems foundation so nothing falls through the cracks.' },
+  { min:31, max:60,  label:'Automation Ready but Fragmented', color:'#FFB347', rec:'You have tools in place but they are not working together. MGC can integrate and optimize your stack for real efficiency.' },
+  { min:61, max:80,  label:'System Upgrade Recommended',      color:'#00BBFF', rec:'Your operations are solid, but there are clear upgrade opportunities. MGC can help you close the gaps and scale faster.' },
+  { min:81, max:100, label:'AI Operations Ready',             color:'#00D4FF', rec:'You are ahead of the curve. MGC can help you implement advanced AI operations and maintain your competitive edge.' },
+];
+
+const NEXT_STEP_COPY = {
+  'new-client':       'We will schedule a discovery call to understand your goals and build a customized AI strategy proposal for your business.',
+  'referral-partner': 'Our partnerships team will reach out to walk you through the referral program structure, commission model, and onboarding.',
+  'existing-client':  'Your project manager will follow up within one business day. You can also access your client portal directly below.',
+  'automation':       'We will run a rapid workflow audit and identify your highest-impact automation opportunities.',
+  'crm-notion':       'Our systems team will review your current setup and propose a connected CRM architecture built for your business.',
+  'ai-training':      'We will outline a training curriculum tailored to your team size, tools, and current readiness level.',
+  'billing':          'Our billing team will follow up with the appropriate invoice, estimate, or payment link within one business day.',
+  'general':          'A team member will review your intake and route you to the right specialist within one business day.',
+};
+
+const state = {
+  currentStep: 1,
+  visitorType: '',
+  service: '',
+  assignedSubAgent: '',
+  recommendedNextStep: '',
+  slackChannel: '',
+  _typeKey: '',
+  _ctaOverride: null,
+  readinessAnswers: new Array(10).fill(null),
+  readinessScore: 0,
+  readinessCategory: '',
+  _scoreColor: '',
+  _scoreRec: '',
+};
+
+// ── Step navigation ──────────────────────────────────────────────────────────
+function goToStep(n) {
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+  state.currentStep = n;
+  updateStepIndicator(n);
+  // Scroll to wizard section
+  const wizardEl = document.getElementById('wizard');
+  const offset = wizardEl.getBoundingClientRect().top + window.scrollY - 100;
+  window.scrollTo({ top: offset, behavior: 'smooth' });
+}
+
+function updateStepIndicator(n) {
+  [1,2,3,4].forEach(i => {
+    const dot = document.getElementById('dot' + i);
+    dot.classList.remove('active', 'done');
+    if (i < n) dot.classList.add('done');
+    else if (i === n) dot.classList.add('active');
+  });
+  [1,2,3].forEach(i => {
+    document.getElementById('line' + i).classList.toggle('done', i < n);
+  });
+}
+
+// ── Step 1: visitor type ────────────────────────────────────────────────────
+function selectVisitorType(type) {
+  document.querySelectorAll('.visitor-card').forEach(c => c.classList.remove('selected'));
+  document.querySelector('[data-type="' + type + '"]').classList.add('selected');
+
+  const vt = VISITOR_TYPES[type];
+  state.visitorType         = vt.label;
+  state.service             = vt.service;
+  state.assignedSubAgent    = vt.subAgent;
+  state.recommendedNextStep = vt.nextStep;
+  state.slackChannel        = vt.slackChannel;
+  state._ctaOverride        = vt.cta || null;
+  state._typeKey            = type;
+
+  setTimeout(() => goToStep(2), 280);
+}
+
+// ── Step 2: readiness questions ─────────────────────────────────────────────
+function buildReadinessQuestions() {
+  const container = document.getElementById('readinessQuestions');
+  container.innerHTML = '';
+  READINESS_QUESTIONS.forEach((q, i) => {
+    const row = document.createElement('div');
+    row.className = 'rq-row';
+    row.id = 'rq-' + i;
+    row.innerHTML =
+      '<span class="rq-num">0' + (i + 1) + '</span>' +
+      '<span class="rq-text">' + q + '</span>' +
+      '<div class="rq-buttons">' +
+        '<button class="rq-btn" id="rq-yes-' + i + '" onclick="answerQuestion(' + i + ',true)">Yes</button>' +
+        '<button class="rq-btn" id="rq-no-'  + i + '" onclick="answerQuestion(' + i + ',false)">No</button>' +
+      '</div>';
+    container.appendChild(row);
+  });
+}
+
+const RING_CIRCUMFERENCE = 2 * Math.PI * 42; // ≈ 263.9
+
+function answerQuestion(index, answer) {
+  state.readinessAnswers[index] = answer;
+
+  const yesBtn = document.getElementById('rq-yes-' + index);
+  const noBtn  = document.getElementById('rq-no-' + index);
+  const row    = document.getElementById('rq-' + index);
+
+  yesBtn.className = 'rq-btn' + (answer ? ' yes-active' : '');
+  noBtn.className  = 'rq-btn' + (!answer ? ' no-active' : '');
+  row.classList.add('answered');
+
+  const answered  = state.readinessAnswers.filter(a => a !== null).length;
+  const yesCount  = state.readinessAnswers.filter(a => a === true).length;
+  const liveScore = yesCount * 10;
+
+  // Update ring
+  const arc = document.getElementById('scoreRingArc');
+  const offset = RING_CIRCUMFERENCE * (1 - liveScore / 100);
+  arc.style.strokeDashoffset = offset;
+
+  // Color the ring based on live score
+  const cat = SCORE_CATEGORIES.find(c => liveScore >= c.min && liveScore <= c.max) || SCORE_CATEGORIES[0];
+  arc.style.stroke = cat.color;
+
+  document.getElementById('scoreRingNum').textContent = liveScore;
+  document.getElementById('scoreRingNum').style.color = liveScore > 0 ? cat.color : 'white';
+  document.getElementById('scoreRingProgress').textContent = answered + ' of 10 answered';
+
+  if (answered === 10) {
+    document.getElementById('scoreRingStatus').textContent = 'Score complete!';
+  } else {
+    document.getElementById('scoreRingStatus').textContent = 'Keep going —\n' + (10 - answered) + ' remaining';
+  }
+
+  document.getElementById('scoreNextBtn').disabled = answered < 10;
+}
+
+function completeScore() {
+  const yesCount = state.readinessAnswers.filter(a => a === true).length;
+  state.readinessScore = yesCount * 10;
+
+  const cat = SCORE_CATEGORIES.find(c => state.readinessScore >= c.min && state.readinessScore <= c.max);
+  state.readinessCategory = cat.label;
+  state._scoreColor       = cat.color;
+  state._scoreRec         = cat.rec;
+
+  document.getElementById('routePillLabel').textContent = state.assignedSubAgent;
+  goToStep(3);
+}
+
+// ── Step 3: form submit ──────────────────────────────────────────────────────
+async function submitIntake() {
+  const name      = document.getElementById('intName').value.trim();
+  const email     = document.getElementById('intEmail').value.trim();
+  const company   = document.getElementById('intCompany').value.trim();
+  const challenge = document.getElementById('intChallenge').value.trim();
+  const timeline  = document.getElementById('intTimeline').value;
+  const budget    = document.getElementById('intBudget').value;
+
+  if (!name || !email) {
+    // Simple inline validation — no alert
+    if (!name) document.getElementById('intName').style.borderColor = 'rgba(244,63,94,0.6)';
+    if (!email) document.getElementById('intEmail').style.borderColor = 'rgba(244,63,94,0.6)';
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('intEmail').style.borderColor = 'rgba(244,63,94,0.6)';
+    return;
+  }
+
+  const btn = document.getElementById('intakeSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  const payload = {
+    name, email, company,
+    service:               state.service,
+    message:               challenge,
+    visitor_type:          state.visitorType,
+    assigned_sub_agent:    state.assignedSubAgent,
+    readiness_score:       state.readinessScore,
+    readiness_category:    state.readinessCategory,
+    recommended_next_step: state.recommendedNextStep,
+    challenge, timeline,
+    budget_range: budget,
+    source:    'MGC AI Operations Front Door',
+    timestamp: new Date().toISOString(),
+  };
+
+  try {
+    await fetch('/.netlify/functions/lead-intake', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch (_) {
+    // Non-blocking — always advance to confirmation
+  }
+
+  buildConfirmation();
+  goToStep(4);
+}
+
+// ── Step 4: confirmation + animated reveal ───────────────────────────────────
+const DONUT_CIRC = 2 * Math.PI * 36; // ≈ 226.2
+
+function buildConfirmation() {
+  // Set category badge
+  const badge = document.getElementById('scoreCatBadge');
+  badge.textContent = state.readinessCategory;
+  badge.style.color = state._scoreColor;
+  badge.style.borderColor = state._scoreColor + '60';
+  badge.style.background = state._scoreColor + '12';
+
+  document.getElementById('scoreCatName').textContent = state.readinessCategory;
+  document.getElementById('scoreCatName').style.color = state._scoreColor;
+  document.getElementById('scoreCatRec').textContent  = state._scoreRec;
+
+  document.getElementById('nextStepTitle').textContent = state.recommendedNextStep;
+  document.getElementById('nextStepBody').textContent  = NEXT_STEP_COPY[state._typeKey] || 'Our team will review your submission and follow up shortly.';
+
+  if (state._ctaOverride) {
+    const cta = document.getElementById('step4CTA');
+    cta.textContent = state._ctaOverride.label;
+    cta.href = state._ctaOverride.href;
+  }
+
+  // Animate donut ring
+  const arc = document.getElementById('scoreDonutArc');
+  arc.style.stroke = state._scoreColor;
+  const targetOffset = DONUT_CIRC * (1 - state.readinessScore / 100);
+
+  // Start at full offset, animate to target
+  arc.style.strokeDashoffset = DONUT_CIRC;
+  setTimeout(() => {
+    arc.style.transition = 'stroke-dashoffset 1.4s cubic-bezier(0.34,1.2,0.64,1)';
+    arc.style.strokeDashoffset = targetOffset;
+  }, 400);
+
+  // Animate counter
+  const numEl = document.getElementById('scoreDonutNum');
+  numEl.style.color = state._scoreColor;
+  setTimeout(() => {
+    animateCounter(numEl, state.readinessScore, 1200);
+  }, 400);
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+buildReadinessQuestions();
+</script>
+
+</body>
+</html>

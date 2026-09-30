@@ -1238,11 +1238,12 @@ html{scroll-padding-top:80px}
       </div>
     </a>
     <div class="nav-links">
-      <a href="#services">Solutions</a>
+      <a href="services.html">Services</a>
+      <a href="onboarding-assistant.html" style="color:var(--cyan)">AI Assessment</a>
       <a href="#process">Process</a>
       <a href="#why-mgc">Philosophy</a>
       <a href="membership.html">Membership</a>
-      <a href="dashboard.html" class="nav-portal" style="background:linear-gradient(135deg,rgba(255,179,71,0.15),rgba(201,138,42,0.1));border:1px solid rgba(255,179,71,0.4);border-radius:var(--pill);padding:.42rem 1.1rem;color:var(--gold)!important;font-weight:700!important">⬡ Client Portal</a>
+      <a href="dashboard.html" class="nav-portal" style="background:linear-gradient(135deg,rgba(255,179,71,0.15),rgba(201,138,42,0.1));border:1px solid rgba(255,179,71,0.4);border-radius:var(--pill);padding:.42rem 1.1rem;color:var(--gold)!important;font-weight:700!important">Client Portal</a>
       <a href="#booking" class="nav-cta">Start a Project</a>
     </div>
     <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
@@ -1251,7 +1252,8 @@ html{scroll-padding-top:80px}
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#services" onclick="closeMenu()">Solutions</a>
+  <a href="services.html" onclick="closeMenu()">Services</a>
+  <a href="onboarding-assistant.html" onclick="closeMenu()" style="color:var(--cyan)">AI Assessment</a>
   <a href="#process" onclick="closeMenu()">Process</a>
   <a href="#why-mgc" onclick="closeMenu()">Philosophy</a>
   <a href="membership.html" onclick="closeMenu()">Membership</a>
@@ -1312,10 +1314,11 @@ html{scroll-padding-top:80px}
         <div class="globe-glow"></div>
         <div class="globe-ring"></div>
         <div class="globe-ring-2"></div>
-        <video class="globe-video" autoplay muted loop playsinline poster="m-globe-sphere.png">
+        <video class="globe-video" autoplay muted loop playsinline>
+          <source src="assets/globe-connected.mp4" type="video/mp4">
           <source src="https://lpzw7sgvwshomcxj.public.blob.vercel-storage.com/globe-connected.mp4" type="video/mp4">
-          <!-- Fallback: static globe image if video fails -->
-          <img src="assets/m-globe-sphere.png" alt="MGC Global — Connected World" style="width:100%;height:100%;object-fit:cover;border-radius:50%">
+          <!-- Fallback: static image if video fails -->
+          <img src="assets/mgc-logo-transparent.png" alt="MGC Global — Connected World" style="width:100%;height:100%;object-fit:cover;border-radius:50%">
         </video>
         <div class="data-chip chip-1">
           <div class="data-chip-label">System Status</div>
@@ -1345,7 +1348,7 @@ html{scroll-padding-top:80px}
 <!-- ══════════════ VISION ══════════════ -->
 <div class="vision-section reveal">
   <div class="vision-image-wrap">
-    <img src="assets/mgc-ai-city.png" alt="AI + Human = Unlimited Potential — MGC Global Consulting" class="vision-img">
+    <img src="assets/mgc-global-image-2.jpg" alt="AI + Human = Unlimited Potential — MGC Global Consulting" class="vision-img">
     <div class="vision-overlay">
       <div class="vision-content">
         <h2>AI + Human =<br><span class="sky-text">Unlimited Potential</span></h2>
@@ -1379,7 +1382,7 @@ html{scroll-padding-top:80px}
       <div class="showcase-video-wrap">
         <video class="showcase-video" autoplay muted loop playsinline>
           <source src="https://lpzw7sgvwshomcxj.public.blob.vercel-storage.com/m-one-shot.mp4" type="video/mp4">
-          <img src="assets/mgc-ai-city.png" alt="MGC in action" style="width:100%;height:100%;object-fit:cover">
+          <img src="assets/mgc-global-image-2.jpg" alt="MGC in action" style="width:100%;height:100%;object-fit:cover">
         </video>
         <div class="showcase-video-badge">
           <span class="svb-dot"></span> Live Platform Demo

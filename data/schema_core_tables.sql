@@ -15,14 +15,17 @@ create table if not exists mgc_client_profiles (
 
 alter table mgc_client_profiles enable row level security;
 
+drop policy if exists "Clients can view own profile" on mgc_client_profiles;
 create policy "Clients can view own profile"
   on mgc_client_profiles for select
   using (auth.uid() = id);
 
+drop policy if exists "Clients can update own profile" on mgc_client_profiles;
 create policy "Clients can update own profile"
   on mgc_client_profiles for update
   using (auth.uid() = id);
 
+drop policy if exists "Clients can insert own profile" on mgc_client_profiles;
 create policy "Clients can insert own profile"
   on mgc_client_profiles for insert
   with check (auth.uid() = id);
@@ -66,6 +69,7 @@ create table if not exists mgc_projects (
 
 alter table mgc_projects enable row level security;
 
+drop policy if exists "Clients can view own projects" on mgc_projects;
 create policy "Clients can view own projects"
   on mgc_projects for select
   using (auth.uid() = client_id);
@@ -90,6 +94,7 @@ create table if not exists mgc_deliverables (
 
 alter table mgc_deliverables enable row level security;
 
+drop policy if exists "Clients can view own deliverables" on mgc_deliverables;
 create policy "Clients can view own deliverables"
   on mgc_deliverables for select
   using (auth.uid() = client_id);
@@ -114,6 +119,7 @@ create table if not exists mgc_invoices (
 
 alter table mgc_invoices enable row level security;
 
+drop policy if exists "Clients can view own invoices" on mgc_invoices;
 create policy "Clients can view own invoices"
   on mgc_invoices for select
   using (auth.uid() = client_id);
@@ -139,10 +145,12 @@ create table if not exists mgc_bookings (
 
 alter table mgc_bookings enable row level security;
 
+drop policy if exists "Clients can view own bookings" on mgc_bookings;
 create policy "Clients can view own bookings"
   on mgc_bookings for select
   using (auth.uid() = client_id or auth.jwt()->>'email' = email);
 
+drop policy if exists "Clients can insert bookings" on mgc_bookings;
 create policy "Clients can insert bookings"
   on mgc_bookings for insert
   with check (true);
@@ -161,13 +169,22 @@ begin
 end;
 $$;
 
+drop trigger if exists set_updated_at on mgc_client_profiles;
 create trigger set_updated_at before update on mgc_client_profiles
   for each row execute procedure mgc_set_updated_at();
+
+drop trigger if exists set_updated_at on mgc_projects;
 create trigger set_updated_at before update on mgc_projects
   for each row execute procedure mgc_set_updated_at();
+
+drop trigger if exists set_updated_at on mgc_deliverables;
 create trigger set_updated_at before update on mgc_deliverables
   for each row execute procedure mgc_set_updated_at();
+
+drop trigger if exists set_updated_at on mgc_invoices;
 create trigger set_updated_at before update on mgc_invoices
   for each row execute procedure mgc_set_updated_at();
+
+drop trigger if exists set_updated_at on mgc_bookings;
 create trigger set_updated_at before update on mgc_bookings
   for each row execute procedure mgc_set_updated_at();

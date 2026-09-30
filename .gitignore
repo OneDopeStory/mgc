@@ -1,32 +1,4 @@
 node_modules
-.env*
 .DS_Store
-.claude
-
-*.mp4
-*.mov
-*.webm
-
-# Large binary assets (serve via CDN)
-*.png
-*.jpeg
-*.jpg
-*.gif
-*.webp
-.vercel
-
-# Local Netlify folder
-.netlify
-
-# AI agent tooling (not site code)
-.agents/
-skills-lock.json
-.mcp.json
-
-# Editor state
-.obsidian/workspace.json
-*.canvas
-
-# Stray files
-deno.lock
-app/
+.env*
+.next

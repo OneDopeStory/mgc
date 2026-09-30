@@ -15,12 +15,26 @@ const TIER_PRICES = {
   elite:   process.env.STRIPE_PRICE_MEMBERSHIP_ELITE,
 };
 
+// Service slug → price ID mapping (resolved server-side)
+const SERVICE_PRICES = {
+  'ai-assessment':      process.env.STRIPE_PRICE_AI_CONSULTING_ASSESSMENT,
+  'ai-roadmap':         process.env.STRIPE_PRICE_AI_CONSULTING_ROADMAP,
+  'automation-starter': process.env.STRIPE_PRICE_AUTOMATION_STARTER,
+  'automation-full':    process.env.STRIPE_PRICE_AUTOMATION_FULL,
+  'crm-audit':          process.env.STRIPE_PRICE_CRM_AUDIT,
+  'crm-build':          process.env.STRIPE_PRICE_CRM_BUILD,
+  'workshop-half':      process.env.STRIPE_PRICE_WORKSHOP_HALF,
+  'workshop-full':      process.env.STRIPE_PRICE_WORKSHOP_FULL,
+  'monthly-retainer':   process.env.STRIPE_PRICE_MONTHLY_RETAINER,
+  'systems-design':     process.env.STRIPE_PRICE_SYSTEMS_DESIGN,
+};
+
 const ALLOWED_PRICES = new Set([
   // Membership tiers
   process.env.STRIPE_PRICE_MEMBERSHIP_STARTER,
   process.env.STRIPE_PRICE_MEMBERSHIP_PRO,
   process.env.STRIPE_PRICE_MEMBERSHIP_ELITE,
-  // Services (one-time)
+  // Services (one-time & retainer)
   process.env.STRIPE_PRICE_AI_CONSULTING_ASSESSMENT,
   process.env.STRIPE_PRICE_AI_CONSULTING_ROADMAP,
   process.env.STRIPE_PRICE_AUTOMATION_STARTER,
@@ -54,12 +68,20 @@ exports.handler = async (event) => {
     return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Invalid JSON' }) };
   }
 
-  let { priceId, mode = 'payment', tier, customerEmail, metadata = {} } = body;
+  let { priceId, mode = 'payment', tier, service, customerEmail, metadata = {} } = body;
 
   // Resolve priceId from tier for membership flows (client never needs to know price IDs)
   if (!priceId && tier) {
     priceId = TIER_PRICES[tier?.toLowerCase()];
     mode = 'subscription';
+    metadata.tier = tier;
+  }
+
+  // Resolve priceId from service slug for service flows
+  if (!priceId && service) {
+    priceId = SERVICE_PRICES[service?.toLowerCase()];
+    mode = service === 'monthly-retainer' ? 'subscription' : 'payment';
+    metadata.service = service;
   }
 
   // Allowlist check — never let arbitrary price IDs through

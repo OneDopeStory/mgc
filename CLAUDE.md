@@ -3,6 +3,8 @@
 This file provides essential context for AI coding assistants working on this codebase.
 Read this before making any changes.
 
+> **Source of truth:** `CLAUDE.md` is the canonical project memory for deployment state, integration behavior, and assistant-facing conventions. Other docs may summarize or mirror this file, but resolve conflicts in favor of `CLAUDE.md`.
+
 > **Design system reference:** See [`BRANDING.md`](./BRANDING.md) for the complete font stack, color tokens, spacing scale, header/nav spec, hero layout, button styles, card styles, and animation system. All visual decisions must reference that file.
 
 ---
@@ -23,7 +25,7 @@ Read this before making any changes.
 |---|---|
 | Site type | Static HTML/CSS/JS — no build step |
 | Backend | Netlify Functions (Node.js 18+, esbuild bundler) |
-| Auth & Database | Supabase (`https://zppuzfvchqxkzprfkhfz.supabase.co`) |
+| Auth & Database | Supabase (`https://bjnpibxaxlgvlzeegwnm.supabase.co`) |
 | Payments | Stripe (Checkout Sessions + Webhooks) |
 | Deployment | Netlify (publish dir: `.` root) |
 | Package manager | npm |
@@ -34,6 +36,7 @@ Read this before making any changes.
 
 ```
 mgc-site-complete_1/
+
 ├── index.html                  # Homepage (1,963 lines)
 ├── dashboard.html              # Supabase-powered client portal
 ├── services.html               # Solutions Gallery with filter UI
@@ -127,7 +130,7 @@ Fans out to: Slack (notify) + QuickBooks (create draft invoice, due 7 days)
 
 ## Supabase Schema (Client Portal)
 
-**Project:** `zppuzfvchqxkzprfkhfz.supabase.co`
+**Project:** `bjnpibxaxlgvlzeegwnm.supabase.co`
 
 | Table | Purpose |
 |---|---|
@@ -148,7 +151,7 @@ Fans out to: Slack (notify) + QuickBooks (create draft invoice, due 7 days)
 | Service | Purpose | Config location |
 |---|---|---|
 | **Stripe** | Payments & subscriptions | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` in env |
-| **Supabase** | Portal auth + database | Credentials in `dashboard.html` (anon key only) |
+| **Supabase** | Portal auth + database | Credentials in `dashboard.html` (anon key only); Vercel integration config ID `icfg_2KqYImfTxvpGfwS5OfySC1yP` on team `mgcglobalconsultings-projects` auto-injects env vars to Vercel deployment |
 | **Notion** | CRM — Companies, Contacts, Deals, Projects, Invoices | See Notion CRM section below |
 | **HubSpot** | Forms + Breeze AI agent | Portal ID `245294674` in `hs-breeze-bridge.js` |
 
@@ -269,7 +272,7 @@ Copy `.env.template` → `.env.local` and fill real values. **Never commit `.env
 | `QB_REALM_ID` | QuickBooks company ID |
 | `GOOGLE_SERVICE_ACCOUNT_EMAIL` | Sheets service account |
 | `GOOGLE_SERVICE_ACCOUNT_KEY_B64` | Sheets key (base64 JSON) |
-| `SLACK_PAYMENTS_WEBHOOK` | Slack incoming webhook URL |
+| `SLACK_PAYMENTS_WEBHOOK` | Slack incoming webhook URL for invoice request alerts |
 | `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` | Twilio credentials |
 | `TWILIO_WHATSAPP_FROM` | Twilio WhatsApp sender number |
 | `NOTION_API_KEY` | Notion integration secret |
@@ -280,6 +283,7 @@ Copy `.env.template` → `.env.local` and fill real values. **Never commit `.env
 | `NOTION_DEALS_DATABASE_ID` | Notion Deals database |
 | `NOTION_PROJECTS_DATABASE_ID` | Notion Projects database |
 | `NOTION_INVOICES_DATABASE_ID` | Notion Invoices database |
+| `SUPABASE_WEBHOOK_SECRET` | Bearer token for Supabase database webhooks hitting Netlify functions |
 | `SITE_URL` | `https://www.mgcglobalconsulting.com` |
 
 ---
@@ -287,6 +291,8 @@ Copy `.env.template` → `.env.local` and fill real values. **Never commit `.env
 ## Deployment
 
 **No build step.** Netlify serves the root directory directly.
+
+**Current production status:** As of 2026-06-04, the Netlify production site has already been updated with the current Supabase portal changes: `bjnpibxaxlgvlzeegwnm.supabase.co`, the Supabase publishable key, the `www` Google OAuth dashboard redirect, rerunnable portal schema SQL, and the new Supabase-to-Notion signup webhook. Treat the next commit as the source-control record of the live Netlify state.
 
 ```bash
 # Deploy via CLI
@@ -567,20 +573,213 @@ await resumeHook(hook.token, { approved: true });
 ---
 
 ## MGC Global Consulting LLC - AI Growth Log
-**Last Updated:** June 2026
-**Current Session Token Target:** <43% (Maintained)
+**Last Updated:** 2026-06-04 (Session 2)
 
 ### Current Project State
 - **Infrastructure:** Supabase Free Nano (us-east-1)
-- **Authentication:** Google OAuth configuration initiated.
-- **Frontend Deployment:** Vercel environment live at `https://mgc-lyart.vercel.app`
+- **Authentication:** Google OAuth configured for the Netlify production dashboard redirect.
+- **Frontend Deployment:** Netlify production live at `https://www.mgcglobalconsulting.com`
+- **Onboarding Assistant:** `onboarding-assistant.html` built and live at `/onboarding-assistant`
 
 ### Completed Increments
 - [x] Initial Stack Definition (Supabase + Obsidian + Claude via MCP)
 - [x] Whitelisted production redirect URL (`/dashboard`) in Supabase URL Configuration.
+- [x] Updated dashboard/admin Supabase project reference to `bjnpibxaxlgvlzeegwnm.supabase.co`.
+- [x] Updated Google OAuth redirect to `https://www.mgcglobalconsulting.com/dashboard`.
+- [x] Added rerunnable portal schema SQL and profile email migration notes.
+- [x] Added Supabase profile signup webhook flow into Netlify/Notion CRM.
+- [x] Confirmed the current files were already updated on Netlify production.
+- [x] **AI Operations Front Door — Sprint 1 (2026-06-04)**
+  - Created `onboarding-assistant.html` — 4-step rule-based wizard (visitor type, readiness score, intake form, confirmation)
+  - 8 visitor type cards route to correct sub-agent (New Client, Referral Partner, Existing Client, Automation, CRM/Notion, AI Training, Billing, General)
+  - 10-question Operations Readiness Score with 4 scoring categories (0–30/31–60/61–80/81–100)
+  - Intake form submits full payload to `/.netlify/functions/lead-intake` → Notion CRM
+  - Step 4 confirmation shows score, category, recommended next step, and what-happens-next copy
+  - Extended `netlify/functions/lead-intake.js` to accept and log: visitor_type, assigned_sub_agent, readiness_score, readiness_category, recommended_next_step, challenge, timeline, budget_range
+  - Added `/onboarding-assistant` redirect in `netlify.toml`
 
-### Next Incremental Milestone
-- [ ] Test the live Google OAuth login flow on the Vercel deployment to confirm the handshake works seamlessly.
+### Next Incremental Milestones
+- [ ] Test the live Google OAuth login flow on the Netlify production deployment
+- [ ] Sprint 2 — Add Slack webhook alerts to onboarding-assistant submissions (per visitor type → correct channel)
+- [ ] Sprint 3 — Add "Choose Your Path" section + "Start With MGC Assistant" CTA to `index.html` homepage
+- [ ] Sprint 4 — Sandbox QuickBooks integration for billing visitor type
+- [ ] Sprint 5 — Dashboard Redesign (see full plan below)
 
 ### Context Memory Cache
-Database and Vercel hosting are linked via OAuth redirect configurations. The environment is ready for live user testing. Next session will focus on verifying active token generation upon successful user login.
+The AI Operations Front Door (onboarding-assistant.html) is the primary new feature. It is wired to the existing Notion CRM via lead-intake.js. The visitor type → sub-agent routing, readiness scoring, and form submission are fully functional. Slack webhooks and homepage CTAs are scoped for Sprint 2–3. Commit the current state before deploying to Netlify production.
+
+### Website Audit (added 2026-09-30)
+Business facts, the latest audit, and reusable audit instructions live in `.mgc-audit/` (dot-folder — Netlify does not publish dot-paths). Load them only when auditing. Trigger: "Read MGC_BUSINESS_CONTEXT.md and MGC_SITE_AUDIT_PROMPT.md, then run the MGC website audit." Note: the 2026-09-30 audit found that live production differs from some statements in this file (canonical host, Supabase project on live dashboard) — see `.mgc-audit/MGC_WEBSITE_AUDIT.md` F-10/F-12.
+
+---
+
+## Dashboard Redesign Plan — Sprint 5
+**Inspiration:** Dribbble "Dashboard Design Overview Analysis" — card-grid layout, rich data viz, engagement timeline, glassmorphism panels, bold KPI typography
+**Reference:** https://dribbble.com/shots/25849429-Dashboard-Design-Overview-Analysis
+**File to modify:** `dashboard.html` (single-file static HTML — no build step)
+**Scope:** Owner portal (you) + client onboarding experience
+**Status:** PLANNED — execute next session
+
+---
+
+### Design Direction
+
+Elevate the current dark dashboard to a premium "Overview Analysis" aesthetic:
+- **Layout:** CSS Grid — left sidebar (265px fixed) + main content area with a 3-zone layout (top KPIs → mid charts row → bottom activity/lists)
+- **Cards:** Deeper glassmorphism — `backdrop-filter: blur(32px)`, gradient borders using `conic-gradient`, `box-shadow` with colored glow layers
+- **Typography:** Raleway 900 for KPI numbers (3.5rem+), Plus Jakarta Sans for body, JetBrains Mono for data values
+- **Color additions:** Add `--emerald:#10B981` for positive deltas, `--rose:#F43F5E` for alerts — keep existing `--abyss`, `--cyan`, `--gold`
+- **Charts:** Pure CSS/SVG — no external chart libraries (keeps zero build step). Use SVG `<polyline>` for sparklines, `<circle>` stroke-dashoffset for donut rings, `<rect>` for bar charts
+- **Animations:** Staggered counter animation on KPI numbers (JS `requestAnimationFrame`), fade-up on panel switch, pulse dot on live status indicators
+
+---
+
+### Panel-by-Panel Redesign
+
+#### 1. Overview Panel (complete redesign)
+Current: 4 flat KPI tiles + 2 cards + deliverables list
+New layout:
+
+```
+[ Engagement Score ]  [ Automations Live ]  [ Hours Saved ]  [ Account Balance ]
+     donut ring             counter+spark        counter+bar       gold gradient
+
+[ Active Projects — timeline bar ]     [ Activity Feed — live ticker ]
+[ Pending Deliverables — status rows ] [ Next Session countdown card ]
+```
+
+**Engagement Score card:** SVG donut ring (0–100), color shifts cyan→gold→emerald based on value. Pulls from `mgc_projects` progress_pct average.
+**Automations Live:** Animated counter, sparkline of last 30 days (hardcoded array for now, Supabase-driven later).
+**Hours Saved:** Calculated as `projects.count * 23` (MGC brand stat). Progress bar vs. monthly target.
+**Next Session countdown:** Live JS timer to next `mgc_bookings` confirmed date. Shows "No session scheduled" with Book CTA if empty.
+
+#### 2. Projects Panel (enhanced)
+Current: Grid of skeleton cards
+New: Timeline view toggle (grid ↔ timeline)
+
+- **Grid view:** Each project card has: status badge, service type icon, phase label, `<progress>` bar with animated fill, last-updated timestamp, "View Details" expand
+- **Timeline view:** Horizontal Gantt-style bars using CSS Grid + `grid-column: start / end` mapped to project dates. Color-coded by service type (AI=cyan, CRM=gold, Automation=emerald, Systems=blue)
+- **Empty state:** Branded illustration + "Your first project will appear here once your engagement kicks off" + Schedule CTA
+
+#### 3. New Panel — Onboarding Checklist (for new clients)
+**Trigger:** Show prominently if `mgc_client_profiles.membership_tier` is null or `created_at` < 7 days ago
+**Nav label:** "Get Started" with a gold pill badge showing incomplete count
+**Steps:**
+1. Complete your profile (name, company, phone) — links to Settings
+2. Schedule your kickoff call — links to Schedule panel
+3. Review your engagement agreement — PDF link (Supabase Storage)
+4. Connect your tools (Notion / HubSpot / Zapier) — links to integrations guide
+5. Meet your dedicated strategist — TrueAssist intro prompt
+
+Each step: checkbox visual, completion state stored in `localStorage` (upgrade to Supabase later), progress ring at top of panel.
+
+#### 4. New Panel — ROI Dashboard
+**Nav label:** "ROI & Impact"
+**Who sees it:** All tiers (data depth increases by tier)
+
+Metrics displayed:
+| Metric | Source | Visualization |
+|---|---|---|
+| Hours reclaimed | `projects.count * 23` | Counter + area sparkline |
+| Automations deployed | `mgc_projects` count where service_type='Automation' | Counter |
+| Cost avoidance estimate | hours * $85/hr (avg ops cost) | Gold dollar counter |
+| Engagement health | avg(progress_pct) across active projects | Donut ring, color-coded |
+| Deliverables completed | `mgc_deliverables` where status='complete' | Bar chart |
+| Days since engagement start | `mgc_client_profiles.created_at` | Timeline pill |
+
+All counters animate from 0 on first render using `requestAnimationFrame` + easing function.
+
+#### 5. Schedule Panel (enhanced)
+Current: Calendar grid + request form + upcoming bookings
+New additions:
+- **Session type icons** — each session type has a distinct SVG icon
+- **Confirmed session card** — if a booking exists with status='confirmed', show a prominent card at top with countdown timer (days:hours:mins)
+- **Calendar highlight** — booked dates show a cyan dot, today shows gold ring
+- **Form improvement** — add "Estimated Duration" auto-fill based on session type selection, "Agenda items" multi-select checklist (Strategy Review / Deliverable Feedback / New Initiative / Technical Issue / Other)
+
+#### 6. Settings Panel (enhanced)
+Current: Profile form + notification toggles + tier card
+New additions:
+- **Profile avatar upload** — click avatar circle → file input → upload to Supabase Storage → update `avatar_url`
+- **Tier badge** — animated gold crown for Elite, bolt for Pro, seedling for Starter (matching membership.html icons)
+- **Engagement summary card** — shows: joined date, total invoiced, active projects count, assigned strategist name (hardcoded "Mark Cartwright, Founder" for now)
+- **Connected integrations** — show/hide section: Notion ✓, HubSpot (coming), Zapier (coming) — each with status dot
+
+#### 7. Sidebar (enhanced)
+Current: Logo + user chip + nav items + logout
+New:
+- **Tier indicator strip** — 4px left border on user chip, color matches tier (cyan=Starter, gold=Pro, white/glow=Elite)
+- **Notification badge** — red dot on bell icon in topbar if any deliverable status='ready'
+- **Collapse button** — `[←]` button collapses sidebar to icon-only mode (65px), expands on hover. State saved in `localStorage`
+- **Nav grouping** — add group labels: WORKSPACE / ANALYTICS / SUPPORT / ACCOUNT
+- **Progress mini-ring** — tiny SVG donut next to "Get Started" nav item showing onboarding % complete
+
+---
+
+### New CSS Additions Needed
+
+```css
+/* Donut ring component */
+.donut-ring { /* SVG stroke-dashoffset animation */ }
+
+/* Sparkline */
+.sparkline { /* SVG polyline, no fill, 2px cyan stroke */ }
+
+/* Counter animation */
+.kpi-counter[data-target] { /* JS-driven, ease-out */ }
+
+/* Sidebar collapsed state */
+.sidebar.collapsed { width: 65px; }
+.sidebar.collapsed .s-nav-item span,
+.sidebar.collapsed .nav-group-label { display: none; }
+
+/* Gantt bar */
+.gantt-bar { /* grid-column based, border-radius 6px, height 32px */ }
+
+/* Onboarding step */
+.ob-step { /* checkbox + label + completion indicator */ }
+.ob-step.done { opacity: 0.55; text-decoration: line-through; }
+
+/* ROI counter */
+.roi-number { font-family: var(--font-display); font-size: 3rem; font-weight: 900; }
+```
+
+---
+
+### New JS Functions Needed
+
+| Function | Purpose |
+|---|---|
+| `animateCounter(el, target, duration)` | requestAnimationFrame counter from 0 → target with ease-out |
+| `renderDonut(svgEl, pct, color)` | Set stroke-dashoffset on SVG circle for donut ring |
+| `renderSparkline(svgEl, dataArray)` | Plot SVG polyline from data array, normalized to SVG viewBox |
+| `renderGantt()` | Map mgc_projects start/end dates to CSS grid-column positions |
+| `initOnboarding()` | Load onboarding step state from localStorage, render checklist |
+| `saveOnboardingStep(stepId, done)` | Persist step completion to localStorage |
+| `startCountdown(targetDate, el)` | Live countdown timer to next session date |
+| `toggleSidebar()` | Toggle .collapsed class + save to localStorage |
+| `uploadAvatar(file)` | Upload to Supabase Storage, update mgc_client_profiles.avatar_url |
+
+---
+
+### Supabase Changes Needed
+
+None for core sprint. Optional enhancements:
+- Add `onboarding_steps` JSONB column to `mgc_client_profiles` to persist checklist server-side
+- Add `strategist_name` TEXT column to `mgc_client_profiles`
+- Add `confirmed_date` column to `mgc_bookings` (currently only `requested_date`)
+
+---
+
+### Execution Order for Next Session
+
+1. **CSS pass** — add donut, sparkline, gantt, onboarding, ROI, sidebar-collapse styles to `<style>` block
+2. **HTML structure** — add new panels (Onboarding, ROI), update Overview panel layout, add sidebar collapse button + group labels
+3. **JS functions** — implement all new functions, wire to existing `loadPortalData()` flow
+4. **Overview redesign** — replace current KPI tiles with new 4-card layout including SVG visualizations
+5. **Projects Gantt** — add timeline toggle to projects panel
+6. **Onboarding panel** — full 5-step checklist with localStorage persistence
+7. **ROI panel** — all metric counters + sparklines wired to Supabase data
+8. **Settings enhancements** — avatar upload, tier badge, engagement summary
+9. **Polish pass** — sidebar collapse, notification dot, counter animations, stagger timing
+10. **Deploy** — confirm with user before pushing to Netlify

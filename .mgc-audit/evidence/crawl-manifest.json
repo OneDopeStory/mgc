@@ -1,0 +1,1083 @@
+{
+ "generated": "2026-09-30T04:37:10.586Z",
+ "site": "https://mgcglobalconsulting.com",
+ "alias_rule": "www.mgcglobalconsulting.com -> 301 -> mgcglobalconsulting.com; http -> https; fragments dropped; query strings kept",
+ "discovery_sources": {
+  "firecrawl_map": 10,
+  "sitemap": 8,
+  "local_tracked_html": 39,
+  "extra_probes": [
+   "/about",
+   "/privacy",
+   "/terms",
+   "/contact",
+   "/blog",
+   "/privacy-policy",
+   "/terms-of-service",
+   "/onboarding-assistant",
+   "/success",
+   "/admin",
+   "/403",
+   "/404",
+   "/500"
+  ]
+ },
+ "counts": {
+  "discovered": 98,
+  "inspected_unique": 22,
+  "duplicate_alias": 51,
+  "failed_404": 18,
+  "crawler_artifact": 7,
+  "excluded": 0
+ },
+ "excluded": [
+  {
+   "pattern": "/.netlify/functions/*",
+   "reason": "server endpoints; POST-only; never invoked"
+  },
+  {
+   "pattern": "external domains (18 seen)",
+   "reason": "out of scope; recorded only"
+  },
+  {
+   "pattern": "authenticated dashboard/admin data",
+   "reason": "only public shell HTML fetched; no login"
+  },
+  {
+   "pattern": "Stripe Checkout sessions / form submissions",
+   "reason": "not executed by instruction"
+  },
+  {
+   "pattern": "non-HTML repo files served publicly (CLAUDE.md etc.)",
+   "reason": "status-checked only; listed in audit finding F-02"
+  }
+ ],
+ "assets": {
+  "/assets/mgc-ai-city.png": {
+   "status": 404,
+   "bytes": null
+  },
+  "/assets/m-globe-sphere.png": {
+   "status": 404,
+   "bytes": null
+  },
+  "/assets/mgc-logo-transparent.png": {
+   "status": 200,
+   "bytes": 3253010
+  },
+  "/assets/logo-integration-hub.jpeg": {
+   "status": 200,
+   "bytes": 731814
+  },
+  "/assets/unified-ecosystem.jpeg": {
+   "status": 200,
+   "bytes": 811428
+  },
+  "/assets/get-paid-image.png": {
+   "status": 200,
+   "bytes": 5786409
+  },
+  "/assets/unify-1.png": {
+   "status": 200,
+   "bytes": 5401830
+  },
+  "/assets/earn-commission.jpeg": {
+   "status": 200,
+   "bytes": 9207365
+  },
+  "/assets/images/mgc-logo-transparent.png": {
+   "status": 404,
+   "bytes": null
+  },
+  "/assets/mgc-global-image-2.jpg": {
+   "status": 200,
+   "bytes": 146751
+  },
+  "/assets/mgc-screw-graphic.jpeg": {
+   "status": 200,
+   "bytes": 1022463
+  }
+ },
+ "external_videos": {
+  "globe-connected.mp4 (Vercel Blob)": 21372091,
+  "m-one-shot.mp4 (Vercel Blob)": 24937898
+ },
+ "pages": [
+  {
+   "path": "/$%7BescHtml(d.file_url)%7D",
+   "class": "crawler_artifact",
+   "status": 404
+  },
+  {
+   "path": "/$%7BescHtml(l.url)%7D",
+   "class": "crawler_artifact",
+   "status": 404
+  },
+  {
+   "path": "/$%7BescHtml(u.file_url%20||",
+   "class": "crawler_artifact",
+   "status": 404
+  },
+  {
+   "path": "/$%7Blink%7D",
+   "class": "crawler_artifact",
+   "status": 404
+  },
+  {
+   "path": "/public/$%7BescHtml(d.file_url)%7D",
+   "class": "crawler_artifact",
+   "status": 404
+  },
+  {
+   "path": "/public/$%7BescHtml(l.url)%7D",
+   "class": "crawler_artifact",
+   "status": 404
+  },
+  {
+   "path": "/public/$%7Blink%7D",
+   "class": "crawler_artifact",
+   "status": 404
+  },
+  {
+   "path": "/403.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/403"
+  },
+  {
+   "path": "/404.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/404"
+  },
+  {
+   "path": "/500.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/500"
+  },
+  {
+   "path": "/admin.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/admin"
+  },
+  {
+   "path": "/ai-consulting.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/ai-consulting"
+  },
+  {
+   "path": "/ai-workshops.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/ai-workshops"
+  },
+  {
+   "path": "/automation.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/automation"
+  },
+  {
+   "path": "/checkout.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/checkout"
+  },
+  {
+   "path": "/crm-optimization.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/crm-optimization"
+  },
+  {
+   "path": "/dashboard.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/dashboard"
+  },
+  {
+   "path": "/index",
+   "class": "duplicate_alias",
+   "status": 200,
+   "redirect": [
+    "301 /index",
+    "200 /"
+   ],
+   "duplicate_of": "/"
+  },
+  {
+   "path": "/index.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/"
+  },
+  {
+   "path": "/membership-v2.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/membership-v2"
+  },
+  {
+   "path": "/membership.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/membership"
+  },
+  {
+   "path": "/partner-success.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/partner-success"
+  },
+  {
+   "path": "/preview-footer.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/preview-footer"
+  },
+  {
+   "path": "/public/",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/"
+  },
+  {
+   "path": "/public/403.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/403"
+  },
+  {
+   "path": "/public/404.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/404"
+  },
+  {
+   "path": "/public/500.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/500"
+  },
+  {
+   "path": "/public/ai-consulting",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/ai-consulting"
+  },
+  {
+   "path": "/public/ai-consulting.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/ai-consulting"
+  },
+  {
+   "path": "/public/ai-workshops",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/ai-workshops"
+  },
+  {
+   "path": "/public/ai-workshops.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/ai-workshops"
+  },
+  {
+   "path": "/public/automation",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/automation"
+  },
+  {
+   "path": "/public/automation.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/automation"
+  },
+  {
+   "path": "/public/checkout",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/checkout"
+  },
+  {
+   "path": "/public/checkout.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/checkout"
+  },
+  {
+   "path": "/public/crm-optimization",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/crm-optimization"
+  },
+  {
+   "path": "/public/crm-optimization.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/crm-optimization"
+  },
+  {
+   "path": "/public/dashboard",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/dashboard"
+  },
+  {
+   "path": "/public/dashboard.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/dashboard"
+  },
+  {
+   "path": "/public/index.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/"
+  },
+  {
+   "path": "/public/membership",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/membership"
+  },
+  {
+   "path": "/public/membership.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/membership"
+  },
+  {
+   "path": "/public/partner-success",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/partner-success"
+  },
+  {
+   "path": "/public/partner-success.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/partner-success"
+  },
+  {
+   "path": "/public/retainer-support",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/retainer-support"
+  },
+  {
+   "path": "/public/retainer-support.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/retainer-support"
+  },
+  {
+   "path": "/public/services",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/services"
+  },
+  {
+   "path": "/public/services.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/services"
+  },
+  {
+   "path": "/public/success.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/success"
+  },
+  {
+   "path": "/public/systems-design",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/systems-design"
+  },
+  {
+   "path": "/public/systems-design.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/systems-design"
+  },
+  {
+   "path": "/public/thank-you.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/thank-you"
+  },
+  {
+   "path": "/retainer-support.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/retainer-support"
+  },
+  {
+   "path": "/services.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/services"
+  },
+  {
+   "path": "/sitemap.xml",
+   "class": "duplicate_alias",
+   "status": 200
+  },
+  {
+   "path": "/success.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/success"
+  },
+  {
+   "path": "/systems-design.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/systems-design"
+  },
+  {
+   "path": "/thank-you.html",
+   "class": "duplicate_alias",
+   "status": 200,
+   "duplicate_of": "/thank-you"
+  },
+  {
+   "path": "/about",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/blog",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/contact",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/directory",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/directory?q=",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/join",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/members",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/members/dashboard",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/members/login",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/onboarding-assistant",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/onboarding-assistant.html",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/partners",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/privacy",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/privacy-policy",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/public/sitemap.xml",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/support",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/terms",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/terms-of-service",
+   "class": "failed_404",
+   "status": 404
+  },
+  {
+   "path": "/",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "MGC Global Consulting | AI Strategy, Automation & Operations Systems",
+   "desc_chars": 168,
+   "canonical": "https://www.mgcglobalconsulting.com",
+   "robots": null,
+   "h1": [
+    "Build Systems That Scale Themselves."
+   ],
+   "headings": 26,
+   "internal_links": 47,
+   "images": 12,
+   "imgs_missing_alt": 0,
+   "videos": 2,
+   "forms": 0,
+   "phones": [
+    "410-952-2846"
+   ],
+   "emails": [
+    "info@mgcglobalconsulting.com",
+    "billing@mgcglobalconsulting.com",
+    "sales@mgcglobalconsulting.com"
+   ],
+   "words": 1261,
+   "content_sha": "29c2712b5de9"
+  },
+  {
+   "path": "/403",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "Members Only — MGC Global Consulting",
+   "desc_chars": 0,
+   "canonical": null,
+   "robots": null,
+   "h1": [
+    "You're One Step Away From Being in the Room."
+   ],
+   "headings": 2,
+   "internal_links": 11,
+   "images": 0,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [],
+   "emails": [],
+   "words": 204,
+   "content_sha": "35115832c035"
+  },
+  {
+   "path": "/404",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "Listing Not Found — MGC Global Consulting",
+   "desc_chars": 0,
+   "canonical": null,
+   "robots": null,
+   "h1": [
+    "This Listing Has Moved Off the Map."
+   ],
+   "headings": 2,
+   "internal_links": 17,
+   "images": 0,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [],
+   "emails": [],
+   "words": 160,
+   "content_sha": "2309acce1895"
+  },
+  {
+   "path": "/500",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "We'll Be Right Back — MGC Global Consulting",
+   "desc_chars": 0,
+   "canonical": null,
+   "robots": null,
+   "h1": [
+    "We're Polishing the Gears. Back Shortly."
+   ],
+   "headings": 1,
+   "internal_links": 10,
+   "images": 0,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [],
+   "emails": [],
+   "words": 225,
+   "content_sha": "74033f69178e"
+  },
+  {
+   "path": "/admin",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "Admin — MGC Global Consulting",
+   "desc_chars": 0,
+   "canonical": null,
+   "robots": "noindex,nofollow",
+   "h1": [],
+   "headings": 0,
+   "internal_links": 0,
+   "images": 2,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [],
+   "emails": [
+    "admin@mgcglobalconsulting.com"
+   ],
+   "words": 127,
+   "content_sha": "dd3b8ed29904"
+  },
+  {
+   "path": "/ai-consulting",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "AI Consulting & Strategy | MGC Global Consulting",
+   "desc_chars": 194,
+   "canonical": "https://www.mgcglobalconsulting.com/ai-consulting.html",
+   "robots": null,
+   "h1": [
+    "AI Strategy That Actually Ships"
+   ],
+   "headings": 17,
+   "internal_links": 28,
+   "images": 2,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [
+    "410-952-2846"
+   ],
+   "emails": [
+    "info@mgcglobalconsulting.com"
+   ],
+   "words": 1623,
+   "content_sha": "3382d4c8bd2e"
+  },
+  {
+   "path": "/ai-workshops",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "AI Workshops & Training | MGC Global Consulting",
+   "desc_chars": 207,
+   "canonical": "https://www.mgcglobalconsulting.com/ai-workshops.html",
+   "robots": null,
+   "h1": [
+    "Your Team Doesn't Need Another AI Webinar"
+   ],
+   "headings": 10,
+   "internal_links": 28,
+   "images": 2,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [
+    "410-952-2846"
+   ],
+   "emails": [
+    "info@mgcglobalconsulting.com"
+   ],
+   "words": 878,
+   "content_sha": "4c6e06d78c92"
+  },
+  {
+   "path": "/api/index.html",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "MGC Global Consulting | AI-Powered Strategy, Automation & Operations Systems",
+   "desc_chars": 148,
+   "canonical": null,
+   "robots": null,
+   "h1": [
+    "AI-Powered Consulting for Smarter Operations & Scalable Growth"
+   ],
+   "headings": 24,
+   "internal_links": 45,
+   "images": 0,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 1,
+   "phones": [
+    "410-952-2846"
+   ],
+   "emails": [
+    "info@mgcglobalconsulting.com"
+   ],
+   "words": 1179,
+   "content_sha": "30e27d6cb79f"
+  },
+  {
+   "path": "/api/slack-hub/dashboard/TAIC-Slack-Hub.html",
+   "class": "inspected_unique",
+   "status": 200,
+   "redirect": [
+    "301 /api/slack-hub/dashboard/TAIC-Slack-Hub.html",
+    "200 /api/slack-hub/dashboard/taic-slack-hub"
+   ],
+   "title": "TAIC — Slack Central Intelligence Hub | MGC Global Consulting",
+   "desc_chars": 0,
+   "canonical": null,
+   "robots": null,
+   "h1": [
+    "Slack Central Intelligence Hub"
+   ],
+   "headings": 11,
+   "internal_links": 0,
+   "images": 0,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [],
+   "emails": [],
+   "words": 675,
+   "content_sha": "98e3e5ad58eb"
+  },
+  {
+   "path": "/automation",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "Automation Architecture | MGC Global Consulting",
+   "desc_chars": 199,
+   "canonical": "https://www.mgcglobalconsulting.com/automation.html",
+   "robots": null,
+   "h1": [
+    "Stop Duct-Taping Your Systems"
+   ],
+   "headings": 18,
+   "internal_links": 28,
+   "images": 2,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [
+    "410-952-2846"
+   ],
+   "emails": [
+    "info@mgcglobalconsulting.com"
+   ],
+   "words": 1978,
+   "content_sha": "b21be9b26228"
+  },
+  {
+   "path": "/checkout",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "Secure Checkout — MGC Global Consulting",
+   "desc_chars": 0,
+   "canonical": null,
+   "robots": "noindex,nofollow",
+   "h1": [
+    "Preparing Secure Checkout"
+   ],
+   "headings": 1,
+   "internal_links": 1,
+   "images": 1,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [],
+   "emails": [
+    "mark@mgcglobalconsulting.com"
+   ],
+   "words": 27,
+   "content_sha": "76c8028d8d57"
+  },
+  {
+   "path": "/crm-optimization",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "CRM & Pipeline Optimization | MGC Global Consulting",
+   "desc_chars": 195,
+   "canonical": "https://www.mgcglobalconsulting.com/crm-optimization.html",
+   "robots": null,
+   "h1": [
+    "Your CRM Should Close Deals — Not Collect Dust"
+   ],
+   "headings": 12,
+   "internal_links": 28,
+   "images": 2,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [
+    "410-952-2846"
+   ],
+   "emails": [
+    "info@mgcglobalconsulting.com"
+   ],
+   "words": 1414,
+   "content_sha": "3e53debd8a7f"
+  },
+  {
+   "path": "/dashboard",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "Client Portal — MGC Global Consulting",
+   "desc_chars": 0,
+   "canonical": null,
+   "robots": "noindex,nofollow",
+   "h1": [],
+   "headings": 0,
+   "internal_links": 2,
+   "images": 3,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 4,
+   "phones": [],
+   "emails": [],
+   "words": 644,
+   "content_sha": "abba945cadb3"
+  },
+  {
+   "path": "/membership",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "Membership — MGC Global Consulting",
+   "desc_chars": 131,
+   "canonical": null,
+   "robots": null,
+   "h1": [
+    "Choose Your Operating Level"
+   ],
+   "headings": 4,
+   "internal_links": 9,
+   "images": 1,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [
+    "410.952.2846"
+   ],
+   "emails": [
+    "mark@mgcglobalconsulting.com"
+   ],
+   "words": 506,
+   "content_sha": "b47d01683b96"
+  },
+  {
+   "path": "/membership-v2",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "Membership — MGC Global Consulting",
+   "desc_chars": 131,
+   "canonical": null,
+   "robots": null,
+   "h1": [
+    "Choose Your Operating Level"
+   ],
+   "headings": 4,
+   "internal_links": 5,
+   "images": 0,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [
+    "410.952.2846"
+   ],
+   "emails": [
+    "mark@mgcglobalconsulting.com"
+   ],
+   "words": 503,
+   "content_sha": "db77f86d5440"
+  },
+  {
+   "path": "/partner-success",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "Partnership Inquiry Received — MGC Global Consulting",
+   "desc_chars": 0,
+   "canonical": null,
+   "robots": null,
+   "h1": [
+    "Our Team Is Reviewing Your Ecosystem Fit."
+   ],
+   "headings": 2,
+   "internal_links": 11,
+   "images": 0,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [],
+   "emails": [],
+   "words": 228,
+   "content_sha": "7edada810fed"
+  },
+  {
+   "path": "/preview-footer",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "MGC — Footer Preview",
+   "desc_chars": 0,
+   "canonical": null,
+   "robots": null,
+   "h1": [],
+   "headings": 0,
+   "internal_links": 22,
+   "images": 2,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [
+    "410-952-2846"
+   ],
+   "emails": [
+    "info@mgcglobalconsulting.com",
+    "billing@mgcglobalconsulting.com",
+    "sales@mgcglobalconsulting.com"
+   ],
+   "words": 99,
+   "content_sha": "ce5bbbe1e10f"
+  },
+  {
+   "path": "/retainer-support",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "Retainer & Ongoing Support | MGC Global Consulting",
+   "desc_chars": 202,
+   "canonical": "https://www.mgcglobalconsulting.com/retainer-support.html",
+   "robots": null,
+   "h1": [
+    "A Consultant Who Stays After the Project Ends"
+   ],
+   "headings": 8,
+   "internal_links": 31,
+   "images": 2,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [
+    "410-952-2846"
+   ],
+   "emails": [
+    "info@mgcglobalconsulting.com"
+   ],
+   "words": 782,
+   "content_sha": "21fe3f9b3227"
+  },
+  {
+   "path": "/services",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "Solutions Gallery — MGC Global Consulting",
+   "desc_chars": 132,
+   "canonical": null,
+   "robots": null,
+   "h1": [
+    "Targeted Engagements. Measurable Outcomes."
+   ],
+   "headings": 1,
+   "internal_links": 5,
+   "images": 1,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [
+    "410.952.2846"
+   ],
+   "emails": [
+    "mark@mgcglobalconsulting.com"
+   ],
+   "words": 997,
+   "content_sha": "dfb9345c0be0"
+  },
+  {
+   "path": "/success",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "You're In — MGC Global Consulting",
+   "desc_chars": 0,
+   "canonical": null,
+   "robots": null,
+   "h1": [
+    "Your Spot in the Directory is Reserved."
+   ],
+   "headings": 2,
+   "internal_links": 11,
+   "images": 0,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [],
+   "emails": [],
+   "words": 192,
+   "content_sha": "e2e9bb2ae781"
+  },
+  {
+   "path": "/systems-design",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "Operational Systems Design | MGC Global Consulting",
+   "desc_chars": 160,
+   "canonical": "https://www.mgcglobalconsulting.com/systems-design.html",
+   "robots": null,
+   "h1": [
+    "Build the Operating System Your Business Is Missing"
+   ],
+   "headings": 11,
+   "internal_links": 28,
+   "images": 2,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [
+    "410-952-2846"
+   ],
+   "emails": [
+    "info@mgcglobalconsulting.com"
+   ],
+   "words": 1237,
+   "content_sha": "2c3e5f1ab6b4"
+  },
+  {
+   "path": "/thank-you",
+   "class": "inspected_unique",
+   "status": 200,
+   "title": "You're In — MGC Global Consulting",
+   "desc_chars": 0,
+   "canonical": null,
+   "robots": "noindex,nofollow",
+   "h1": [
+    "You're officially in. Welcome to the team."
+   ],
+   "headings": 1,
+   "internal_links": 3,
+   "images": 0,
+   "imgs_missing_alt": 0,
+   "videos": 0,
+   "forms": 0,
+   "phones": [
+    "410.952.2846"
+   ],
+   "emails": [
+    "mark@mgcglobalconsulting.com"
+   ],
+   "words": 193,
+   "content_sha": "c1f69db9941b"
+  }
+ ]
+}

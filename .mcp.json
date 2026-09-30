@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "hunter": {
+      "url": "https://mcp.hunter.io/mcp",
+      "headers": {
+        "X-API-Key": "bd0bbfe89a4de2362dce79fc445aec125c0f8f89E"
+      }
+    }
+  }
+}

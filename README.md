@@ -2,6 +2,8 @@
 
 Enterprise-caliber AI strategy, automation, CRM optimization, and operational systems design for growth-stage businesses.
 
+**Source of truth:** [`CLAUDE.md`](./CLAUDE.md) is the canonical project memory for deployment state, integration behavior, and assistant-facing conventions. This README is a quick-start mirror.
+
 **Live site:** https://www.mgcglobalconsulting.com
 **Hosting:** Netlify (static HTML + serverless functions)
 **Stack:** Vanilla HTML/CSS/JS · Netlify Functions · Supabase · Stripe
@@ -97,7 +99,9 @@ mgc-site-complete_1/
 ├── netlify/
 │   └── functions/
 │       ├── create-checkout.js  # Stripe checkout session creator
-│       ├── payment-webhook.js  # Stripe webhook → 5-system fan-out
+│       ├── payment-webhook.js  # Stripe webhook → Notion CRM sync
+│       ├── lead-intake.js      # Booking form submissions → Notion CRM lead/deal
+│       ├── new-client-signup.js # Supabase profile inserts → Notion CRM lead/deal
 │       └── request-invoice.js  # Custom invoice request handler
 │
 ├── netlify.toml                # Build config, headers, redirects
@@ -112,6 +116,10 @@ mgc-site-complete_1/
 ---
 
 ## Deployment
+
+### Current production status
+
+As of 2026-06-04, the Netlify production site has already been updated with the current portal/Supabase changes. The next commit should serve as the source-control record of the state now live at `https://www.mgcglobalconsulting.com`.
 
 ### Auto-deploy (recommended)
 
@@ -176,7 +184,7 @@ Set these in the Netlify dashboard under **Site Settings → Environment Variabl
 
 | Variable | Description |
 |---|---|
-| `SLACK_PAYMENTS_WEBHOOK` | Incoming webhook URL for payment alerts |
+| `SLACK_PAYMENTS_WEBHOOK` | Incoming webhook URL for invoice request alerts |
 
 ### Twilio
 
@@ -191,7 +199,12 @@ Set these in the Netlify dashboard under **Site Settings → Environment Variabl
 | Variable | Description |
 |---|---|
 | `NOTION_API_KEY` | Notion integration secret |
-| `NOTION_CLIENTS_DATABASE_ID` | Clients database ID |
+| `NOTION_COMPANIES_DATABASE_ID` | Companies database ID |
+| `NOTION_CONTACTS_DATABASE_ID` | Contacts database ID |
+| `NOTION_DEALS_DATABASE_ID` | Deals database ID |
+| `NOTION_PROJECTS_DATABASE_ID` | Projects database ID |
+| `NOTION_INVOICES_DATABASE_ID` | Invoices database ID |
+| `SUPABASE_WEBHOOK_SECRET` | Bearer token for Supabase database webhooks hitting Netlify functions |
 
 ### Site
 
@@ -232,15 +245,46 @@ Creates a Stripe Checkout Session and returns a redirect URL.
 
 ### `POST /.netlify/functions/payment-webhook`
 
-Handles `checkout.session.completed` Stripe events. Verifies the Stripe signature, then fans out to 5 systems in parallel via `Promise.allSettled`:
+Handles `checkout.session.completed` Stripe events. Verifies the Stripe signature, then syncs the payment to Notion CRM:
 
-1. **QuickBooks** — Create invoice + payment record
-2. **Google Sheets** — Append row to "Payments" sheet
-3. **Slack** — Formatted payment notification
-4. **Twilio WhatsApp** — SMS receipt to customer (E.164 phone required in metadata)
-5. **Notion** — Update client record status → Active
+1. **Find or create Company** — matched from customer name
+2. **Find or create Contact** — matched by email, status updated to Active
+3. **Create Invoice** — status Paid, linked to Company, includes Stripe payment intent ID
+4. **Close or create Deal** — Lead deals move to Closed Won, or a new Closed Won deal is created
 
-Failures in any single system do not block the webhook response.
+Notion write failures are logged but do not block the webhook success response.
+
+---
+
+### `POST /.netlify/functions/lead-intake`
+
+Handles booking form submissions from the site.
+
+**Request body:**
+```json
+{
+  "name": "Jane Smith",
+  "email": "jane@example.com",
+  "company": "Acme Corp",
+  "service": "AI Consulting & Strategy",
+  "message": "Interested in an assessment",
+  "requested_date": "2026-06-10"
+}
+```
+
+Writes to Notion CRM: Company, Contact, and a new Lead-stage Deal. CRM write failures are non-blocking for the form UX.
+
+---
+
+### `POST /.netlify/functions/new-client-signup`
+
+Handles Supabase database webhooks for `mgc_client_profiles` inserts.
+
+**Trigger:** Supabase Dashboard → Database Webhooks → `mgc_client_profiles` `INSERT`
+
+**Auth:** `Authorization: Bearer {SUPABASE_WEBHOOK_SECRET}`
+
+Writes to Notion CRM: Company, Contact, and a Portal Signup Lead Deal. Notion failures return `200` so Supabase does not retry indefinitely.
 
 ---
 
@@ -268,7 +312,8 @@ Fans out to: Slack (notify team) + QuickBooks (create draft invoice, due in 7 da
 
 Protected by Supabase auth. Users can sign in with email/password or Google OAuth.
 
-**Supabase project:** `zppuzfvchqxkzprfkhfz.supabase.co`
+**Supabase project:** `bjnpibxaxlgvlzeegwnm.supabase.co`
+**Live Netlify update:** dashboard/admin now use the Supabase publishable key and redirect Google OAuth to `https://www.mgcglobalconsulting.com/dashboard`.
 
 Portal panels:
 - **Overview** — KPI cards and recent activity feed
@@ -288,10 +333,8 @@ The anon key is embedded in `dashboard.html` — this is intentional and safe. N
 |---|---|---|
 | Stripe | Payments & subscriptions | stripe.com/docs |
 | Supabase | Auth + client portal database | supabase.com/docs |
-| QuickBooks | Automated invoicing | developer.intuit.com |
-| Google Sheets | Payment logging | developers.google.com/sheets |
-| Slack | Team notifications | api.slack.com |
-| Twilio | WhatsApp SMS receipts | twilio.com/docs |
+| QuickBooks | Custom invoice creation | developer.intuit.com |
+| Slack | Invoice request alerts | api.slack.com |
 | Notion | CRM + client records | developers.notion.com |
 | HubSpot | Lead capture forms + Breeze AI | developers.hubspot.com |
 

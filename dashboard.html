@@ -1298,8 +1298,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 <script>
 // ── SUPABASE INIT ──
-const SUPABASE_URL = 'https://zppuzfvchqxkzprfkhfz.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwcHV6ZnZjaHF4a3pwcmZraGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1NzYwNTksImV4cCI6MjA5MDE1MjA1OX0.-DGVDEIuWqivnMB3f8Hbi_GcIfR7EQ6_O_QGknDVXqI';
+const SUPABASE_URL = 'https://bjnpibxaxlgvlzeegwnm.supabase.co';
+const SUPABASE_ANON = 'sb_publishable_Nj15e9wDVGVjBANsOdcTbg_AyXa1UJD';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON, {
   auth: { detectSessionInUrl: true, persistSession: true, autoRefreshToken: true }
@@ -1397,7 +1397,7 @@ async function doSignup() {
 async function doGoogleAuth() {
   await sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: 'https://mgcglobalconsulting.com/dashboard' }
+    options: { redirectTo: 'https://www.mgcglobalconsulting.com/dashboard' }
   });
 }
 

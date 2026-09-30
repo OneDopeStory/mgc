@@ -7,6 +7,7 @@
     { "source": "/membership",      "destination": "/membership.html" },
     { "source": "/services",        "destination": "/services.html" },
     { "source": "/dashboard",       "destination": "/dashboard.html" },
+    { "source": "/onboarding-assistant", "destination": "/onboarding-assistant.html" },
     { "source": "/ai-consulting",   "destination": "/ai-consulting.html" },
     { "source": "/ai-workshops",    "destination": "/ai-workshops.html" },
     { "source": "/automation",      "destination": "/automation.html" },
