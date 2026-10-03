@@ -1,0 +1,17 @@
+# Keep ripgrep/Claude search focused on the site. Files here are still on disk and in git.
+node_modules
+.claude-flow
+.swarm
+.netlify
+.firecrawl
+.superpowers
+.obsidian
+.vercel
+open-seo
+ruvector.db
+*.db
+.claude/skills
+.claude/agents
+.claude/commands
+.claude/helpers
+docs/reference/CLAUDE-archive-2026-10-03.md
