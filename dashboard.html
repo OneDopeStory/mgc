@@ -1043,6 +1043,17 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
                 </select>
               </div>
               <div class="field-group">
+                <label class="field-label">Which Service Is This About?</label>
+                <select class="field-select" id="sched-service-line">
+                  <option value="AI Consulting & Strategy">AI Consulting &amp; Strategy</option>
+                  <option value="AI Workshops & Training">AI Workshops &amp; Training</option>
+                  <option value="Automation Architecture">Automation Architecture</option>
+                  <option value="CRM & Pipeline Optimization">CRM &amp; Pipeline Optimization</option>
+                  <option value="Operational Systems Design">Operational Systems Design</option>
+                  <option value="Retainer & Ongoing Support">Retainer &amp; Ongoing Support</option>
+                </select>
+              </div>
+              <div class="field-group">
                 <label class="field-label">Preferred Date</label>
                 <input class="field-input" type="date" id="sched-date">
               </div>
@@ -1632,6 +1643,7 @@ async function submitSchedule(e) {
     email: currentUser.email,
     company: currentProfile?.company || '',
     service: document.getElementById('sched-type').value,
+    service_line: document.getElementById('sched-service-line').value,
     message: document.getElementById('sched-msg').value,
     requested_date: document.getElementById('sched-date').value,
     status: 'pending'
@@ -2169,11 +2181,16 @@ function sendTA() {
 
   const thinking = appendTAMsg('Thinking…', 'ai', true);
 
-  fetch('/.netlify/functions/trueassist', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages: taHistory, clientName: currentProfile?.full_name || 'Client', company: currentProfile?.company || '' })
-  })
+  // The server verifies this token and reads the client's own profile and projects (RLS applies).
+  sb.auth.getSession()
+    .then(({ data }) => fetch('/.netlify/functions/trueassist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(data.session ? { Authorization: 'Bearer ' + data.session.access_token } : {}),
+      },
+      body: JSON.stringify({ messages: taHistory })
+    }))
     .then(r => r.json())
     .then(data => {
       thinking.remove();

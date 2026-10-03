@@ -157,6 +157,31 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .drawer-field-value.mono{font-family:var(--font-mono);font-size:.78rem}
 .drawer-actions{display:flex;gap:.65rem;flex-wrap:wrap;padding:1rem 1.5rem;border-top:1px solid var(--border)}
 
+/* ─── SERVICE BOXES (Bookings panel) ─── */
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+@media(max-width:1100px){.svc-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){.svc-grid{grid-template-columns:1fr}}
+.svc-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;backdrop-filter:blur(12px);cursor:pointer;transition:all .2s var(--ease);display:flex;flex-direction:column;gap:.9rem}
+.svc-card:hover{border-color:rgba(0,212,255,.3);transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.svc-card-title{font-family:var(--font-display);font-size:.88rem;font-weight:800;letter-spacing:-.01em}
+.svc-card-stages{display:flex;gap:.6rem}
+.svc-stage{flex:1;display:flex;flex-direction:column;gap:.15rem}
+.svc-stage-count{font-family:var(--font-display);font-size:1.4rem;font-weight:900;line-height:1}
+.svc-stage-count.c-pending{color:var(--gold)}
+.svc-stage-count.c-confirmed{color:var(--success)}
+.svc-stage-count.c-completed{color:#93c5fd}
+.svc-stage-label{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+
+/* ─── FULFILLMENT CHECKLIST ─── */
+.task-list{display:flex;flex-direction:column;gap:.5rem}
+.task-item{display:flex;align-items:flex-start;gap:.6rem;padding:.55rem .65rem;border-radius:9px;transition:background .15s;cursor:pointer}
+.task-item:hover{background:rgba(0,212,255,.05)}
+.task-item input[type=checkbox]{margin-top:.2rem;accent-color:var(--cyan);width:15px;height:15px;cursor:pointer;flex-shrink:0}
+.task-item span{font-size:.82rem;line-height:1.4;color:rgba(255,255,255,.88)}
+.task-item.done span{color:var(--muted);text-decoration:line-through}
+.field-textarea-sm{background:rgba(1,12,26,.7);border:1px solid rgba(0,212,255,.15);border-radius:10px;padding:.65rem 1rem;color:white;font-family:var(--font-body);font-size:.82rem;outline:none;transition:border-color .2s;width:100%;min-height:90px;resize:vertical}
+.field-textarea-sm:focus{border-color:rgba(0,212,255,.45)}
+
 /* ─── TOAST ─── */
 #toast-container{position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;display:flex;flex-direction:column;gap:.5rem;pointer-events:none}
 .toast{pointer-events:auto;padding:.7rem 1.1rem;border-radius:10px;font-size:.8rem;font-weight:600;backdrop-filter:blur(16px);animation:toastIn .25s var(--ease);display:flex;align-items:center;gap:.5rem;max-width:320px}
@@ -429,17 +454,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
       <!-- ── BOOKINGS ── -->
       <div class="a-panel" id="panel-bookings">
-        <div class="card">
-          <div class="a-table-wrap">
-            <table class="a-table">
-              <thead><tr>
-                <th>Name</th><th>Email</th><th>Service</th><th>Requested</th><th>Status</th><th>Actions</th>
-              </tr></thead>
-              <tbody id="bookings-tbody">
-                <tr><td colspan="6"><div class="empty-state"><div class="empty-state-title">Loading…</div></div></td></tr>
-              </tbody>
-            </table>
-          </div>
+        <div class="svc-grid" id="svc-grid">
+          <div class="empty-state"><div class="empty-state-title">Loading…</div></div>
         </div>
       </div>
 
@@ -985,47 +1001,166 @@ async function markQReviewed(id) {
   closeDrawer(); loadQuestionnaires(); updateKPIs();
 }
 
-// ── BOOKINGS ──
+// ── BOOKINGS (per-service boxes) ──
+const SERVICES = [
+  { key: 'AI Consulting & Strategy', tasks: ['Review intake & current AI maturity', 'Scope engagement (discovery call/audit)', 'Draft strategy brief or roadmap', 'Email proposal + next steps'] },
+  { key: 'AI Workshops & Training', tasks: ['Confirm team size & skill level', 'Pick workshop format/date', 'Prep workshop materials', 'Email confirmation + logistics'] },
+  { key: 'Automation Architecture', tasks: ['Review current systems/tools mentioned', 'Identify automation targets', 'Draft automation plan/quote', 'Email plan + quote'] },
+  { key: 'CRM & Pipeline Optimization', tasks: ['Review current CRM/platform', 'Audit pipeline stages & data quality', 'Draft optimization recommendations', 'Email recommendations'] },
+  { key: 'Operational Systems Design', tasks: ['Review operational pain points', 'Map workflow gaps', 'Draft systems design proposal', 'Email proposal'] },
+  { key: 'Retainer & Ongoing Support', tasks: ['Confirm scope/hours needed', 'Check retainer tier fit', 'Draft agreement/terms', 'Email agreement + onboarding'] }
+];
+
+let allBookings = [];
+let lastServiceLine;
+
 async function loadBookings() {
   const { data, error } = await sb.from('mgc_bookings')
     .select('*')
     .order('created_at', { ascending: false });
 
   if (error) { console.error('loadBookings:', error); return; }
-  const bookings = data || [];
-  const tbody = document.getElementById('bookings-tbody');
-  if (!tbody) return;
-  if (!bookings.length) {
-    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-state-title">No bookings yet</div></div></td></tr>`;
-    return;
-  }
+  allBookings = data || [];
+  renderServiceGrid();
+}
+
+function renderServiceGrid() {
+  const grid = document.getElementById('svc-grid');
+  if (!grid) return;
+  const unassigned = allBookings.filter(b => !b.service_line);
+
+  const cardsHTML = SERVICES.map(s => {
+    const bookings = allBookings.filter(b => b.service_line === s.key);
+    const pending = bookings.filter(b => b.status === 'pending').length;
+    const confirmed = bookings.filter(b => b.status === 'confirmed').length;
+    const completed = bookings.filter(b => b.status === 'completed').length;
+    return `
+      <div class="svc-card" onclick='viewServiceBookings(${JSON.stringify(s.key)})'>
+        <div class="svc-card-title">${escHtml(s.key)}</div>
+        <div class="svc-card-stages">
+          <div class="svc-stage"><div class="svc-stage-count c-pending">${pending}</div><div class="svc-stage-label">Pending</div></div>
+          <div class="svc-stage"><div class="svc-stage-count c-confirmed">${confirmed}</div><div class="svc-stage-label">Confirmed</div></div>
+          <div class="svc-stage"><div class="svc-stage-count c-completed">${completed}</div><div class="svc-stage-label">Done</div></div>
+        </div>
+      </div>`;
+  }).join('');
+
+  const unassignedHTML = unassigned.length ? `
+      <div class="svc-card" onclick="viewServiceBookings(null)">
+        <div class="svc-card-title">Unspecified Service</div>
+        <div class="svc-card-stages">
+          <div class="svc-stage" style="flex:0 0 auto"><div class="svc-stage-count c-pending">${unassigned.length}</div><div class="svc-stage-label">Needs tagging</div></div>
+        </div>
+      </div>` : '';
+
+  grid.innerHTML = cardsHTML + unassignedHTML;
+}
+
+function viewServiceBookings(serviceLine) {
+  lastServiceLine = serviceLine;
+  const list = serviceLine === null
+    ? allBookings.filter(b => !b.service_line)
+    : allBookings.filter(b => b.service_line === serviceLine);
   const statusPill = { pending:'pill-gold', confirmed:'pill-green', cancelled:'pill-red', completed:'pill-blue' };
-  tbody.innerHTML = bookings.map(b => `
-    <tr>
-      <td><div style="font-weight:600">${escHtml(b.name || '—')}</div></td>
-      <td style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted)">${escHtml(b.email || '—')}</td>
-      <td style="color:var(--muted)">${escHtml(b.service || '—')}</td>
-      <td style="color:var(--muted);white-space:nowrap">${fmtDate(b.requested_date)}</td>
-      <td><span class="pill ${statusPill[b.status] || 'pill-gray'}">${escHtml(b.status || 'pending')}</span></td>
-      <td>
+
+  const bodyHTML = list.length ? list.map(b => `
+    <div class="drawer-field" style="border-bottom:1px solid var(--border);padding-bottom:1rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem">
+        <div style="font-weight:700">${escHtml(b.name || '—')}</div>
+        <span class="pill ${statusPill[b.status] || 'pill-gray'}">${escHtml(b.status || 'pending')}</span>
+      </div>
+      <div class="drawer-field-value mono" style="font-size:.72rem">${escHtml(b.email || '—')}</div>
+      <div class="drawer-field-value" style="font-size:.78rem;color:var(--muted)">Requested: ${fmtDate(b.requested_date)}</div>
+      <div style="display:flex;gap:.5rem;margin-top:.5rem;flex-wrap:wrap">
+        <button class="btn-primary btn-sm" onclick='viewBookingChecklist(${JSON.stringify(b)})'>Open Checklist</button>
         <button class="btn-ghost btn-sm" onclick="confirmBooking('${b.id}')">Confirm</button>
         <button class="btn-danger btn-sm" onclick="cancelBooking('${b.id}')">Cancel</button>
-      </td>
-    </tr>
+      </div>
+    </div>
+  `).join('') : `<div class="empty-state"><div class="empty-state-title">No bookings for this service yet</div></div>`;
+
+  openDrawer(serviceLine || 'Unspecified Service', bodyHTML);
+}
+
+function viewBookingChecklist(b) {
+  const service = SERVICES.find(s => s.key === b.service_line);
+  const tasks = service ? service.tasks : ['Review request', 'Prepare response', 'Email client'];
+  const storeKey = 'mgc_task_' + b.id;
+  const saved = JSON.parse(localStorage.getItem(storeKey) || '{"done":[],"notes":""}');
+
+  const taskHTML = tasks.map((t, i) => `
+    <label class="task-item ${saved.done.includes(i) ? 'done' : ''}" id="task-${i}">
+      <input type="checkbox" ${saved.done.includes(i) ? 'checked' : ''} onchange="toggleTask('${b.id}', ${i})">
+      <span>${escHtml(t)}</span>
+    </label>
   `).join('');
+
+  const bodyHTML = `
+    <div class="drawer-field">
+      <div class="drawer-field-label">Client</div>
+      <div class="drawer-field-value">${escHtml(b.name || '—')} · <span class="mono" style="font-size:.72rem">${escHtml(b.email || '—')}</span></div>
+    </div>
+    <div class="drawer-field">
+      <div class="drawer-field-label">Message</div>
+      <div class="drawer-field-value" style="white-space:pre-wrap">${escHtml(b.message || '—')}</div>
+    </div>
+    <div class="drawer-field">
+      <div class="drawer-field-label">Fulfillment Checklist</div>
+      <div class="task-list" id="task-list">${taskHTML}</div>
+    </div>
+    <div class="drawer-field">
+      <div class="drawer-field-label">Solution Notes (goes into the email)</div>
+      <textarea class="field-textarea-sm" id="solution-notes" oninput="saveNotes('${b.id}')" placeholder="What's the solution/next step for this client?">${escHtml(saved.notes || '')}</textarea>
+    </div>
+  `;
+
+  const actionsHTML = `
+    <button class="btn-ghost btn-sm" onclick='viewServiceBookings(${JSON.stringify(b.service_line || null)})'>&larr; Back to list</button>
+    <button class="btn-primary btn-sm" onclick='emailClient(${JSON.stringify(b)})'>Email Client</button>
+  `;
+
+  openDrawer(b.name + ' — ' + (b.service_line || 'Unspecified'), bodyHTML, actionsHTML);
+}
+
+function toggleTask(bookingId, idx) {
+  const storeKey = 'mgc_task_' + bookingId;
+  const saved = JSON.parse(localStorage.getItem(storeKey) || '{"done":[],"notes":""}');
+  const pos = saved.done.indexOf(idx);
+  if (pos > -1) saved.done.splice(pos, 1); else saved.done.push(idx);
+  localStorage.setItem(storeKey, JSON.stringify(saved));
+  document.getElementById('task-' + idx).classList.toggle('done');
+}
+
+function saveNotes(bookingId) {
+  const storeKey = 'mgc_task_' + bookingId;
+  const saved = JSON.parse(localStorage.getItem(storeKey) || '{"done":[],"notes":""}');
+  saved.notes = document.getElementById('solution-notes').value;
+  localStorage.setItem(storeKey, JSON.stringify(saved));
+}
+
+function emailClient(b) {
+  const storeKey = 'mgc_task_' + b.id;
+  const saved = JSON.parse(localStorage.getItem(storeKey) || '{"done":[],"notes":""}');
+  const subject = encodeURIComponent('Your ' + (b.service_line || 'MGC') + ' — next steps');
+  const body = encodeURIComponent(`Hi ${b.name || ''},\n\n${saved.notes || ''}\n\nBest,\nMark\nMGC Global Consulting`);
+  window.location.href = `mailto:${b.email}?subject=${subject}&body=${body}`;
 }
 
 async function confirmBooking(id) {
   const { error } = await sb.from('mgc_bookings').update({ status: 'confirmed' }).eq('id', id);
   if (error) { toast('Failed: ' + error.message, 'error'); return; }
-  toast('Booking confirmed', 'success'); loadBookings();
+  toast('Booking confirmed', 'success');
+  await loadBookings();
+  if (lastServiceLine !== undefined) viewServiceBookings(lastServiceLine);
 }
 
 async function cancelBooking(id) {
   if (!confirm('Cancel this booking?')) return;
   const { error } = await sb.from('mgc_bookings').update({ status: 'cancelled' }).eq('id', id);
   if (error) { toast('Failed: ' + error.message, 'error'); return; }
-  toast('Booking cancelled', 'info'); loadBookings();
+  toast('Booking cancelled', 'info');
+  await loadBookings();
+  if (lastServiceLine !== undefined) viewServiceBookings(lastServiceLine);
 }
 
 // ── DRAWER ──

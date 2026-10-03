@@ -1,0 +1,29 @@
+{
+  "session_id": "mgc-codex-wiki-active",
+  "token_threshold_reached": null,
+  "token_usage_note": "Context utilization is not exposed; the 35% threshold cannot be verified.",
+  "last_completed_step": null,
+  "completed_milestone": "2026-10-03: QuickBooks and Lycoris specifications prepared; local documentation checks passed.",
+  "pipeline_status": "Earlier sequential external-sync pipeline remains incomplete; no completion markers asserted.",
+  "pending_actions": [
+    "When called, use the selected implementation shortcut in CLAUDE.md.",
+    "For QuickBooks: establish company, owner authorization, durable token storage, current query/version rules, and approved Item mapping.",
+    "For Lycoris: select placement, visual motif, final copy, and verify source license.",
+    "For the earlier full pipeline: resolve context measurement and verify external integration configuration before resuming its ordered steps."
+  ],
+  "file_manifest": [
+    "wiki/README.md",
+    "wiki/index.md",
+    "wiki/log.md",
+    "wiki/pages/quickbooks-account-spec.md",
+    "wiki/pages/lycoris-experience-spec.md",
+    "wiki/raw/2026-10-03-lycoris-component.txt"
+  ],
+  "external_sync": {
+    "github": "not_performed",
+    "vercel": "not_performed",
+    "supabase": "not_performed",
+    "obsidian": "local Markdown prepared; vault synchronization unverified"
+  },
+  "raw_source_sha256": "bcaece40471cc1cefb9fdf5f0cdbb1822e17210891e47fd287d8a2f729915fe7"
+}

@@ -20,7 +20,7 @@ Routes are defined in `netlify.toml`. `/terms` is linked from the footer but has
 | `trueassist.js` | Client advisor chat (Haiku). |
 | `create-checkout.js` | Stripe Checkout; price IDs validated against an allowlist. |
 | `payment-webhook.js` | `checkout.session.completed` → Notion fulfilment. |
-| `request-invoice.js` | Custom invoice requests → Slack. |
+| `request-invoice.js` | Custom invoice requests → Slack + QuickBooks customer/invoice creation and invoice email. |
 | `new-client-signup.js` | Supabase signup webhook → Notion. |
 
 ## Booking system (decided 2026-10-03)
@@ -70,6 +70,11 @@ Full list: `.env.template` (tracked in git — it must contain placeholders only
 - Read this file and the page you're editing. Skip the archive unless a task needs a section from it.
 - Search with `rg`; `.ignore` excludes `node_modules`, `.claude-flow`, `.swarm`, `ruvector.db`, `open-seo`, and the large `.claude` skill folders.
 - Ask for missing facts once, in a single list, rather than one at a time.
+
+## Saved implementation shortcuts (Mark Garcia Cartwright)
+- **“Implement MGC QuickBooks accounts”** → read [the QuickBooks spec](wiki/pages/quickbooks-account-spec.md). Sequence: verify sandbox/auth → account lookup → service-to-Item mapping → focused checks → report. Account management and invoice sending are separate actions; follow the spec's scope.
+- **“Implement MGC Lycoris experience”** → read [the visual spec](wiki/pages/lycoris-experience-spec.md) and `BRANDING.md`. Sequence: static demo → MGC copy/tokens → scroll/WebGL behavior → accessibility/mobile checks → report. The supplied React source is reference material; keep the main site static.
+- Read only the selected spec; load the large raw component only for the visual task. Specs are prepared, not implemented. Catalog and maintenance history: [wiki index](wiki/index.md).
 
 ## Reference (load only when needed)
 - Full original CLAUDE.md: `docs/reference/CLAUDE-archive-2026-10-03.md`
