@@ -35,7 +35,7 @@ Full list: `.env.template` (tracked in git — it must contain placeholders only
 
 ## Deployment and external actions — confirm first
 - **Never** `git push`, `netlify deploy`, `vercel`, or any production change without explicit approval in the current conversation. Ask: "Ready to push to GitHub / deploy to Netlify?"
-- Netlify auto-deploys `main` on push. Treat a push as a deploy.
+- Netlify site `mgc-global-consulting` (ID `07dc7dd7-37b2-4044-8503-64e8ca7a9044`, https://mgcglobalconsulting.com) is **not linked to a Git repo** (checked 2026-10-03). A GitHub push does NOT deploy. Production deploys are manual: `npx netlify deploy --prod --dir .`, which needs approval.
 - Never send content to an outside service on the owner's behalf (email, post, invoice) without confirmation.
 
 ## Security rules
