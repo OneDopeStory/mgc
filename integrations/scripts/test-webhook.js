@@ -10,7 +10,7 @@
  *   npm run test:webhook
  */
 
-require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+require('dotenv').config({ path: require('path').join(__dirname, '..', '..', '.env.local') });
 
 const crypto = require('crypto');
 const http   = require('http');

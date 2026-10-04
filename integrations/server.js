@@ -8,7 +8,8 @@
  *         npm start
  */
 
-require('dotenv').config();
+// Single local env source: repo-root .env.local (gitignored), shared with netlify dev.
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env.local') });
 
 const validateEnv = require('./middleware/validateEnv');
 validateEnv();

@@ -25,7 +25,7 @@ module.exports = function validateEnv() {
   const missing = REQUIRED.filter(key => !process.env[key]);
   if (missing.length > 0) {
     console.error(`\n❌ Missing required environment variables:\n  ${missing.join('\n  ')}\n`);
-    console.error('Copy .env.template to .env and fill in all values.\n');
+    console.error('Copy the root .env.template to the root .env.local and fill in all values.\n');
     process.exit(1);
   }
 };
