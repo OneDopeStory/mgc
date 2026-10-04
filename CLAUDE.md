@@ -2,6 +2,30 @@
 
 Canonical project memory. Read this first; it is kept short on purpose to save tokens. Long reference material lives in `docs/reference/` (full archive: `docs/reference/CLAUDE-archive-2026-10-03.md`).
 
+## Session handoff (2026-10-04): resume here
+
+**Objective for next session:** front-page visual system and the live TrueAssist experience. Pick one loop and one promo from [docs/site-experience-plan.md](docs/site-experience-plan.md) and the hero storyboard in [docs/hero-loop-storyboard.md](docs/hero-loop-storyboard.md).
+
+**Done (local, not deployed):**
+- Public TrueAssist widget on `index.html` (`#trueassist`), with [assets/trueassist-widget.js](assets/trueassist-widget.js) and [assets/trueassist-widget.css](assets/trueassist-widget.css). Syntax-checked and served locally. Not yet tested in a browser.
+- Portal migration written: [supabase/migrations/20261003230000_portal_support_tables.sql](supabase/migrations/20261003230000_portal_support_tables.sql). Remote migration history was fetched into `supabase/migrations/`.
+- Slack support-agent scaffold in [slack-agent/](slack-agent/). Local manifest trimmed to bot scopes. 43 template tests pass.
+- Slack CLI v4.8.0 installed. Not logged in.
+
+**Pending, needs owner action:**
+- `slack login`, then `slack app link` inside `slack-agent/`. Create `slack-agent/.env` with `ANTHROPIC_API_KEY`, `SLACK_BOT_TOKEN`, `SLACK_APP_TOKEN`. Start with `npm start`, not `slack run`, because `slack run` syncs the manifest to the live Slack app.
+- Set `ANTHROPIC_API_KEY` in Netlify. TrueAssist returns the friendly fallback until it's set.
+- Approve the production push of the portal migration. The auto-mode classifier denied it, and nothing was applied.
+- Approve any Netlify deploy. None has been made.
+- Owner consent for a HeyGen avatar of Mark: given 2026-10-04. A HeyGen plan is still needed.
+- Higgsfield: free plan, 10 credits. Preflight every generation.
+
+**Open discrepancies to verify:**
+- This file says `trueassist.js` handles pricing, lead capture, and `/api/chat`. The function read on 2026-10-04 does not. Check `docs/trueassist-architecture.md` before relying on either.
+- A new image was sent on 2026-10-04 without a description. Its purpose is unknown.
+
+**Rules carried forward:** no `git push`, deploy, or production schema change without explicit approval. Do not read `.env*` files. Do not route around a denied action.
+
 ## Identity and stack
 - **Site:** https://www.mgcglobalconsulting.com — MGC Global Consulting LLC (owner: Mark Cartwright, Founder). Enterprise AI strategy, automation, CRM optimization, systems design.
 - **Stack:** static HTML/CSS/JS, no build step · Netlify (publish dir `.`) · Netlify Functions (Node 18+, esbuild) · Supabase (client portal, prefix `mgc_`) · Stripe · Notion CRM · HubSpot forms · Anthropic (AI assistants) · Google Calendar (bookings).
