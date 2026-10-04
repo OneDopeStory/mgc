@@ -23,7 +23,8 @@ async function refreshQBToken() {
 }
 async function notifySlack(body) {
   const webhook = process.env.SLACK_PAYMENTS_WEBHOOK;
-  if (!webhook) return;
+  if (!webhook)
+    return;
   await fetch(webhook, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -111,8 +112,10 @@ async function createQBInvoice(token, body) {
   return invoiceId;
 }
 exports.handler = async (event) => {
-  if (event.httpMethod === "OPTIONS") return { statusCode: 200, headers: CORS, body: "" };
-  if (event.httpMethod !== "POST") return { statusCode: 405, headers: CORS, body: "Method not allowed" };
+  if (event.httpMethod === "OPTIONS")
+    return { statusCode: 200, headers: CORS, body: "" };
+  if (event.httpMethod !== "POST")
+    return { statusCode: 405, headers: CORS, body: "Method not allowed" };
   let body;
   try {
     body = JSON.parse(event.body);
@@ -126,7 +129,8 @@ exports.handler = async (event) => {
   const results = await Promise.allSettled([
     notifySlack(body),
     (async () => {
-      if (!process.env.QB_CLIENT_ID) return null;
+      if (!process.env.QB_CLIENT_ID)
+        return null;
       const token = await refreshQBToken();
       return createQBInvoice(token, body);
     })()

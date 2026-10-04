@@ -1222,6 +1222,7 @@ html{scroll-padding-top:80px}
 .eco-image-frame-sm{height:180px}
 
 </style>
+<link rel="stylesheet" href="assets/trueassist-widget.css">
 </head>
 <body>
 
@@ -1845,6 +1846,39 @@ html{scroll-padding-top:80px}
 </section>
 
 <!-- ══════════════ FOOTER ══════════════ -->
+<!-- ── TRUEASSIST (visitor chat) ── -->
+<section class="section ta-section reveal" id="trueassist" aria-labelledby="ta-heading">
+  <div class="container">
+    <div class="ta-wrap">
+      <div class="ta-intro">
+        <div class="eyebrow">TrueAssist</div>
+        <h2 id="ta-heading">Ask the MGC AI advisor <span class="sky-text">before you book</span></h2>
+        <p>TrueAssist answers questions about AI strategy, automation, CRM design, and how an engagement with MGC works. For questions about your own account, sign in to the client portal.</p>
+        <div class="ta-chips" role="group" aria-label="Suggested questions">
+          <button type="button" class="ta-chip" data-ta-prompt="What does an AI readiness assessment include?">AI readiness assessment</button>
+          <button type="button" class="ta-chip" data-ta-prompt="Which automation should a small business start with?">Where to start with automation</button>
+          <button type="button" class="ta-chip" data-ta-prompt="How does a CRM optimization engagement work?">CRM optimization</button>
+        </div>
+      </div>
+
+      <div class="ta-panel" id="ta-widget">
+        <div class="ta-head">
+          <div class="ta-title"><span class="ta-dot" aria-hidden="true"></span>TrueAssist</div>
+          <button type="button" class="ta-reset" id="ta-reset">Start over</button>
+        </div>
+        <div class="ta-log" id="ta-log" role="log" aria-live="polite" aria-relevant="additions" aria-label="TrueAssist conversation"></div>
+        <p class="ta-status" id="ta-status" role="status"></p>
+        <form class="ta-form" id="ta-form">
+          <label class="ta-sr" for="ta-input">Message TrueAssist</label>
+          <textarea id="ta-input" class="ta-input" rows="1" maxlength="1000" placeholder="Ask about strategy, automation, or next steps" required></textarea>
+          <button type="submit" class="ta-send" id="ta-send">Send</button>
+        </form>
+        <div class="ta-count" id="ta-count" aria-hidden="true">0 / 1000</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
@@ -2211,6 +2245,7 @@ document.querySelectorAll('.agent-ql').forEach(ql => {
   });
 });
 </script>
+<script src="assets/trueassist-widget.js" defer></script>
 </body>
 </html>
  

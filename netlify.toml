@@ -59,6 +59,21 @@
   to     = "/privacy.html"
   status = 200
 
+# ── API routes (rewrites to Netlify functions) ─────────────────────────
+# TrueAssist web chat: POST to chat, GET to poll for relayed team replies.
+[[redirects]]
+  from   = "/api/chat"
+  to     = "/.netlify/functions/trueassist"
+  status = 200
+  force  = true
+
+# Slack Events API request URL for the TrueAssist thread relay.
+[[redirects]]
+  from   = "/api/slack/events"
+  to     = "/.netlify/functions/slack-events"
+  status = 200
+  force  = true
+
 [[redirects]]
   from   = "/404"
   to     = "/404.html"

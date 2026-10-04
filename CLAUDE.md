@@ -17,7 +17,8 @@ Routes are defined in `netlify.toml`. `/terms` is linked from the footer but has
 |---|---|
 | `booking-assistant.js` | `slots` / `book` / `chat` actions. Google Calendar free/busy and event creation; Claude tool-use chat. Origin-locked, rate-limited. |
 | `lead-intake.js` | Booking/contact form → Notion (Company → Contact → Deal). Used by the booking assistant too. |
-| `trueassist.js` | Client advisor chat (Haiku). |
+| `trueassist.js` | `/api/chat`. Client advisor chat (Haiku): pricing from `mgc_service_pricing`, lead capture to `mgc_leads` + welcome email + Slack card, Slack handoff. See `docs/trueassist-architecture.md`. |
+| `slack-events.js` | `/api/slack/events`. Relays Slack thread replies back into the TrueAssist chat. |
 | `create-checkout.js` | Stripe Checkout; price IDs validated against an allowlist. |
 | `payment-webhook.js` | `checkout.session.completed` → Notion fulfilment. |
 | `request-invoice.js` | Custom invoice requests → Slack + QuickBooks customer/invoice creation and invoice email. |
@@ -30,7 +31,7 @@ Routes are defined in `netlify.toml`. `/terms` is linked from the footer but has
 - **Not deployed:** nothing here is live until Mark approves a deploy.
 
 ## Environment variables (names only — values live in Netlify, never in files)
-Stripe: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_*` · Supabase: `SUPABASE_URL`, `SUPABASE_ANON_KEY` · Notion: `NOTION_API_KEY`, `NOTION_{COMPANIES,CONTACTS,DEALS,PROJECTS,INVOICES}_DATABASE_ID` · Google: `GOOGLE_SERVICE_ACCOUNT_EMAIL`, `GOOGLE_SERVICE_ACCOUNT_KEY_B64`, `GOOGLE_CALENDAR_ID` (new) · AI: `ANTHROPIC_API_KEY`, optional `BOOKING_MODEL` · Other: `SLACK_PAYMENTS_WEBHOOK`, `SUPABASE_WEBHOOK_SECRET`, `SITE_URL`, `BOOKING_*`.
+Stripe: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_*` · Supabase: `SUPABASE_URL`, `SUPABASE_ANON_KEY` · Notion: `NOTION_API_KEY`, `NOTION_{COMPANIES,CONTACTS,DEALS,PROJECTS,INVOICES}_DATABASE_ID` · Google: `GOOGLE_SERVICE_ACCOUNT_EMAIL`, `GOOGLE_SERVICE_ACCOUNT_KEY_B64`, `GOOGLE_CALENDAR_ID` (new) · AI: `ANTHROPIC_API_KEY`, optional `BOOKING_MODEL` · Slack/email (TrueAssist): `SLACK_WEBHOOK_URL`, `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`, `SLACK_RELAY_CHANNEL_ID`, `RESEND_API_KEY`, `LEAD_EMAIL_FROM` · Other: `SLACK_PAYMENTS_WEBHOOK`, `SUPABASE_WEBHOOK_SECRET`, `SITE_URL`, `BOOKING_*`.
 Full list: `.env.template` (tracked in git — it must contain placeholders only).
 
 ## Deployment and external actions — confirm first

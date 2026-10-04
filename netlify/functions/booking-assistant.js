@@ -14,6 +14,7 @@
  */
 
 const crypto = require('crypto');
+const { recordLead } = require('../lib/leads');
 
 const ALLOWED_ORIGINS = [
   'https://www.mgcglobalconsulting.com',
@@ -256,6 +257,13 @@ async function bookSession(input) {
   } catch (err) {
     console.error('CRM sync failed:', err.message);
   }
+
+  // Supabase lead row, confirmation email and Slack card. Never blocks the booking.
+  await recordLead({
+    name, email, message: notes,
+    source: mode === 'live' ? 'Booking (confirmed)' : 'Booking (request)',
+    booking: { service, label: slot.label, start: slot.start, status: mode === 'live' ? 'confirmed' : 'requested' },
+  }).catch(err => console.error('Lead record failed:', err.message));
 
   return {
     status: mode === 'live' ? 'confirmed' : 'requested',

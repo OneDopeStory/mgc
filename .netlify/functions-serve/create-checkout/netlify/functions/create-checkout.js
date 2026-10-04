@@ -506,7 +506,6 @@ var require_Error = __commonJS({
     exports2.generateV1Error = generateV1Error;
     var generateV2Error = (rawStripeError) => {
       switch (rawStripeError.type) {
-        // switchCases: The beginning of the section generated from our OpenAPI spec
         case "temporary_session_expired":
           return new TemporarySessionExpiredError(rawStripeError);
       }
@@ -1440,7 +1439,7 @@ var require_shams = __commonJS({
         return true;
       }
       var obj = {};
-      var sym = /* @__PURE__ */ Symbol("test");
+      var sym = Symbol("test");
       var symObj = Object(sym);
       if (typeof sym === "string") {
         return false;
@@ -1499,7 +1498,7 @@ var require_has_symbols = __commonJS({
       if (typeof origSymbol("foo") !== "symbol") {
         return false;
       }
-      if (typeof /* @__PURE__ */ Symbol("bar") !== "symbol") {
+      if (typeof Symbol("bar") !== "symbol") {
         return false;
       }
       return hasSymbolSham();
@@ -1756,7 +1755,7 @@ var require_get_intrinsic = __commonJS({
     var throwTypeError = function() {
       throw new $TypeError();
     };
-    var ThrowTypeError = $gOPD ? (function() {
+    var ThrowTypeError = $gOPD ? function() {
       try {
         arguments.callee;
         return throwTypeError;
@@ -1767,7 +1766,7 @@ var require_get_intrinsic = __commonJS({
           return throwTypeError;
         }
       }
-    })() : throwTypeError;
+    }() : throwTypeError;
     var hasSymbols = require_has_symbols()();
     var getProto = require_get_proto();
     var $ObjectGPO = require_Object_getPrototypeOf();
@@ -2031,7 +2030,7 @@ var require_get_intrinsic = __commonJS({
             if (!allowMissing) {
               throw new $TypeError("base intrinsic for " + name + " exists, but the property is not available.");
             }
-            return void undefined2;
+            return void 0;
           }
           if ($gOPD && i + 1 >= parts.length) {
             var desc = $gOPD(value, part);
@@ -2294,13 +2293,13 @@ var require_utils = __commonJS({
     var setMaxIndex = function setMaxIndex2(obj, maxIndex) {
       overflowChannel.set(obj, maxIndex);
     };
-    var hexTable = (function() {
+    var hexTable = function() {
       var array = [];
       for (var i = 0; i < 256; ++i) {
         array[array.length] = "%" + ((i < 16 ? "0" : "") + i.toString(16)).toUpperCase();
       }
       return array;
-    })();
+    }();
     var compactQueue = function compactQueue2(queue) {
       while (queue.length > 1) {
         var item = queue.pop();
@@ -9006,12 +9005,24 @@ var TIER_PRICES = {
   pro: process.env.STRIPE_PRICE_MEMBERSHIP_PRO,
   elite: process.env.STRIPE_PRICE_MEMBERSHIP_ELITE
 };
+var SERVICE_PRICES = {
+  "ai-assessment": process.env.STRIPE_PRICE_AI_CONSULTING_ASSESSMENT,
+  "ai-roadmap": process.env.STRIPE_PRICE_AI_CONSULTING_ROADMAP,
+  "automation-starter": process.env.STRIPE_PRICE_AUTOMATION_STARTER,
+  "automation-full": process.env.STRIPE_PRICE_AUTOMATION_FULL,
+  "crm-audit": process.env.STRIPE_PRICE_CRM_AUDIT,
+  "crm-build": process.env.STRIPE_PRICE_CRM_BUILD,
+  "workshop-half": process.env.STRIPE_PRICE_WORKSHOP_HALF,
+  "workshop-full": process.env.STRIPE_PRICE_WORKSHOP_FULL,
+  "monthly-retainer": process.env.STRIPE_PRICE_MONTHLY_RETAINER,
+  "systems-design": process.env.STRIPE_PRICE_SYSTEMS_DESIGN
+};
 var ALLOWED_PRICES = /* @__PURE__ */ new Set([
   // Membership tiers
   process.env.STRIPE_PRICE_MEMBERSHIP_STARTER,
   process.env.STRIPE_PRICE_MEMBERSHIP_PRO,
   process.env.STRIPE_PRICE_MEMBERSHIP_ELITE,
-  // Services (one-time)
+  // Services (one-time & retainer)
   process.env.STRIPE_PRICE_AI_CONSULTING_ASSESSMENT,
   process.env.STRIPE_PRICE_AI_CONSULTING_ROADMAP,
   process.env.STRIPE_PRICE_AUTOMATION_STARTER,
@@ -9020,7 +9031,7 @@ var ALLOWED_PRICES = /* @__PURE__ */ new Set([
   process.env.STRIPE_PRICE_CRM_BUILD,
   process.env.STRIPE_PRICE_WORKSHOP_HALF,
   process.env.STRIPE_PRICE_WORKSHOP_FULL,
-  process.env.STRIPE_PRICE_RETAINER,
+  process.env.STRIPE_PRICE_MONTHLY_RETAINER,
   process.env.STRIPE_PRICE_SYSTEMS_DESIGN
 ]);
 var CORS = {
@@ -9041,10 +9052,16 @@ exports.handler = async (event) => {
   } catch {
     return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: "Invalid JSON" }) };
   }
-  let { priceId, mode = "payment", tier, customerEmail, metadata = {} } = body;
+  let { priceId, mode = "payment", tier, service, customerEmail, metadata = {} } = body;
   if (!priceId && tier) {
     priceId = TIER_PRICES[tier?.toLowerCase()];
     mode = "subscription";
+    metadata.tier = tier;
+  }
+  if (!priceId && service) {
+    priceId = SERVICE_PRICES[service?.toLowerCase()];
+    mode = service === "monthly-retainer" ? "subscription" : "payment";
+    metadata.service = service;
   }
   if (!priceId || !ALLOWED_PRICES.has(priceId)) {
     return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: "Invalid price" }) };

@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Employee Dashboard Preview | MGC</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --abyss:#EEF3FA; --navy:#DCE7F5; --mid:#C9D9EE;
+  --electric:#2563EB; --cyan:#1D4ED8; --gold:#FFB347; --gold-hi:#FFD580; --amber:#A35A00;
+  --ice:#B8D8F0; --white:#FFFFFF; --ink:#0B1B33;
+  --emerald:#047857; --rose:#BE123C;
+  --t-hi:#0B1B33; --t-mid:#33425C; --t-dim:#55657F;
+  --edge:rgba(37,99,235,.16); --edge-hi:rgba(37,99,235,.36);
+  --display:'Raleway',system-ui,sans-serif; --ui:'Plus Jakarta Sans',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+  --radius:22px; --ease:cubic-bezier(.16,1,.3,1);
+  --btn-blue:linear-gradient(135deg,#1E40AF,#2563EB);
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{
+  font-family:var(--ui); color:var(--t-hi); min-height:100vh; background:var(--abyss);
+  background-image:
+    radial-gradient(900px 600px at 6% -12%, rgba(255,255,255,.95), transparent 60%),
+    radial-gradient(800px 700px at 100% 108%, rgba(37,99,235,.14), transparent 60%),
+    radial-gradient(640px 460px at 88% 0%, rgba(147,197,253,.30), transparent 62%);
+  background-attachment:fixed;
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:disabled{cursor:not-allowed}
+svg{display:block}
+
+/* Glass primitive */
+.glass{
+  position:relative; border-radius:var(--radius);
+  background:linear-gradient(150deg, rgba(255,255,255,.88) 0%, rgba(255,255,255,.62) 55%, rgba(219,234,254,.55) 100%);
+  border:1px solid rgba(255,255,255,.9);
+  backdrop-filter:blur(26px) saturate(170%); -webkit-backdrop-filter:blur(26px) saturate(170%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(15,40,90,.05), 0 24px 50px -24px rgba(15,40,90,.28);
+  transition:border-color .35s var(--ease), transform .35s var(--ease);
+}
+.glass::before{content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:linear-gradient(115deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 32%); opacity:.7}
+.glass:hover{border-color:var(--edge-hi)}
+.pad{padding:1.5rem 1.6rem}
+
+/* Shell */
+.app{max-width:1440px; margin:0 auto; padding:1.1rem; display:flex; flex-direction:column; gap:1.15rem}
+
+/* Notice bar */
+.notice{font-size:.84rem; color:var(--t-mid); padding:.7rem 1rem; border-radius:16px; background:rgba(255,179,71,.06); border:1px solid rgba(255,179,71,.22); line-height:1.5}
+.notice b{color:var(--amber); font-weight:700}
+
+/* Top nav */
+.topnav{display:flex; align-items:center; gap:1rem; padding:.55rem .6rem .55rem .9rem; border-radius:999px; min-width:0}
+.logo{display:flex; align-items:center; gap:.6rem; flex-shrink:0; padding-right:.4rem}
+.logo-mark{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:var(--btn-blue);box-shadow:0 0 22px rgba(0,128,224,.4)}
+.logo-name{font-family:var(--display); font-weight:800; font-size:.98rem; color:var(--ink); letter-spacing:-.01em; white-space:nowrap}
+.tabs{display:flex; gap:.25rem; overflow-x:auto; scrollbar-width:none; min-width:0; flex:1; padding:.2rem}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{padding:.5rem .95rem; border-radius:999px; font-size:.86rem; font-weight:600; color:var(--t-mid); white-space:nowrap; transition:background .25s,color .25s}
+.tabs a:hover{color:var(--t-hi); background:rgba(37,99,235,.07)}
+.tabs a[aria-current="page"]{background:var(--btn-blue); color:var(--white); box-shadow:0 8px 22px rgba(37,99,235,.3)}
+.nav-tools{display:flex; align-items:center; gap:.5rem; flex-shrink:0}
+.icon-btn{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.8);border:1px solid var(--edge);color:var(--t-mid)}
+.icon-btn svg{width:18px;height:18px}
+.icon-btn:disabled{opacity:.75}
+.brand-mark{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.9);border:1px solid rgba(255,255,255,1);box-shadow:0 8px 20px -10px rgba(15,40,90,.35);overflow:hidden;flex-shrink:0}
+.brand-mark img{width:34px;height:34px;object-fit:contain}
+
+/* Header */
+.head{display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; flex-wrap:wrap; padding:.2rem .3rem 0}
+.head h1{font-family:var(--display); font-weight:800; font-size:clamp(1.8rem,3vw,2.5rem); line-height:1.05; letter-spacing:-.025em; color:var(--ink)}
+.head p{color:var(--t-mid); font-size:.95rem; margin-top:.45rem; max-width:62ch; line-height:1.55}
+.head-right{display:flex; align-items:center; gap:.6rem; flex-wrap:wrap}
+.live{display:inline-flex; align-items:center; gap:.5rem; font-family:var(--mono); font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; padding:.45rem .75rem; border-radius:999px; color:var(--cyan); background:rgba(37,99,235,.08); border:1px solid rgba(37,99,235,.3)}
+.live::before{content:""; width:7px; height:7px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); animation:blink 1.6s ease-in-out infinite}
+@keyframes blink{50%{opacity:.25}}
+.tag{font-family:var(--mono); font-size:.64rem; letter-spacing:.12em; text-transform:uppercase; padding:.36rem .65rem; border-radius:999px; color:var(--amber); background:rgba(255,179,71,.1); border:1px solid rgba(255,179,71,.3); white-space:nowrap}
+.seg{display:inline-flex; padding:.25rem; border-radius:999px; background:rgba(255,255,255,.7); border:1px solid var(--edge)}
+.seg button{padding:.42rem .85rem; border-radius:999px; font-size:.78rem; font-weight:600; color:var(--t-mid)}
+.seg button[aria-pressed="true"]{background:var(--btn-blue); color:var(--white)}
+.btn{display:inline-flex; align-items:center; gap:.45rem; padding:.58rem 1rem; border-radius:12px; font-weight:700; font-size:.84rem; border:1px solid var(--edge-hi); background:rgba(37,99,235,.08); white-space:nowrap}
+.btn:not(:disabled):hover{transform:translateY(-1px)}
+.btn.primary{background:var(--btn-blue); border-color:transparent; color:var(--white); box-shadow:0 10px 26px rgba(0,82,204,.35)}
+.btn.gold{background:linear-gradient(135deg,#FFB347,#FFD580); border-color:transparent; color:#1a1200}
+.btn.ghost{background:transparent}
+.btn.danger{color:#9F1239; border-color:rgba(244,63,94,.45); background:rgba(244,63,94,.08)}
+.btn:disabled{opacity:.6; transform:none}
+.btn svg{width:15px;height:15px}
+
+/* KPI tiles */
+.kpis{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:1rem}
+.kpi{padding:1.15rem 1.2rem 1rem; min-width:0}
+.kpi-top{display:flex; align-items:center; justify-content:space-between; gap:.5rem; color:var(--t-mid); font-size:.8rem; font-weight:600}
+.kpi-arrow{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;border:1px solid var(--edge);color:var(--cyan);background:rgba(37,99,235,.06);flex-shrink:0}
+.kpi-arrow svg{width:13px;height:13px}
+.kpi-num{font-family:var(--display); font-weight:900; font-size:clamp(1.9rem,2.6vw,2.6rem); line-height:1; letter-spacing:-.03em; color:var(--ink); margin:.8rem 0 .45rem; font-variant-numeric:tabular-nums}
+.kpi-num small{font-size:.45em; color:var(--t-mid); font-weight:700; margin-left:.2rem}
+.kpi-sub{font-size:.76rem; color:var(--t-dim); line-height:1.4}
+.kpi.gold{border-color:rgba(255,179,71,.28)}
+.kpi.gold .kpi-arrow{color:var(--amber); border-color:rgba(255,179,71,.3); background:rgba(255,179,71,.08)}
+.kpi.gold .kpi-num{background:linear-gradient(135deg,var(--ink) 10%,var(--amber) 90%); -webkit-background-clip:text; background-clip:text; color:transparent}
+
+/* Layout panels */
+.cols{display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:1.15rem}
+.row{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:1.15rem}
+.panel-h{display:flex; align-items:flex-start; justify-content:space-between; gap:.8rem; margin-bottom:1.05rem; flex-wrap:wrap}
+.panel-h h2{font-family:var(--display); font-weight:700; font-size:1.12rem; color:var(--ink); letter-spacing:-.01em; display:flex; align-items:center; gap:.6rem; flex-wrap:wrap}
+.panel-h p{color:var(--t-mid); font-size:.84rem; margin-top:.3rem; line-height:1.5}
+.legend{display:flex; gap:.9rem; flex-wrap:wrap; font-size:.76rem; color:var(--t-mid)}
+.legend i{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:.4rem; vertical-align:middle}
+
+/* Live runs */
+.run{border:1px solid rgba(37,99,235,.12); border-radius:18px; background:rgba(255,255,255,.6); padding:1rem 1.1rem; margin-bottom:.7rem; transition:border-color .3s}
+.run:hover{border-color:var(--edge-hi)}
+.run-top{display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap}
+.run-title{font-weight:700; color:var(--ink); font-size:.96rem}
+.run-agent{font-family:var(--mono); font-size:.7rem; letter-spacing:.06em; color:var(--cyan); text-transform:uppercase; margin-top:.3rem}
+.run-meta{font-family:var(--mono); font-size:.72rem; color:var(--t-dim); text-align:right; white-space:nowrap}
+.bar{height:8px; border-radius:8px; background:rgba(15,40,90,.08); overflow:hidden; margin:.75rem 0 .35rem}
+.bar i{display:block; height:100%; width:0; border-radius:8px; background:linear-gradient(90deg,var(--electric),var(--cyan)); box-shadow:0 0 14px rgba(37,99,235,.55); transition:width .9s var(--ease)}
+.run-foot{display:flex; justify-content:space-between; align-items:center; gap:.6rem; font-family:var(--mono); font-size:.72rem; color:var(--t-dim); flex-wrap:wrap}
+.run-actions{display:flex; gap:.4rem}
+.run-actions .btn{padding:.36rem .7rem; font-size:.74rem}
+
+/* Status pills */
+.pill{font-family:var(--mono); font-size:.64rem; letter-spacing:.07em; text-transform:uppercase; padding:.26rem .6rem; border-radius:999px; white-space:nowrap; display:inline-block}
+.pill.run{color:var(--cyan); background:rgba(37,99,235,.10); border:1px solid rgba(37,99,235,.3)}
+.pill.ok{color:var(--emerald); background:rgba(16,185,129,.10); border:1px solid rgba(16,185,129,.3)}
+.pill.review{color:var(--amber); background:rgba(255,179,71,.10); border:1px solid rgba(255,179,71,.32)}
+.pill.fail{color:#9F1239; background:rgba(244,63,94,.10); border:1px solid rgba(244,63,94,.36)}
+.pill.idle{color:var(--t-mid); background:rgba(184,216,240,.07); border:1px solid rgba(184,216,240,.18)}
+.pill.pending{color:var(--amber); background:rgba(255,179,71,.08); border:1px dashed rgba(255,179,71,.45)}
+
+/* Source of truth */
+.sot{display:flex; flex-direction:column; gap:.7rem}
+.sot-row{display:flex; align-items:center; justify-content:space-between; gap:.8rem; padding:.85rem 1rem; border-radius:16px; background:rgba(255,255,255,.6); border:1px solid rgba(37,99,235,.08)}
+.sot-row .k{font-size:.84rem; color:var(--t-mid)}
+.sot-row .k b{display:block; color:var(--ink); font-family:var(--display); font-weight:800; font-size:1.25rem; margin-top:.2rem; font-variant-numeric:tabular-nums}
+.sot-row .k span{font-size:.74rem; color:var(--t-dim)}
+.match{font-family:var(--mono); font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; color:var(--emerald)}
+.sot-note{font-size:.8rem; color:var(--t-dim); line-height:1.6; margin-top:.2rem}
+
+/* Roster */
+.roster{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr)); gap:.9rem}
+.emp{padding:1.15rem 1.1rem; min-width:0}
+.emp-top{display:flex; align-items:center; gap:.85rem}
+.ring{width:56px; height:56px; flex-shrink:0}
+.ring text{font-family:var(--display); font-weight:800; font-size:12px; fill:var(--ink)}
+.emp-name{font-weight:700; color:var(--ink); font-size:.95rem; line-height:1.25}
+.emp-role{font-size:.76rem; color:var(--t-mid); margin-top:.2rem; line-height:1.4}
+.emp-task{font-size:.8rem; color:var(--t-mid); margin-top:.9rem; line-height:1.5; min-height:2.4em}
+.emp-foot{display:flex; justify-content:space-between; align-items:center; margin-top:.9rem; padding-top:.8rem; border-top:1px solid rgba(15,40,90,.08); font-family:var(--mono); font-size:.7rem; color:var(--t-dim); gap:.5rem; flex-wrap:wrap}
+
+/* Review queue */
+.review-card{border:1px solid rgba(255,179,71,.22); border-radius:18px; background:rgba(255,179,71,.04); padding:1rem 1.05rem; margin-bottom:.7rem}
+.review-card h3{font-size:.95rem; color:var(--ink); font-weight:700}
+.review-card p{font-size:.8rem; color:var(--t-mid); margin:.35rem 0 .8rem; line-height:1.5}
+.review-card .acts{display:flex; gap:.45rem; flex-wrap:wrap}
+.review-card .acts .btn{padding:.4rem .75rem; font-size:.76rem}
+.empty{font-size:.84rem; color:var(--t-dim); padding:1rem 0}
+
+/* Tables */
+.tbl-wrap{overflow-x:auto}
+table{width:100%; border-collapse:collapse; font-size:.86rem; min-width:520px}
+th{font-family:var(--mono); font-size:.64rem; letter-spacing:.12em; text-transform:uppercase; color:var(--t-dim); text-align:left; padding:.6rem .7rem; border-bottom:1px solid rgba(37,99,235,.12); font-weight:500}
+td{padding:.8rem .7rem; border-bottom:1px solid rgba(15,40,90,.08); color:var(--t-mid); vertical-align:middle}
+td.strong{color:var(--ink); font-weight:600}
+td.mono{font-family:var(--mono); font-size:.76rem; color:var(--t-dim); white-space:nowrap}
+tr:hover td{background:rgba(37,99,235,.03)}
+
+/* Timeline */
+.feed{display:flex; flex-direction:column; gap:.1rem; max-height:360px; overflow:auto; padding-right:.3rem}
+.ev{display:grid; grid-template-columns:78px auto minmax(0,1fr); gap:.7rem; align-items:start; padding:.6rem .4rem; border-bottom:1px solid rgba(15,40,90,.06); font-size:.82rem}
+.ev time{font-family:var(--mono); font-size:.7rem; color:var(--t-dim); padding-top:.2rem}
+.ev p{color:var(--t-mid); line-height:1.5; min-width:0}
+.ev p b{color:var(--ink); font-weight:600}
+.ev.new{animation:flash 1.6s var(--ease)}
+@keyframes flash{from{background:rgba(37,99,235,.12)} to{background:transparent}}
+.feed-foot{font-family:var(--mono); font-size:.68rem; color:var(--t-dim); margin-top:.7rem}
+
+/* Chart */
+.chart{width:100%; height:210px}
+.chart text{font-family:var(--mono); font-size:10px; fill:var(--t-dim)}
+
+.foot-note{font-family:var(--mono); font-size:.68rem; color:var(--t-dim); text-align:center; padding:.4rem 0 1rem; letter-spacing:.05em}
+
+/* Motion */
+.rise{opacity:0; transform:translateY(12px); animation:rise .75s var(--ease) forwards}
+@keyframes rise{to{opacity:1; transform:none}}
+.rise:nth-child(2){animation-delay:.05s} .rise:nth-child(3){animation-delay:.1s} .rise:nth-child(4){animation-delay:.15s}
+@media (prefers-reduced-motion: reduce){*{animation:none!important; transition:none!important}.rise{opacity:1;transform:none}}
+
+/* Responsive */
+@media (max-width:1280px){ .kpis{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:1060px){ .cols,.row{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:640px){
+  .app{padding:.75rem; gap:.9rem}
+  .topnav{border-radius:22px; flex-wrap:wrap; padding:.6rem}
+  .nav-tools{margin-left:auto}
+  .tabs{order:3; flex-basis:100%; width:100%; flex:none}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr)); gap:.75rem}
+  .kpi{padding:.95rem}
+  .pad{padding:1.2rem 1.05rem}
+  .run-meta{text-align:left; white-space:normal}
+  .ev{grid-template-columns:64px minmax(0,1fr)}
+  .ev .pill{grid-column:2; justify-self:start}
+  .ev p{grid-column:2}
+  .chart{height:180px}
+  table{min-width:0}
+  th:first-child, td:first-child{display:none}
+  th,td{padding:.55rem .3rem; font-size:.76rem}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Top nav -->
+  <nav class="topnav glass rise" aria-label="Owner console">
+    <div class="logo">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-9"/><path d="M14 7h7v7"/></svg>
+      </span>
+      <span class="logo-name">MGC Console</span>
+    </div>
+    <div class="tabs">
+      <a href="#" aria-current="page">Overview</a>
+      <a href="#roster">AI employees</a>
+      <a href="#runs">Runs</a>
+      <a href="#review">Review queue</a>
+      <a href="#sync">Source of truth</a>
+      <a href="#activity">Activity</a>
+    </div>
+    <div class="nav-tools">
+      <button class="icon-btn" aria-label="Search" disabled title="Not wired in this preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+      <button class="icon-btn" aria-label="Notifications" disabled title="Not wired in this preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 8a6 6 0 1112 0c0 6 2.5 7.5 2.5 7.5h-17S6 14 6 8z"/><path d="M10 19a2 2 0 004 0"/></svg></button>
+      <span class="brand-mark" role="img" aria-label="MGC Global Consulting"><img src="assets/mgc-logo-small.png" alt=""></span>
+    </div>
+  </nav>
+
+  <div class="notice rise">
+    <b>Preview.</b> Every number and event on this page is sample data on a simulated clock. Nothing is connected to Supabase or Google Sheets. Only Approve and Reject change anything, and they change sample state only. Other controls are inactive.
+  </div>
+
+  <!-- Header -->
+  <header class="head rise">
+    <div>
+      <h1>AI Employees</h1>
+      <p>Realtime progress for each agent run. In the built version, every finished run is saved to the database and mirrored to Google Sheets.</p>
+    </div>
+    <div class="head-right">
+      <span class="live">Simulated feed</span>
+      <span class="tag">Sample data</span>
+      <div class="seg" aria-label="Date range">
+        <button aria-pressed="true" disabled title="Not wired in this preview">Today</button>
+        <button aria-pressed="false" disabled title="Not wired in this preview">7D</button>
+        <button aria-pressed="false" disabled title="Not wired in this preview">30D</button>
+      </div>
+      <button class="btn primary" disabled title="Not wired in this preview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        Start a run
+      </button>
+    </div>
+  </header>
+
+  <!-- KPIs -->
+  <section class="kpis" aria-label="Key numbers">
+    <article class="kpi glass rise">
+      <div class="kpi-top">Runs today <span class="kpi-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span></div>
+      <div class="kpi-num" id="kRunsToday">12</div>
+      <div class="kpi-sub">Sample count, across 5 AI employees</div>
+    </article>
+    <article class="kpi glass rise">
+      <div class="kpi-top">In progress <span class="kpi-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span></div>
+      <div class="kpi-num" id="kInProgress">2</div>
+      <div class="kpi-sub">Changes as sample runs advance</div>
+    </article>
+    <article class="kpi glass gold rise">
+      <div class="kpi-top">Awaiting review <span class="kpi-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span></div>
+      <div class="kpi-num" id="kReview">1</div>
+      <div class="kpi-sub">Nothing sends until approved</div>
+    </article>
+    <article class="kpi glass rise">
+      <div class="kpi-top">Completed (database) <span class="kpi-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span></div>
+      <div class="kpi-num" id="kCompleted">37</div>
+      <div class="kpi-sub">Sample total, all time</div>
+    </article>
+    <article class="kpi glass rise">
+      <div class="kpi-top">Synced to Sheets <span class="kpi-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span></div>
+      <div class="kpi-num" id="kSheets">37</div>
+      <div class="kpi-sub" id="kSheetsSub">Sample: backup matches database</div>
+    </article>
+    <article class="kpi glass rise">
+      <div class="kpi-top">Last sync <span class="kpi-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span></div>
+      <div class="kpi-num" style="font-size:clamp(1.5rem,2.1vw,2.1rem)">2 min</div>
+      <div class="kpi-sub">Sample lag, database to Sheets</div>
+    </article>
+  </section>
+
+  <!-- Live runs + source of truth -->
+  <section class="cols" id="runs">
+    <article class="glass pad rise">
+      <div class="panel-h">
+        <div>
+          <h2>Live progress <span class="tag">Sample</span></h2>
+          <p>Each run reports steps as it works. When a run finishes, it moves to the completed list.</p>
+        </div>
+        <div class="legend">
+          <span><i style="background:var(--cyan)"></i>Running</span>
+          <span><i style="background:var(--gold)"></i>Waiting for you</span>
+        </div>
+      </div>
+      <div id="liveList"></div>
+    </article>
+
+    <article class="glass pad rise" id="sync">
+      <div class="panel-h">
+        <div>
+          <h2>Source of truth <span class="tag">Sample</span></h2>
+          <p>The database is the primary record. Google Sheets is the backup copy.</p>
+        </div>
+      </div>
+      <div class="sot">
+        <div class="sot-row">
+          <div class="k">Database (Supabase)<b id="sotDb">37 runs</b><span id="sotDbAt">Sample last write 8:52 PM</span></div>
+          <span class="pill ok">Primary</span>
+        </div>
+        <div class="sot-row">
+          <div class="k">Backup (Google Sheets)<b id="sotSheets">37 rows</b><span id="sotSheetsAt">Sample last sync 8:50 PM</span></div>
+          <span class="match" id="sotMatch">Counts match</span>
+        </div>
+        <div class="sot-row">
+          <div class="k">Failed syncs waiting to retry<b id="sotFailed">0</b><span>Retries run every 10 minutes</span></div>
+          <span class="pill ok">Clear</span>
+        </div>
+        <p class="sot-note">Each row is keyed by run ID, so a retry updates the existing row and never adds a duplicate. A nightly reconcile compares the two counts. Mismatches appear here.</p>
+        <div style="display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.3rem">
+          <button class="btn" disabled title="Connected in the build, not in this preview">Reconcile now</button>
+          <button class="btn ghost" disabled title="Connected in the build, not in this preview">Open backup sheet</button>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- Roster -->
+  <section class="glass pad rise" id="roster">
+    <div class="panel-h">
+      <div>
+        <h2>AI employees <span class="tag">Sample</span></h2>
+        <p>One card per agent. Progress rings show the current run. Done today counts sample runs completed today.</p>
+      </div>
+    </div>
+    <div class="roster" id="rosterGrid"></div>
+  </section>
+
+  <!-- Review + completed -->
+  <section class="row">
+    <article class="glass pad rise" id="review">
+      <div class="panel-h">
+        <div>
+          <h2>Review queue <span class="tag">Sample</span></h2>
+          <p>Agents pause here before anything leaves the system: sending, invoicing, or publishing.</p>
+        </div>
+      </div>
+      <div id="reviewList"></div>
+    </article>
+
+    <article class="glass pad rise">
+      <div class="panel-h">
+        <div>
+          <h2>Completed runs <span class="tag">Sample</span></h2>
+          <p>Newest first. The Sheets column shows whether the backup copy has caught up.</p>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Run</th><th>Agent</th><th>Work</th><th>Time</th><th>Sheets</th></tr></thead>
+          <tbody id="doneBody"></tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+
+  <!-- Activity + throughput -->
+  <section class="row" id="activity">
+    <article class="glass pad rise">
+      <div class="panel-h">
+        <div>
+          <h2>Activity <span class="tag">Sample</span></h2>
+          <p>Every step, warning, and approval is logged, so the work can be checked.</p>
+        </div>
+      </div>
+      <div class="feed" id="feed" aria-live="polite"></div>
+      <div class="feed-foot">Sample timeline. Times are illustrative and advance with each simulated event.</div>
+    </article>
+
+    <article class="glass pad rise">
+      <div class="panel-h">
+        <div>
+          <h2>Runs per day <span class="tag">Sample</span></h2>
+          <p>Last 14 days, sample counts.</p>
+        </div>
+      </div>
+      <svg class="chart" id="throughput" viewBox="0 0 640 210" role="img" aria-label="Sample runs per day, last 14 days"></svg>
+    </article>
+  </section>
+
+  <div class="foot-note">PREVIEW · SAMPLE DATA · SIMULATED FEED · NOT CONNECTED TO SUPABASE OR SHEETS · NOT DEPLOYED</div>
+</div>
+
+<script>
+/* ---------- Sample data (preview only, not connected to any system) ---------- */
+const agents = [
+  {key:'site_auditor', name:'Site auditor', role:'Audits public pages for broken links and metadata', pct:64, status:'run', task:'Checking internal links across 11 pages', doneToday:6, last:'8:52 PM'},
+  {key:'invoice_drafter', name:'Invoice drafter', role:'Drafts invoices from approved engagement scope', pct:100, status:'review', task:'Draft ready. Waiting for your approval.', doneToday:3, last:'7:40 PM'},
+  {key:'booking_reminders', name:'Booking reminders', role:'Sends 24-hour reminders for confirmed sessions', pct:100, status:'ok', task:'Last run complete. Next run at 6:00 PM tomorrow.', doneToday:2, last:'6:00 PM'},
+  {key:'content_drafter', name:'Content drafter', role:'Drafts posts from briefs you approve', pct:22, status:'run', task:'Drafting LinkedIn post from brief 14', doneToday:1, last:'8:49 PM'},
+  {key:'crm_hygiene', name:'CRM hygiene', role:'Dry-run duplicate checks, no writes', pct:38, status:'fail', task:'Stopped at step 4 (rate limit). Retry in 10 minutes.', doneToday:0, last:'5:12 PM'}
+];
+const statusLabel = {run:'Running', review:'Needs review', ok:'Done', fail:'Failed', idle:'Idle'};
+const statusClass = {run:'run', review:'review', ok:'ok', fail:'fail', idle:'idle'};
+
+let live = [
+  {id:'r-0931', agent:'Site auditor', title:'Audit public pages for broken links', pct:64, total:14, elapsed:12, started:'8:52 PM'},
+  {id:'r-0933', agent:'Content drafter', title:'Draft LinkedIn post from approved brief', pct:22, total:9, elapsed:3, started:'8:49 PM'}
+];
+let done = [
+  {id:'r-0928', agent:'Booking reminders', title:'24-hour reminders, 2 sessions', at:'6:00 PM', dur:'3 min', sheets:'synced'},
+  {id:'r-0921', agent:'Site auditor', title:'Full audit, 11 public pages', at:'2:10 PM', dur:'18 min', sheets:'synced'},
+  {id:'r-0919', agent:'Content drafter', title:'Brief to LinkedIn draft', at:'Yesterday', dur:'5 min', sheets:'synced'}
+];
+let review = [
+  {id:'r-0925', agent:'Invoice drafter', title:'Draft invoice: 90-Day AI Roadmap', note:'Tax field left empty for review. Nothing has been sent.', state:'pending'}
+];
+/* Sample clock: starts at 8:52 PM and advances one minute per simulated event. */
+let sampleMinutes = 20 * 60 + 52;
+const clockText = m => { const h = Math.floor(m / 60) % 24, mm = String(m % 60).padStart(2, '0'); const hh = ((h + 11) % 12) + 1; return hh + ':' + mm + ' ' + (h < 12 ? 'AM' : 'PM'); };
+const advanceClock = () => { sampleMinutes += 1; return clockText(sampleMinutes); };
+
+let events = [
+  {t:'8:52 PM', lvl:'ok', who:'Site auditor', text:'r-0931 started, 14 steps'},
+  {t:'8:50 PM', lvl:'warn', who:'Site auditor', text:'footer links to /terms, route not found'},
+  {t:'8:49 PM', lvl:'info', who:'Content drafter', text:'r-0933 started, brief 14'},
+  {t:'7:40 PM', lvl:'review', who:'Invoice drafter', text:'r-0925 paused for your approval'},
+  {t:'6:00 PM', lvl:'ok', who:'Booking reminders', text:'r-0928 complete. 2 reminders queued'},
+  {t:'5:12 PM', lvl:'fail', who:'CRM hygiene', text:'r-0927 rate limited at step 4'}
+];
+const throughput = [3,5,4,6,2,7,5,4,6,8,5,3,6,4];
+const pool = [
+  {agent:'Site auditor', title:'Audit services pages for metadata', total:12},
+  {agent:'Content drafter', title:'Draft email follow-up from brief 15', total:8},
+  {agent:'Booking reminders', title:'Next-day reminder check', total:3}
+];
+let dbCount = 37, sheetsCount = 37, failedSync = 0, runsToday = 12, runSeq = 934;
+
+/* ---------- Helpers (all dynamic text via textContent) ---------- */
+const $ = id => document.getElementById(id);
+const NS = 'http://www.w3.org/2000/svg';
+const mk = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; };
+const pillFor = (cls, text) => mk('span', 'pill ' + cls, text);
+function el(tag, attrs, parent){ const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; }
+
+/* ---------- Roster ---------- */
+function renderRoster(){
+  const grid = $('rosterGrid'); grid.textContent = '';
+  const C = 2 * Math.PI * 22;
+  agents.forEach(a => {
+    const card = mk('article', 'glass emp');
+    const top = mk('div', 'emp-top');
+    const svg = el('svg', {viewBox:'0 0 56 56', class:'ring', role:'img', 'aria-label': a.name + ', sample progress ' + a.pct + ' percent'});
+    el('circle', {cx:28, cy:28, r:22, fill:'none', stroke:'rgba(15,40,90,.1)', 'stroke-width':4}, svg);
+    el('circle', {cx:28, cy:28, r:22, fill:'none', stroke: a.status === 'fail' ? '#BE123C' : (a.status === 'review' ? '#E8952E' : '#2563EB'), 'stroke-width':4, 'stroke-linecap':'round', 'stroke-dasharray': (C * a.pct / 100).toFixed(1) + ' ' + C.toFixed(1), transform:'rotate(-90 28 28)'}, svg);
+    const t = el('text', {x:28, y:32, 'text-anchor':'middle'}, svg); t.textContent = a.pct + '%';
+    top.appendChild(svg);
+    const meta = mk('div');
+    meta.appendChild(mk('div', 'emp-name', a.name));
+    meta.appendChild(mk('div', 'emp-role', a.role));
+    top.appendChild(meta);
+    card.appendChild(top);
+    card.appendChild(mk('div', 'emp-task', a.task));
+    const foot = mk('div', 'emp-foot');
+    foot.appendChild(pillFor(statusClass[a.status], statusLabel[a.status]));
+    foot.appendChild(mk('span', null, 'done today ' + a.doneToday + ' · last ' + a.last));
+    card.appendChild(foot);
+    grid.appendChild(card);
+  });
+}
+
+/* ---------- Live runs (controls shown inactive in this preview) ---------- */
+function renderLive(){
+  const box = $('liveList'); box.textContent = '';
+  if (!live.length) box.appendChild(mk('p', 'empty', 'No sample runs in progress.'));
+  live.forEach(r => {
+    const card = mk('div', 'run');
+    const top = mk('div', 'run-top');
+    const left = mk('div');
+    left.appendChild(mk('div', 'run-title', r.title));
+    left.appendChild(mk('div', 'run-agent', r.agent + ' · ' + r.id));
+    top.appendChild(left);
+    top.appendChild(mk('div', 'run-meta', 'sample start ' + r.started + ' · ' + Math.round(r.elapsed) + ' min'));
+    card.appendChild(top);
+    const bar = mk('div', 'bar'); const fill = mk('i'); fill.style.width = r.pct + '%'; bar.appendChild(fill); card.appendChild(bar);
+    const foot = mk('div', 'run-foot');
+    const step = Math.min(r.total, Math.max(0, Math.round(r.pct / 100 * r.total)));
+    foot.appendChild(mk('span', null, 'step ' + step + ' of ' + r.total + ' · ' + r.pct + '%'));
+    const acts = mk('div', 'run-actions');
+    const log = mk('button', 'btn ghost', 'Open log'); log.disabled = true; log.title = 'Not wired in this preview';
+    const pause = mk('button', 'btn ghost', 'Pause'); pause.disabled = true; pause.title = 'Not wired in this preview';
+    acts.appendChild(log); acts.appendChild(pause);
+    foot.appendChild(acts);
+    card.appendChild(foot);
+    box.appendChild(card);
+  });
+  $('kInProgress').textContent = live.length;
+}
+
+/* ---------- Review queue (Approve and Reject change sample state only) ---------- */
+function renderReview(){
+  const box = $('reviewList'); box.textContent = '';
+  const open = review.filter(r => r.state === 'pending');
+  if (!open.length) box.appendChild(mk('p', 'empty', 'Nothing waiting for you in this sample.'));
+  open.forEach(r => {
+    const card = mk('div', 'review-card');
+    card.appendChild(mk('h3', null, r.title));
+    card.appendChild(mk('p', null, r.agent + ' · ' + r.note));
+    const acts = mk('div', 'acts');
+    const ok = mk('button', 'btn gold', 'Approve'); ok.onclick = () => decide(r, 'approved');
+    const edit = mk('button', 'btn ghost', 'Edit draft'); edit.disabled = true; edit.title = 'Not wired in this preview';
+    const no = mk('button', 'btn danger', 'Reject'); no.onclick = () => decide(r, 'rejected');
+    acts.appendChild(ok); acts.appendChild(edit); acts.appendChild(no);
+    card.appendChild(acts);
+    box.appendChild(card);
+  });
+  $('kReview').textContent = open.length;
+}
+function decide(r, verdict){
+  r.state = verdict;
+  addEvent(verdict === 'approved' ? 'ok' : 'warn', 'Owner', verdict + ' ' + r.id + ' (sample state only, nothing sent)');
+  renderReview();
+}
+
+/* ---------- Completed runs ---------- */
+function renderDone(){
+  const body = $('doneBody'); body.textContent = '';
+  done.slice(0, 8).forEach(r => {
+    const tr = mk('tr');
+    tr.appendChild(mk('td', 'mono', r.id));
+    tr.appendChild(mk('td', 'strong', r.agent));
+    tr.appendChild(mk('td', null, r.title));
+    tr.appendChild(mk('td', 'mono', r.at + ' · ' + r.dur));
+    const td = mk('td');
+    td.appendChild(r.sheets === 'synced' ? pillFor('ok', 'Synced') : pillFor('pending', 'Pending'));
+    tr.appendChild(td);
+    body.appendChild(tr);
+  });
+  $('kCompleted').textContent = dbCount;
+}
+
+/* ---------- Activity (sample clock; built with textContent only) ---------- */
+const lvlClass = {info:'idle', ok:'ok', warn:'review', fail:'fail', review:'review'};
+const lvlLabel = {info:'info', ok:'ok', warn:'warn', fail:'error', review:'review'};
+function eventNode(e){
+  const row = mk('div', 'ev');
+  row.appendChild(mk('time', null, e.t));
+  row.appendChild(pillFor(lvlClass[e.lvl] || 'idle', lvlLabel[e.lvl] || e.lvl));
+  const p = mk('p');
+  p.appendChild(mk('b', null, e.who));
+  p.appendChild(document.createTextNode(' ' + e.text));
+  row.appendChild(p);
+  return row;
+}
+function renderFeed(){
+  const feed = $('feed'); feed.textContent = '';
+  events.forEach(e => feed.appendChild(eventNode(e)));
+}
+function addEvent(lvl, who, text){
+  const e = {t: advanceClock(), lvl, who, text};
+  events.unshift(e);
+  const node = eventNode(e); node.classList.add('new');
+  const feed = $('feed'); feed.insertBefore(node, feed.firstChild);
+  $('sotDbAt').textContent = 'Sample last write ' + e.t;
+}
+
+/* ---------- Source of truth + KPI sync figures ---------- */
+function renderSot(){
+  $('sotDb').textContent = dbCount + ' runs';
+  $('sotSheets').textContent = sheetsCount + ' rows';
+  $('kSheets').textContent = String(sheetsCount);
+  const match = sheetsCount === dbCount;
+  $('sotMatch').textContent = match ? 'Counts match' : (dbCount - sheetsCount) + ' waiting to sync';
+  $('sotMatch').style.color = match ? 'var(--emerald)' : 'var(--gold)';
+  $('kSheetsSub').textContent = match ? 'Sample: backup matches database' : 'Sample: ' + (dbCount - sheetsCount) + ' rows still syncing';
+  $('sotFailed').textContent = failedSync;
+}
+
+/* ---------- Throughput chart (static sample counts) ---------- */
+function drawThroughput(){
+  const svg = $('throughput');
+  const W = 640, H = 210, pl = 30, pr = 12, pt = 14, pb = 28;
+  const max = Math.max(...throughput) + 2;
+  const bw = (W - pl - pr) / throughput.length;
+  for (let t = 0; t <= 4; t++){
+    const v = Math.round(max / 4 * t), y = pt + (H - pt - pb) * (1 - v / max);
+    el('line', {x1:pl, x2:W - pr, y1:y, y2:y, stroke:'rgba(15,40,90,.09)', 'stroke-width':1}, svg);
+    const tx = el('text', {x:pl - 8, y:y + 4, 'text-anchor':'end'}, svg); tx.textContent = v;
+  }
+  const defs = el('defs', {}, svg);
+  const g = el('linearGradient', {id:'bg', x1:0, y1:0, x2:0, y2:1}, defs);
+  el('stop', {offset:'0%', 'stop-color':'#3B82F6', 'stop-opacity':.95}, g);
+  el('stop', {offset:'100%', 'stop-color':'#1E40AF', 'stop-opacity':.35}, g);
+  throughput.forEach((v, i) => {
+    const h = (H - pt - pb) * v / max;
+    const x = pl + i * bw + bw * .18;
+    el('rect', {x, y:H - pb - h, width:bw * .64, height:h, rx:4, fill:'url(#bg)'}, svg);
+    const lbl = el('text', {x:x + bw * .32, y:H - 8, 'text-anchor':'middle'}, svg);
+    lbl.textContent = (i % 2 === 0) ? 'D' + (i + 1) : '';
+  });
+}
+
+/* ---------- Simulated feed (preview only, sample clock) ---------- */
+function tick(){
+  live.forEach(r => {
+    if (r.pct < 100){
+      r.pct = Math.min(100, r.pct + 1 + Math.floor(Math.random() * 4));
+      r.elapsed += 0.5;
+    }
+  });
+  const finished = live.filter(r => r.pct >= 100);
+  finished.forEach(r => {
+    live = live.filter(x => x !== r);
+    const rec = {id:r.id, agent:r.agent, title:r.title, at:advanceClock(), dur:Math.round(r.elapsed) + ' min', sheets:'pending'};
+    done.unshift(rec);
+    dbCount += 1; runsToday += 1;
+    addEvent('ok', r.agent, r.id + ' complete (sample)');
+    setTimeout(() => {
+      rec.sheets = 'synced'; sheetsCount += 1;
+      addEvent('info', 'Sheets backup', 'row written for ' + r.id + ' (sample)');
+      renderDone(); renderSot();
+    }, 2200);
+    if (pool.length){
+      const next = pool.shift(); runSeq += 1;
+      const id = 'r-0' + runSeq;
+      live.push({id, agent:next.agent, title:next.title, pct:0, total:next.total, elapsed:0, started:clockText(sampleMinutes)});
+      addEvent('info', next.agent, id + ' queued and started (sample)');
+    }
+  });
+  $('kRunsToday').textContent = runsToday;
+  renderLive(); renderDone(); renderSot();
+}
+
+renderRoster();
+renderLive();
+renderReview();
+renderDone();
+renderFeed();
+renderSot();
+drawThroughput();
+
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches){
+  setInterval(tick, 2500);
+}
+</script>
+</body>
+</html>

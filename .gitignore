@@ -16,3 +16,6 @@ ruvector.db
 # Scratch/research — not part of the deployed site
 .firecrawl/
 .superpowers/
+
+# Local Netlify folder
+.netlify

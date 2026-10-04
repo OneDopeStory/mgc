@@ -506,7 +506,6 @@ var require_Error = __commonJS({
     exports2.generateV1Error = generateV1Error;
     var generateV2Error = (rawStripeError) => {
       switch (rawStripeError.type) {
-        // switchCases: The beginning of the section generated from our OpenAPI spec
         case "temporary_session_expired":
           return new TemporarySessionExpiredError(rawStripeError);
       }
@@ -1440,7 +1439,7 @@ var require_shams = __commonJS({
         return true;
       }
       var obj = {};
-      var sym = /* @__PURE__ */ Symbol("test");
+      var sym = Symbol("test");
       var symObj = Object(sym);
       if (typeof sym === "string") {
         return false;
@@ -1499,7 +1498,7 @@ var require_has_symbols = __commonJS({
       if (typeof origSymbol("foo") !== "symbol") {
         return false;
       }
-      if (typeof /* @__PURE__ */ Symbol("bar") !== "symbol") {
+      if (typeof Symbol("bar") !== "symbol") {
         return false;
       }
       return hasSymbolSham();
@@ -1756,7 +1755,7 @@ var require_get_intrinsic = __commonJS({
     var throwTypeError = function() {
       throw new $TypeError();
     };
-    var ThrowTypeError = $gOPD ? (function() {
+    var ThrowTypeError = $gOPD ? function() {
       try {
         arguments.callee;
         return throwTypeError;
@@ -1767,7 +1766,7 @@ var require_get_intrinsic = __commonJS({
           return throwTypeError;
         }
       }
-    })() : throwTypeError;
+    }() : throwTypeError;
     var hasSymbols = require_has_symbols()();
     var getProto = require_get_proto();
     var $ObjectGPO = require_Object_getPrototypeOf();
@@ -2031,7 +2030,7 @@ var require_get_intrinsic = __commonJS({
             if (!allowMissing) {
               throw new $TypeError("base intrinsic for " + name + " exists, but the property is not available.");
             }
-            return void undefined2;
+            return void 0;
           }
           if ($gOPD && i + 1 >= parts.length) {
             var desc = $gOPD(value, part);
@@ -2294,13 +2293,13 @@ var require_utils = __commonJS({
     var setMaxIndex = function setMaxIndex2(obj, maxIndex) {
       overflowChannel.set(obj, maxIndex);
     };
-    var hexTable = (function() {
+    var hexTable = function() {
       var array = [];
       for (var i = 0; i < 256; ++i) {
         array[array.length] = "%" + ((i < 16 ? "0" : "") + i.toString(16)).toUpperCase();
       }
       return array;
-    })();
+    }();
     var compactQueue = function compactQueue2(queue) {
       while (queue.length > 1) {
         var item = queue.pop();
@@ -9018,7 +9017,8 @@ async function findOrCreateCompany(name) {
     "POST",
     { filter: { property: "Company Name", title: { equals: name } } }
   );
-  if (search.results?.length) return search.results[0].id;
+  if (search.results?.length)
+    return search.results[0].id;
   const created = await notion("pages", "POST", {
     parent: { database_id: process.env.NOTION_COMPANIES_DATABASE_ID },
     properties: {
@@ -9028,6 +9028,49 @@ async function findOrCreateCompany(name) {
   });
   console.log("[Notion] Company created:", created.id);
   return created.id;
+}
+async function closeOrCreateDeal(session, companyId, contactId) {
+  const today = (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
+  const service = session.metadata?.source || "Website Purchase";
+  const amount = session.amount_total / 100;
+  const search = companyId ? await notion(
+    `databases/${process.env.NOTION_DEALS_DATABASE_ID}/query`,
+    "POST",
+    {
+      filter: {
+        and: [
+          { property: "Company", relation: { contains: companyId } },
+          { property: "Stage", select: { equals: "Lead" } }
+        ]
+      },
+      sorts: [{ timestamp: "created_time", direction: "descending" }],
+      page_size: 1
+    }
+  ) : { results: [] };
+  if (search.results?.length) {
+    await notion(`pages/${search.results[0].id}`, "PATCH", {
+      properties: {
+        "Stage": { select: { name: "Closed Won" } },
+        "Close Date": { date: { start: today } },
+        "Deal Value": { number: amount }
+      }
+    });
+    console.log("[Notion] Deal closed (Won):", search.results[0].id, `$${amount}`);
+  } else {
+    const created = await notion("pages", "POST", {
+      parent: { database_id: process.env.NOTION_DEALS_DATABASE_ID },
+      properties: {
+        "Deal Name": { title: [{ text: { content: `${service} \u2014 Payment` } }] },
+        "Stage": { select: { name: "Closed Won" } },
+        "Source": { select: { name: "Stripe Payment" } },
+        "Company": { relation: companyId ? [{ id: companyId }] : [] },
+        "Contact": { relation: contactId ? [{ id: contactId }] : [] },
+        "Deal Value": { number: amount },
+        "Close Date": { date: { start: today } }
+      }
+    });
+    console.log("[Notion] Deal created (Closed Won):", created.id, `$${amount}`);
+  }
 }
 async function findOrCreateContact(session, companyId) {
   const email = session.customer_email || "";
@@ -9108,9 +9151,10 @@ exports.handler = async (event) => {
   try {
     const customerName = session.customer_details?.name || session.customer_email || "Unknown";
     const companyId = await findOrCreateCompany(customerName);
+    const contactId = await findOrCreateContact(session, companyId);
     await Promise.allSettled([
-      findOrCreateContact(session, companyId),
-      createInvoice(session, companyId)
+      createInvoice(session, companyId),
+      closeOrCreateDeal(session, companyId, contactId)
     ]);
     console.log("[Webhook] Notion sync complete for", session.id);
   } catch (err) {
