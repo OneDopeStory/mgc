@@ -1223,6 +1223,7 @@ html{scroll-padding-top:80px}
 
 </style>
 <link rel="stylesheet" href="assets/trueassist-widget.css">
+<link rel="stylesheet" href="assets/hero-globe.css">
 </head>
 <body>
 
@@ -1315,12 +1316,14 @@ html{scroll-padding-top:80px}
         <div class="globe-glow"></div>
         <div class="globe-ring"></div>
         <div class="globe-ring-2"></div>
-        <video class="globe-video" autoplay muted loop playsinline>
-          <source src="assets/globe-connected.mp4" type="video/mp4">
-          <source src="https://lpzw7sgvwshomcxj.public.blob.vercel-storage.com/globe-connected.mp4" type="video/mp4">
-          <!-- Fallback: static image if video fails -->
-          <img src="assets/mgc-logo-transparent.png" alt="MGC Global — Connected World" style="width:100%;height:100%;object-fit:cover;border-radius:50%">
-        </video>
+        <canvas class="globe-canvas" id="hero-globe" tabindex="0" role="img" aria-label="Interactive globe of MGC services. Drag to spin, use the arrow keys to move between services, press Enter to open one."></canvas>
+        <div class="globe-tip" id="globe-tip" aria-hidden="true"><b></b><span></span></div>
+        <div class="globe-hint" aria-hidden="true">Drag to spin · tap a service</div>
+        <div class="globe-carousel">
+          <button type="button" id="globe-prev" aria-label="Previous service">&#8249;</button>
+          <a id="globe-car-link" href="ai-consulting.html"><small>Explore</small><b>AI Strategy &amp; Consulting</b></a>
+          <button type="button" id="globe-next" aria-label="Next service">&#8250;</button>
+        </div>
         <div class="data-chip chip-1">
           <div class="data-chip-label">System Status</div>
           <div class="data-chip-val">Fully Operational</div>
@@ -2246,6 +2249,7 @@ document.querySelectorAll('.agent-ql').forEach(ql => {
 });
 </script>
 <script src="assets/trueassist-widget.js" defer></script>
+<script src="assets/hero-globe.js" defer></script>
 </body>
 </html>
  

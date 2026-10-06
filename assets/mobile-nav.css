@@ -1,0 +1,19 @@
+/* Mobile nav toggle for pages whose nav has no menu of its own.
+   Paired with assets/mobile-nav.js. !important is needed because some
+   pages set nav layout in inline style attributes. */
+.mnav-toggle{display:none;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border-radius:10px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.04);color:#fff;cursor:pointer;flex-shrink:0}
+.mnav-toggle svg{width:22px;height:22px}
+.mnav-toggle .mnav-close{display:none}
+.mnav-open .mnav-toggle .mnav-open-icon{display:none}
+.mnav-open .mnav-toggle .mnav-close{display:block}
+.mnav-toggle:focus-visible{outline:2px solid var(--cyan,#00D4FF);outline-offset:2px}
+
+@media (max-width:860px){
+  .mnav-toggle{display:inline-flex}
+  .mnav-host .nav-inner{padding-left:1rem!important;padding-right:1rem!important;gap:1rem!important;position:relative}
+  .mnav-host .nav-logo-sub{display:none!important}
+  .mnav-host .nav-links{display:none!important;position:absolute;top:calc(100% + 0.75rem);left:1rem;right:1rem;flex-direction:column!important;align-items:stretch!important;gap:0!important;padding:0.5rem;border-radius:16px;background:rgba(10,22,40,0.98);border:1px solid rgba(255,255,255,0.08);box-shadow:0 20px 50px rgba(0,0,0,0.45);z-index:10001}
+  .mnav-host.mnav-open .nav-links{display:flex!important}
+  .mnav-host .nav-links a{display:block!important;padding:0.85rem 1rem!important;font-size:0.95rem!important;border-radius:10px;text-align:left}
+  .mnav-host .nav-links a.nav-cta{margin-top:0.35rem;text-align:center}
+}

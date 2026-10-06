@@ -1403,7 +1403,7 @@ async function doSignup() {
 async function doGoogleAuth() {
   await sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: 'https://www.mgcglobalconsulting.com/dashboard' }
+    options: { redirectTo: window.location.origin + '/dashboard' }
   });
 }
 
@@ -1631,6 +1631,7 @@ async function submitSchedule(e) {
   resultEl.classList.remove('show');
 
   const { error } = await sb.from('mgc_bookings').insert({
+    client_id: currentUser.id,
     name: currentProfile?.full_name || currentUser.email,
     email: currentUser.email,
     company: currentProfile?.company || '',
@@ -1676,7 +1677,7 @@ async function saveProfile(e) {
 async function sendPasswordReset() {
   if (!currentUser) return;
   const { error } = await sb.auth.resetPasswordForEmail(currentUser.email, {
-    redirectTo: 'https://mgcglobalconsulting.com/dashboard'
+    redirectTo: window.location.origin + '/dashboard'
   });
   if (error) { toast('Failed to send reset email', 'error'); return; }
   toast('Password reset email sent!', 'success');

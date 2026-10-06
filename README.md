@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # MGC Global Consulting — Site README
 
 Enterprise-caliber AI strategy, automation, CRM optimization, and operational systems design for growth-stage businesses.
@@ -364,3 +365,7 @@ The anon key is embedded in `dashboard.html` — this is intentional and safe. N
 - Scroll progress bar (`#scrollBar`) must remain on every page
 - `mgc-logo-transparent.png` is the correct logo — circular with drop-shadow, no white fill
 # loyaltysocial
+=======
+# mgc-site-complete_1-update
+full-site-vs-code-claude-codex
+>>>>>>> 8280ee4c65f02452638a9feaac64ace9a07da833

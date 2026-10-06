@@ -2,7 +2,94 @@
 
 Canonical project memory. Read this first; it is kept short on purpose to save tokens. Long reference material lives in `docs/reference/` (full archive: `docs/reference/CLAUDE-archive-2026-10-03.md`).
 
-## Session handoff (2026-10-04): resume here
+## Session handoff (2026-10-05): START HERE
+
+Everything in this section was verified live on 2026-10-05 with `netlify env:list`, `netlify api`, `curl` against production, and `git`. It **supersedes** any conflicting statement later in this file.
+
+### Verified production facts (corrects earlier notes)
+
+- **One Netlify site, not two.** `mgc-global-consulting` (ID `07dc7dd7-37b2-4044-8503-64e8ca7a9044`) owns the custom domain and serves **both** apex and `www`. The `www` CNAME target `luminous-heliotrope-0377ea.netlify.app` is that same site's original auto-generated name — not a separate site. `listSites` confirms only this one site has a custom domain.
+- **Published deploy: 2026-10-05T01:07:21Z**, promoted from a deploy-preview created 01:03. The last deploy with `production` *context* was 2026-06-04, so "last prod deploy was June" is misleading — a preview was published on top of it.
+- **The 2026-10-04 audit work is NOT live.** These return 404 in production: `404.html`, `403.html`, `terms.html`, `assets/mobile-nav.css`.
+- **CORRECTION — repo docs are NOT publicly exposed.** An earlier note claimed "all root markdown is publicly served." False for the current deploy: `CLAUDE.md`, `AGENTS.md`, `ALEX.md`, `BRANDING.md`, `.env.template`, `netlify.toml`, `package.json` all 404 live. **But this is luck, not configuration** — `netlify.toml` has no rule blocking `*.md` / `*.toml` / `.env.template` (only `/ruvector.db`). A full `netlify deploy --prod --dir .` **would** publish them. Add a block rule before the next prod deploy.
+
+### P0 — Live site is showing wrong prices
+
+Production still serves the pre-audit price table. `services.html` live shows `$1,950` / `$2,200` and is missing the audited retainer tiers `$199` / `$499` / `$1,299`. Local is correct. Customers are seeing stale pricing right now. This is the highest-priority item and it is blocked only by the merge conflict below.
+
+### P0 — Git merge conflict blocks all commits
+
+A merge is in progress (`.git/MERGE_HEAD` exists). `README.md` is `AA` (both-added). Branch is **27 commits ahead** of `origin/main`. Nothing can be committed until this is resolved.
+
+- `ours` (`:2:README.md`) = 11,427 B — the real project README.
+- `theirs` (`:3:README.md`) = 60 B — a GitHub stub: `# mgc-site-complete_1-update` / `full-site-vs-code-claude-codex`.
+- **Recommended:** keep `ours`, then conclude the merge. Needs owner approval before any commit.
+
+### P1 — Env var gaps (verified 2026-10-05, 24 vars set)
+
+**Now set — earlier "missing" notes were stale:** `STRIPE_SECRET_KEY`, `ANTHROPIC_API_KEY` (TrueAssist fallback resolved), `SUPABASE_WEBHOOK_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `GOOGLE_CALENDAR_ID`, `GOOGLE_SERVICE_ACCOUNT_KEY_B64`, `NOTION_DEALS_DATABASE_ID`, `QB_ENVIRONMENT`, `SITE_URL`, all `STRIPE_PRICE_*` except the one below.
+
+**Referenced by functions but NOT set in Netlify:**
+
+| Missing var(s) | Breaks |
+|---|---|
+| `STRIPE_WEBHOOK_SECRET` | `payment-webhook.js` — no Stripe fulfilment at all |
+| `NOTION_API_KEY`, `NOTION_COMPANIES_DATABASE_ID`, `NOTION_CONTACTS_DATABASE_ID`, `NOTION_INVOICES_DATABASE_ID` | all Notion CRM sync (`lead-intake`, `payment-webhook`, `new-client-signup`) |
+| `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`, `SLACK_WEBHOOK_URL`, `SLACK_RELAY_CHANNEL_ID`, `SLACK_RELAY_ALLOWED_BOT_IDS`, `SLACK_INQUIRIES_CHANNEL_ID`, `SLACK_INQUIRIES_WEBHOOK_URL`, `SLACK_NOTIFY_SECRET`, `SLACK_PAYMENTS_WEBHOOK` | TrueAssist Slack handoff + `slack-events` thread relay |
+| `QB_CLIENT_ID`, `QB_CLIENT_SECRET`, `QB_REALM_ID`, `QB_REFRESH_TOKEN` | `request-invoice.js` QuickBooks customer/invoice creation |
+| `BOOKING_PRICE_USD` | `book.html` shows the function default **160**, not the decided **169** |
+
+### P1 — Env var NAME MISMATCH (real bug, one-line fix)
+
+`create-checkout.js:28` and `:46` read **`STRIPE_PRICE_MONTHLY_RETAINER`**. Netlify has it named **`STRIPE_PRICE_RETAINER`**. The `monthly-retainer` checkout therefore resolves to `undefined` and fails.
+**Fix:** rename the Netlify variable to `STRIPE_PRICE_MONTHLY_RETAINER` (no code change needed).
+
+### Notes / lower priority
+
+- `NOTION_PROJECTS_DATABASE_ID` is listed in the env section below but is **not referenced by any function**.
+- `GOOGLE_SERVICE_ACCOUNT_EMAIL`, `RESEND_API_KEY`, `LEAD_EMAIL_FROM` are listed below but were not found in `netlify/functions/`. Verify before provisioning.
+- `.netlify/functions/*.zip` build artifacts are **tracked in git** and currently modified. Consider gitignoring.
+- **Still outstanding:** the QuickBooks client secret in the working-tree `.env.template` (tracked in git, history commits `17c5014`, `d7a81dd`) needs removal and rotation in the Intuit portal. Not inspected this session — the "do not read `.env*`" rule was respected.
+
+### Suggested order for the fresh session
+
+1. Resolve `README.md` conflict (keep `ours`), finish the merge — **ask before committing**.
+2. Add a `netlify.toml` redirect blocking `/*.md`, `/*.toml`, `/.env*`, `/package.json`.
+3. Rename `STRIPE_PRICE_RETAINER` → `STRIPE_PRICE_MONTHLY_RETAINER`; add `BOOKING_PRICE_USD=169`.
+4. Add `STRIPE_WEBHOOK_SECRET` + the four Notion vars (owner supplies values).
+5. Draft deploy, verify prices and the 404/terms pages on the preview URL, **then ask** before `--prod`.
+
+### Update (2026-10-05, later): Slack notify secret secured — pick up here next session
+
+- `SLACK_NOTIFY_SECRET` is **no longer missing**. It's set in Netlify (`mgc-global-consulting`, all contexts) to a real random 256-bit hex value (generated with `openssl rand -hex 32`). Remove it from the "NOT set in Netlify" table above — that row is stale.
+- **Not yet done — needs the owner, manually, in the Supabase dashboard:** add/update the Database Webhook header `x-webhook-secret: <the new value>` on the webhooks for `mgc_leads`, `mgc_bookings`, `mgc_client_profiles`, `mgc_messages`, `mgc_uploads`, `mgc_questionnaires` in project `bjnpibxaxlgvlzeegwnm` (Database → Webhooks). The actual secret value was shown to the owner in-chat this session, not stored in any file — ask the owner for it or regenerate.
+- **Not yet done — needs a prod deploy** (held pending approval, same as the P0 pricing fix above): until `netlify deploy --prod` runs, the live `slack-notify.js` function is still running with the *old placeholder* value, so the webhook will 401 even after the Supabase header is updated. Bundle this into the same deploy as the pricing fix if possible.
+- **Heads up:** the Supabase project `bjnpibxaxlgvlzeegwnm` (MGC's real project) is reportedly undergoing upgrades outside this session — re-verify its schema/webhooks/auth state before trusting earlier notes about it, rather than assuming no drift.
+- Also reconfirmed: the Supabase MCP connection available to Claude in this environment only has access to a **different client's** project (`lphudfgjbsyhroqmhomh`, LoveLi Care) — MGC's `bjnpibxaxlgvlzeegwnm` is not reachable via MCP here, so any Supabase-side change for MGC must be done manually or the MCP connection re-pointed.
+
+---
+
+## Site audit pass (2026-10-04, evening): done, don't redo
+
+Full status: [docs/site-audit-2026-10-04.md](docs/site-audit-2026-10-04.md).
+
+- **Done (uncommitted, on `main`, browser-checked at 375px and desktop):**
+  - Prices on every page match the owner's six service lines.
+  - Services page: Systems Design shows Custom / Enterprise; the Retainer card shows $199 to $1,299/mo.
+  - Retainer page: tiers are Starter, Pro and Elite at $199, $499 and $1,299.
+  - Each of the six service pages has a price section, a "Maryland-based. Serving clients nationwide." line, and the main CTA "Book a Strategy Call".
+  - New pages: root `404.html`, `403.html`, `500.html`, and a draft `terms.html` marked for legal review.
+  - Mobile menu: new `assets/mobile-nav.css` and `assets/mobile-nav.js`, used on services and membership.
+  - Invoice requests on Services now report errors instead of always saying "sent".
+- **Blocked:**
+  - A merge is half-finished on `main`. `README.md` conflicts with a two-line stub from GitHub, so nothing can be committed until the owner resolves it. Creating a branch was also denied.
+  - ~~No deploy preview yet~~ — superseded: three deploy-previews exist (2026-10-05, 00:05 / 00:59 / 01:03 UTC) and the 01:03 one was published to production at 01:07. None contains the audit work.
+- **Owner decisions pending:**
+  - Footer address: Baltimore 21202 (Services) or Owings Mills (home page).
+- **Consultation price (decided 2026-10-04):** $169 for 60 minutes; first-time clients pay $50. The page copy is updated. Still needed server-side: `BOOKING_PRICE_USD=169` in Netlify (the function default is 160, and book.html shows whatever the function returns). The $50 first-time price is display only until booking payment is built.
+- **Slack feed of all site inserts:** the owner approved one database webhook feeding a single `slack-notify` function that posts to #site-inquiries. It is being built by the "Fix Supabase login and sync" thread, which owns `netlify/` and `supabase/`. Not this thread.
+
+## Session handoff (2026-10-04): background only — see the 2026-10-05 section above first
 
 **Objective for next session:** front-page visual system and the live TrueAssist experience. Pick one loop and one promo from [docs/site-experience-plan.md](docs/site-experience-plan.md) and the hero storyboard in [docs/hero-loop-storyboard.md](docs/hero-loop-storyboard.md).
 

@@ -111,6 +111,43 @@ async function createDeal(name, service, message, requestedDate, companyId, cont
   console.log('[Lead Intake] Deal created:', created.id);
 }
 
+function escapeSlack(text) {
+  return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Shared with the database-insert alerts so routing and agent names stay in one place.
+const { postToSlack } = require('./slack-notify');
+
+async function notifySlack({ name, email, company, service, message, requestedDate, extras }) {
+  const field = (label, value) => ({ type: 'mrkdwn', text: `*${label}:*\n${value ? escapeSlack(String(value).slice(0, 300)) : '—'}` });
+  await postToSlack({
+    text: `New website inquiry from ${name}`,
+    unfurl_links: false,
+    blocks: [
+      { type: 'section', text: { type: 'mrkdwn', text: '*New website inquiry*' } },
+      { type: 'section', fields: [
+        field('Name', name),
+        field('Email', email),
+        field('Company', company),
+        field('Service', service),
+        field('Requested date', requestedDate),
+        field('Source', extras.source),
+        ...(extras.readinessScore !== undefined ? [field('Readiness', `${extras.readinessScore}/100 ${extras.readinessCategory}`)] : []),
+        ...(extras.timeline ? [field('Timeline', extras.timeline)] : []),
+        ...(extras.budgetRange ? [field('Budget', extras.budgetRange)] : []),
+      ]},
+      ...(message ? [{ type: 'section', text: { type: 'mrkdwn', text: `*Message:*\n${escapeSlack(String(message).slice(0, 1500))}` } }] : []),
+      { type: 'context', elements: [{ type: 'mrkdwn', text: `lead-intake · ${new Date().toUTCString()}` }] },
+    ],
+  });
+}
+
+async function syncNotion(name, email, company, service, message, requestedDate, extras) {
+  const companyId = await findOrCreateCompany(company || null);
+  const contactId = await findOrUpdateContact(name, email, companyId);
+  await createDeal(name, service, message, requestedDate, companyId, contactId, extras);
+}
+
 exports.handler = async (event) => {
   const corsHeaders = {
     'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
@@ -156,15 +193,14 @@ exports.handler = async (event) => {
     source: source || 'Website Form',
   };
 
-  try {
-    const companyId = await findOrCreateCompany(company || null);
-    const contactId = await findOrUpdateContact(name, email, companyId);
-    await createDeal(name, service, challenge || message, requested_date, companyId, contactId, extras);
-    console.log('[Lead Intake] Notion sync complete for', email);
-  } catch (err) {
-    console.error('[Lead Intake] Notion sync failed:', err.message);
-    // Non-blocking — form UX succeeds even if CRM write fails
-  }
+  // Non-blocking — form UX succeeds even if the CRM write or Slack post fails
+  const [notionResult, slackResult] = await Promise.allSettled([
+    syncNotion(name, email, company, service, challenge || message, requested_date, extras),
+    notifySlack({ name, email, company, service, message: challenge || message, requestedDate: requested_date, extras }),
+  ]);
+  if (notionResult.status === 'fulfilled') console.log('[Lead Intake] Notion sync complete for', email);
+  else console.error('[Lead Intake] Notion sync failed:', notionResult.reason?.message);
+  if (slackResult.status === 'rejected') console.error('[Lead Intake] Slack post failed:', slackResult.reason?.message);
 
   return {
     statusCode: 200,

@@ -18,10 +18,14 @@
  * that drafts or sends replies into the thread.
  *
  * Every request is verified with SLACK_SIGNING_SECRET (HMAC-SHA256, 5-minute window).
+ *
+ * Also logs each human message in MGC's routed channels (SLACK_CHANNEL_MAP) to mgc_agent_events
+ * for the Command Center's live Slack panel. Bot posts are logged where they are sent.
  */
 
 const crypto = require('crypto');
 const { db, hasServiceRole, slackApi } = require('../lib/leads');
+const { routeForChannel, logSlackActivity } = require('../lib/slack-routing');
 
 const MAX_SKEW_SECONDS = 60 * 5;
 
@@ -71,6 +75,30 @@ async function displayName(userId) {
   } catch {
     return 'MGC team'; // users:read scope missing or lookup failed
   }
+}
+
+// Full Slack display name for the activity feed (users:read scope; falls back to the user ID).
+async function fullName(userId) {
+  if (!userId) return 'Slack user';
+  try {
+    const { user } = await slackApi('users.info', { user: userId });
+    return user?.profile?.display_name || user?.real_name || userId;
+  } catch {
+    return userId;
+  }
+}
+
+async function logChannelMessage(ev) {
+  if (!ev || ev.type !== 'message' || ev.bot_id) return;
+  if (ev.subtype && ev.subtype !== 'thread_broadcast') return; // edits, deletes, joins
+  const route = routeForChannel(ev.channel);
+  if (!route) return;
+  await logSlackActivity({
+    agent: await fullName(ev.user),
+    route,
+    text: slackToPlain(ev.text),
+    reply: Boolean(ev.thread_ts && ev.thread_ts !== ev.ts),
+  });
 }
 
 async function setMode(session, mode) {
@@ -141,12 +169,10 @@ exports.handler = async (event) => {
       console.error('slack-events: SUPABASE_SERVICE_ROLE_KEY not set; reply not relayed');
       return respond(200, { ok: true });
     }
-    try {
-      await handleThreadReply(payload.event);
-    } catch (err) {
-      // Still 200 so Slack does not disable the subscription; the error is in the function log.
-      console.error('slack-events relay failed:', err.message);
-    }
+    // Still 200 either way so Slack does not disable the subscription; errors are in the function log.
+    const [relay, log] = await Promise.allSettled([handleThreadReply(payload.event), logChannelMessage(payload.event)]);
+    if (relay.status === 'rejected') console.error('slack-events relay failed:', relay.reason?.message);
+    if (log.status === 'rejected') console.error('slack-events activity log failed:', log.reason?.message);
   }
   return respond(200, { ok: true });
 };

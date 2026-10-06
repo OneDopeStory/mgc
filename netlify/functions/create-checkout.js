@@ -90,6 +90,11 @@ exports.handler = async (event) => {
   }
 
   try {
+    // Stripe decides one-time vs subscription: a recurring price in 'payment' mode is rejected.
+    const price = await stripe.prices.retrieve(priceId);
+    if (!price.active) throw new Error(`Price ${priceId} is archived`);
+    mode = price.recurring ? 'subscription' : 'payment';
+
     const session = await stripe.checkout.sessions.create({
       mode,                           // 'payment' or 'subscription'
       payment_method_types: ['card'],

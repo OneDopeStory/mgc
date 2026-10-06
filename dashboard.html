@@ -1054,8 +1054,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
                 </select>
               </div>
               <div class="field-group">
-                <label class="field-label">Preferred Date</label>
-                <input class="field-input" type="date" id="sched-date">
+                <label class="field-label">Open Time (Eastern, 60 min)</label>
+                <select class="field-select" id="sched-slot" required>
+                  <option value="">Loading open times…</option>
+                </select>
               </div>
               <div class="field-group">
                 <label class="field-label">Message / Agenda</label>
@@ -1338,11 +1340,37 @@ window.addEventListener('DOMContentLoaded', async () => {
   });
 
   renderCalendar();
-  const d = new Date();
-  d.setDate(d.getDate() + 1);
-  document.getElementById('sched-date').min = d.toISOString().split('T')[0];
-  document.getElementById('sched-date').value = d.toISOString().split('T')[0];
+  loadScheduleSlots();
 });
+
+// Open times come from MGC's Google Calendar (same source as /book).
+const BOOKING_FN = '/.netlify/functions/booking-assistant';
+async function loadScheduleSlots() {
+  const select = document.getElementById('sched-slot');
+  if (!select) return;
+  try {
+    const res = await fetch(BOOKING_FN, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'slots' }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Could not load times');
+    select.replaceChildren();
+    const first = document.createElement('option');
+    first.value = '';
+    first.textContent = data.slots?.length ? 'Choose a time' : 'No open times in the next two weeks';
+    select.appendChild(first);
+    for (const slot of data.slots || []) {
+      const opt = document.createElement('option');
+      opt.value = slot.start;
+      opt.textContent = slot.label;
+      select.appendChild(opt);
+    }
+  } catch (err) {
+    select.replaceChildren();
+    const opt = document.createElement('option');
+    opt.value = '';
+    opt.textContent = 'Times unavailable. Please email info@mgcglobalconsulting.com';
+    select.appendChild(opt);
+  }
+}
 
 // ── AUTH SCREEN ──
 function showAuthScreen() {
@@ -1408,7 +1436,7 @@ async function doSignup() {
 async function doGoogleAuth() {
   await sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: 'https://www.mgcglobalconsulting.com/dashboard' }
+    options: { redirectTo: window.location.origin + '/dashboard' }
   });
 }
 
@@ -1632,30 +1660,61 @@ async function loadInvoices() {
 }
 
 // ── SCHEDULE SUBMIT ──
+// Portal service lines → booking service names used by booking-assistant.js.
+const SERVICE_FOR_LINE = {
+  'AI Consulting & Strategy': 'AI Consulting',
+  'AI Workshops & Training': 'AI Workshop',
+  'Automation Architecture': 'Automation',
+  'CRM & Pipeline Optimization': 'CRM Optimization',
+  'Operational Systems Design': 'Systems Design',
+  'Retainer & Ongoing Support': 'Retainer Support',
+};
+
 async function submitSchedule(e) {
   e.preventDefault();
   if (!currentUser) return;
   const resultEl = document.getElementById('sched-result');
   resultEl.classList.remove('show');
 
-  const { error } = await sb.from('mgc_bookings').insert({
-    name: currentProfile?.full_name || currentUser.email,
-    email: currentUser.email,
-    company: currentProfile?.company || '',
-    service: document.getElementById('sched-type').value,
-    service_line: document.getElementById('sched-service-line').value,
-    message: document.getElementById('sched-msg').value,
-    requested_date: document.getElementById('sched-date').value,
-    status: 'pending'
-  });
+  const start = document.getElementById('sched-slot').value;
+  if (!start) { toast('Choose an open time first.', 'error'); return; }
+  const typeEl = document.getElementById('sched-type');
+  const serviceLine = document.getElementById('sched-service-line').value;
+  const agenda = document.getElementById('sched-msg').value.trim();
 
-  if (error) { toast('Failed to submit request. Please try again.', 'error'); return; }
+  // The server books the Google Calendar event and saves the booking row under this client.
+  const { data: { session } } = await sb.auth.getSession();
+  let data = {};
+  try {
+    const res = await fetch(BOOKING_FN, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` },
+      body: JSON.stringify({
+        action: 'book',
+        name: currentProfile?.full_name || currentUser.email,
+        email: currentUser.email,
+        service: SERVICE_FOR_LINE[serviceLine] || 'Strategy Session',
+        service_line: serviceLine,
+        start,
+        notes: [typeEl.options[typeEl.selectedIndex]?.text, agenda].filter(Boolean).join('. '),
+      }),
+    });
+    data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Booking failed');
+  } catch (err) {
+    toast(err.message || 'Failed to book. Please try again.', 'error');
+    loadScheduleSlots();
+    return;
+  }
 
-  resultEl.textContent = 'Session request submitted! We\'ll confirm within 24 hours.';
+  resultEl.textContent = data.status === 'confirmed'
+    ? `Booked for ${data.label}. It is on our calendar, and a confirmation email is on its way.`
+    : `Request received for ${data.label}. We'll confirm within 24 hours.`;
   resultEl.classList.add('show');
   document.getElementById('schedule-form').reset();
-  toast('Session request submitted!', 'success');
-  addActivity('Strategy session requested', 'gold');
+  loadScheduleSlots();
+  toast(data.status === 'confirmed' ? 'Session booked!' : 'Session request submitted!', 'success');
+  addActivity(data.status === 'confirmed' ? 'Strategy session booked' : 'Strategy session requested', 'gold');
 }
 
 // ── SAVE PROFILE ──
@@ -1685,7 +1744,7 @@ async function saveProfile(e) {
 async function sendPasswordReset() {
   if (!currentUser) return;
   const { error } = await sb.auth.resetPasswordForEmail(currentUser.email, {
-    redirectTo: 'https://mgcglobalconsulting.com/dashboard'
+    redirectTo: window.location.origin + '/dashboard'
   });
   if (error) { toast('Failed to send reset email', 'error'); return; }
   toast('Password reset email sent!', 'success');
@@ -1751,8 +1810,15 @@ function changeMonth(dir) {
 
 function selectDate(y, m, d) {
   const ds = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-  document.getElementById('sched-date').value = ds;
-  toast(`Selected ${MONTHS[m-1]} ${d}, ${y}`, 'info');
+  // Jump the time picker to the first open time on that day (slot values are ISO times).
+  const select = document.getElementById('sched-slot');
+  const opt = [...(select?.options || [])].find(o => o.value && new Date(o.value).toLocaleDateString('en-CA', { timeZone: 'America/New_York' }) === ds);
+  if (opt) {
+    select.value = opt.value;
+    toast(`Selected ${MONTHS[m-1]} ${d}, ${y}`, 'info');
+  } else {
+    toast(`No open times on ${MONTHS[m-1]} ${d}`, 'info');
+  }
 }
 
 // ── ACTIVITY FEED ──

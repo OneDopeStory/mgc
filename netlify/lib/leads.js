@@ -44,11 +44,17 @@ function hasServiceRole() {
   return Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 }
 
+// New Supabase keys (sb_publishable_ / sb_secret_) are not JWTs and go on the apikey header only.
+// Legacy JWT keys (eyJ...) also need Authorization: Bearer.
+function keyHeaders(key) {
+  return key.startsWith('eyJ') ? { apikey: key, Authorization: `Bearer ${key}` } : { apikey: key };
+}
+
 // Server-side only. Bypasses RLS, so never pass client-controlled paths.
 async function db(path, { method = 'GET', body, prefer } = {}) {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!key) throw new Error('SUPABASE_SERVICE_ROLE_KEY not set');
-  const headers = { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' };
+  const headers = { ...keyHeaders(key), 'Content-Type': 'application/json' };
   if (prefer) headers.Prefer = prefer;
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { method, headers, body: body ? JSON.stringify(body) : undefined });
   if (!res.ok) throw new Error(`Supabase ${method} ${path.split('?')[0]} ${res.status}: ${(await res.text()).slice(0, 200)}`);
@@ -62,8 +68,8 @@ async function getServicePricing() {
   if (Date.now() - pricingCache.at < PRICING_TTL_MS && pricingCache.rows.length) return pricingCache.rows;
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/mgc_service_pricing?select=slug,name,category,price_usd,price_note,summary&active=eq.true&order=sort_order`,
-      { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } }
+      `${SUPABASE_URL}/rest/v1/mgc_service_pricing?select=slug,name,category,offer_type,price_usd,price_note,summary&active=eq.true&order=sort_order`,
+      { headers: keyHeaders(SUPABASE_ANON) }
     );
     if (!res.ok) throw new Error(`pricing ${res.status}`);
     const rows = await res.json();
@@ -75,9 +81,9 @@ async function getServicePricing() {
 }
 
 function pricingForPrompt(rows) {
-  if (!rows.length) return 'Pricing table unavailable right now. Do not quote prices; point the visitor to /services or a $160 strategy session at /book.';
+  if (!rows.length) return 'Pricing table unavailable right now. Do not quote prices; point the visitor to /services or a $169 strategy session at /book.';
   return rows
-    .map(r => `- ${clean(r.name, 80)} (${clean(r.category, 30)}): $${Number(r.price_usd).toLocaleString('en-US')} ${clean(r.price_note, 40)}. ${clean(r.summary, 200)}`)
+    .map(r => `- ${clean(r.name, 80)} (${clean(r.category, 30)}, ${clean(r.offer_type || 'project', 12)}): $${Number(r.price_usd).toLocaleString('en-US')} ${clean(r.price_note, 40)}. ${clean(r.summary, 200)}`)
     .join('\n');
 }
 

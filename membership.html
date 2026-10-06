@@ -7,6 +7,11 @@
 <meta name="description" content="Choose your MGC Global membership tier. Enterprise-caliber AI and automation consulting delivered at founder-friendly price points.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="canonical" href="https://www.mgcglobalconsulting.com/membership">
+<meta property="og:title" content="Membership | MGC Global Consulting">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.mgcglobalconsulting.com/membership">
+<link rel="stylesheet" href="assets/mobile-nav.css">
 <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -115,6 +120,7 @@ nav{position:sticky;top:0;z-index:100;padding:1.25rem 2rem;display:flex;align-it
 
 /* ── COMPARISON TABLE ── */
 .compare-section{padding:5rem 2rem;max-width:900px;margin:0 auto}
+@media(max-width:600px){.compare-section{padding:3.5rem 1rem;overflow-x:auto;-webkit-overflow-scrolling:touch}.compare-table{min-width:460px}}
 .compare-table{width:100%;border-collapse:collapse}
 .compare-table th{font-family:var(--font-display);font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;padding:1rem;text-align:center}
 .compare-table th:first-child{text-align:left;color:rgba(255,255,255,0.5)}
@@ -172,7 +178,7 @@ footer a:hover{color:var(--cyan)}
       <a href="services.html" style="font-size:0.82rem;font-weight:600;color:rgba(255,255,255,0.7);transition:color 0.3s;text-decoration:none;">Solutions</a>
       <a href="onboarding-assistant.html" style="font-size:0.82rem;font-weight:600;color:var(--cyan);transition:color 0.3s;text-decoration:none;">AI Assessment</a>
       <a href="dashboard.html" style="font-size:0.82rem;font-weight:600;color:var(--gold);transition:color 0.3s;text-decoration:none;">Client Portal</a>
-      <a href="index.html#booking" class="nav-cta" style="background:linear-gradient(135deg,#0066FF,#00D4FF);color:white!important;padding:0.6rem 1.5rem;border-radius:100px;font-size:0.82rem!important;font-weight:700!important;letter-spacing:0.02em;display:inline-block;text-decoration:none;white-space:nowrap">Start a Project</a>
+      <a href="index.html#booking" class="nav-cta" style="background:linear-gradient(135deg,var(--primary),var(--cyan));color:white!important;padding:0.6rem 1.5rem;border-radius:100px;font-size:0.82rem!important;font-weight:700!important;letter-spacing:0.02em;display:inline-block;text-decoration:none;white-space:nowrap">Book a Strategy Call</a>
     </div>
   </div>
 </nav>
@@ -412,7 +418,8 @@ function toggleFaq(btn) {
   if(!wasOpen) item.classList.add('open');
 }
 </script>
-<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/245294674.js"></script>
+<script type="text/javascript" id="hs-script-loader" async defer src="https://js.hs-scripts.com/245294674.js"></script>
 <script src="/assets/js/hs-breeze-bridge.js" defer></script>
+<script src="assets/mobile-nav.js" defer></script>
 </body>
 </html>

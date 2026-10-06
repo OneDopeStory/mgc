@@ -17,20 +17,49 @@ const CORS = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
+const { db, hasServiceRole } = require('../lib/leads');
+
+// Intuit rotates the refresh token (the value changes about every 24 hours and the old one goes
+// stale), so the latest one is kept in mgc_integration_tokens. QB_REFRESH_TOKEN only seeds it.
+async function storedRefreshToken() {
+  if (!hasServiceRole()) return null;
+  const rows = await db('mgc_integration_tokens?provider=eq.quickbooks&select=refresh_token').catch(() => []);
+  return rows?.[0]?.refresh_token || null;
+}
+
 async function refreshQBToken() {
   const creds = Buffer.from(
     `${process.env.QB_CLIENT_ID}:${process.env.QB_CLIENT_SECRET}`
   ).toString('base64');
+  const current = (await storedRefreshToken()) || process.env.QB_REFRESH_TOKEN;
+  if (!current) throw new Error('QuickBooks is not connected: no refresh token');
 
   const res = await fetch('https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer', {
     method: 'POST',
     headers: {
       'Authorization': `Basic ${creds}`,
       'Content-Type':  'application/x-www-form-urlencoded',
+      'Accept':        'application/json',
     },
-    body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(process.env.QB_REFRESH_TOKEN)}`,
+    body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(current)}`,
   });
   const data = await res.json();
+  if (!res.ok || !data.access_token) {
+    throw new Error(`QuickBooks token refresh failed: ${data.error || res.status}`);
+  }
+
+  if (data.refresh_token && data.refresh_token !== current && hasServiceRole()) {
+    await db('mgc_integration_tokens?on_conflict=provider', {
+      method: 'POST',
+      prefer: 'resolution=merge-duplicates,return=minimal',
+      body: {
+        provider: 'quickbooks',
+        refresh_token: data.refresh_token,
+        expires_at: new Date(Date.now() + (data.x_refresh_token_expires_in || 0) * 1000).toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+    }).catch(err => console.error('[request-invoice] Could not save new QuickBooks refresh token:', err.message));
+  }
   return data.access_token;
 }
 

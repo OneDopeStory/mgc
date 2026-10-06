@@ -371,6 +371,18 @@ a{text-decoration:none;color:inherit}
 .del-icon,.deliv-icon,.fw-icon,.fmt-icon,.highlight-icon,.inc-icon,.perk-icon,.pillar-icon,.support-icon,.svc-icon,.tier-icon,.ws-icon,.wvc-icon{font-size:0!important}
 .fit-card h3 svg,.good-fit h3 svg{color:#22c55e}
 
+
+.hero-location{font-size:0.8rem;color:rgba(255,255,255,0.5);margin:-1.75rem 0 2.5rem;letter-spacing:0.02em}
+.cta-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--primary),var(--cyan));color:white;padding:14px 32px;border-radius:100px;font-weight:700;font-size:0.9rem;text-decoration:none;white-space:nowrap}
+.btn-invest{display:inline-flex;align-items:center;gap:8px;background:rgba(19,89,151,0.12);color:var(--cyan);padding:14px 32px;border-radius:100px;font-weight:700;font-size:0.9rem;text-decoration:none;white-space:nowrap;border:1px solid rgba(74,175,207,0.3);margin-left:12px}
+.invest-wrap{text-align:center;max-width:720px;margin:0 auto}
+.invest-price{font-family:var(--font-display);font-size:3.2rem;font-weight:800;color:var(--navy-deep);line-height:1.1;margin-bottom:0.75rem}
+.invest-note{font-size:0.95rem;font-weight:600;color:var(--primary);margin-bottom:1.5rem}
+.invest-copy{font-size:1.05rem;color:#475569;line-height:1.7;margin-bottom:2rem}
+.invest-actions{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center}
+.invest-actions .btn-outline{color:var(--navy-deep);border-color:rgba(10,22,40,0.25)}
+.invest-actions .btn-outline:hover{border-color:var(--primary);background:rgba(19,89,151,0.06)}
+@media(max-width:600px){.invest-price{font-size:2.2rem}.btn-invest{margin-left:0}}
 </style>
 </head>
 <body>
@@ -395,7 +407,7 @@ a{text-decoration:none;color:inherit}
       <a href="onboarding-assistant.html">AI Assessment</a>
       <a href="index.html#process">Process</a>
       <a href="index.html#why-mgc">About</a>
-      <a href="index.html#booking" class="nav-cta">Start a Project</a>
+      <a href="index.html#booking" class="nav-cta">Book a Strategy Call</a>
     </div>
     <div class="hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('active')">
       <span></span><span></span><span></span>
@@ -416,8 +428,9 @@ a{text-decoration:none;color:inherit}
     <div class="section-label reveal">Service Deep Dive</div>
     <h1 class="reveal">AI Strategy That <span class="gradient-text">Actually Ships</span></h1>
     <p class="hero-lead reveal">78% of enterprises now use AI in at least one business function. But 70–85% of AI initiatives fail to meet expectations. The difference isn't the technology — it's whether you had a strategy before you bought the tool. That's where we come in.</p>
+    <p class="hero-location reveal">Maryland-based. Serving clients nationwide.</p>
     <div class="hero-actions reveal">
-      <a href="index.html#booking" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0066FF,#00D4FF);color:white;padding:14px 32px;border-radius:100px;font-weight:700;font-size:0.9rem;text-decoration:none;white-space:nowrap">Book Your Strategy Session</a> <a href="checkout.html?service=ai-strategy" style="display:inline-flex;align-items:center;gap:8px;background:rgba(0,102,255,0.12);color:#00D4FF;padding:14px 32px;border-radius:100px;font-weight:700;font-size:0.9rem;text-decoration:none;white-space:nowrap;border:1px solid rgba(0,187,255,0.3);margin-left:12px">Invest Now &rarr;</a>
+      <a href="index.html#booking" class="btn-primary">Book a Strategy Call</a> <a href="checkout.html?service=ai-strategy" class="btn-invest">Invest Now &rarr;</a>
       <a href="#framework" class="btn-outline">
         <span>See Our Process</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
@@ -795,13 +808,32 @@ a{text-decoration:none;color:inherit}
   </div>
 </section>
 
+<!-- ═══════════ INVESTMENT ═══════════ -->
+<section class="section-pad bg-light" id="investment">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Investment</div>
+      <h2>Clear Scope. Fixed Pricing.</h2>
+    </div>
+    <div class="invest-wrap reveal">
+      <div class="invest-price">$750 – $2,450</div>
+      <p class="invest-note">AI Readiness Assessment from $750 · Implementation Roadmap up to $2,450</p>
+      <p class="invest-copy">Every engagement starts with a 60-minute strategy consultation, $50 for first-time clients (regularly $169). You get a written scope and a fixed price before any work begins.</p>
+      <div class="invest-actions">
+        <a href="index.html#booking" class="btn-primary">Book a Strategy Call</a>
+        <a href="services.html" class="btn-outline"><span>See All Services</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══════════ FINAL CTA ═══════════ -->
 <section class="cta-section">
   <div class="container">
     <h2 class="reveal">Let's Find Your AI Advantage</h2>
-    <p class="reveal">Start with a free 30-minute strategy conversation. We'll identify your highest-impact opportunities, assess your readiness, and tell you honestly whether working together makes sense.</p>
+    <p class="reveal">Start with a 60-minute strategy consultation: $50 for first-time clients (regularly $169). We'll identify your highest-impact opportunities, assess your readiness, and tell you honestly whether working together makes sense.</p>
     <div class="cta-actions reveal">
-      <a href="index.html#booking" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0066FF,#00D4FF);color:white;padding:14px 32px;border-radius:100px;font-weight:700;font-size:0.9rem;text-decoration:none;white-space:nowrap">Book Your Free Strategy Session</a>
+      <a href="index.html#booking" class="btn-primary">Book a Strategy Call</a>
       <a href="index.html#services" class="btn-outline">
         <span>Explore Other Services</span>
       </a>
@@ -882,7 +914,7 @@ document.querySelectorAll('.nav-links a').forEach(a=>{
 </script>
 <!-- Floating CTA -->
 <div id="floatingCTA" style="position:fixed;bottom:24px;right:24px;z-index:9990;display:flex;flex-direction:column;gap:10px;align-items:flex-end;opacity:0;transform:translateY(20px);transition:all 0.4s cubic-bezier(0.16,1,0.3,1)">
-<a href="index.html#booking" class="cta-btn" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0066FF,#00D4FF);color:white;padding:14px 32px;border-radius:100px;font-weight:700;font-size:0.9rem;text-decoration:none;white-space:nowrap">Start a Project</a>
+<a href="index.html#booking" class="cta-btn">Book a Strategy Call</a>
 </div>
 <script>
 (function(){
@@ -894,7 +926,7 @@ document.querySelectorAll('.nav-links a').forEach(a=>{
   },{passive:true});
 })();
 </script>
-<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/245294674.js"></script>
+<script type="text/javascript" id="hs-script-loader" async defer src="https://js.hs-scripts.com/245294674.js"></script>
 <script src="/assets/js/hs-breeze-bridge.js" defer></script>
 </body>
 </html>

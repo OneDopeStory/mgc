@@ -14,7 +14,7 @@
  */
 
 const crypto = require('crypto');
-const { recordLead } = require('../lib/leads');
+const { recordLead, db, hasServiceRole, SUPABASE_URL, SUPABASE_ANON } = require('../lib/leads');
 
 const ALLOWED_ORIGINS = [
   'https://www.mgcglobalconsulting.com',
@@ -205,7 +205,20 @@ function buildIcs({ start, end, summary, description }) {
   ].join('\r\n');
 }
 
-async function bookSession(input) {
+// Portal bookings send the client's Supabase session; verify it server-side to get their user id.
+async function clientIdFromToken(token) {
+  if (!token) return null;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${token}` } });
+    if (!res.ok) return null;
+    const user = await res.json();
+    return typeof user.id === 'string' ? user.id : null;
+  } catch {
+    return null;
+  }
+}
+
+async function bookSession(input, clientId = null) {
   const name = clean(input.name, 120);
   const email = clean(input.email, 254);
   const service = SERVICES.includes(input.service) ? input.service : null;
@@ -225,23 +238,45 @@ async function bookSession(input) {
   const c = config();
   const endMs = startMs + c.slotMinutes * 60e3;
   const summary = `${service} — ${name}`;
+  const serviceLine = clean(input.service_line, 120);
   let eventLink = null;
+  let eventId = null;
 
   if (mode === 'live') {
     const event = await googleFetch(
-      `/calendars/${encodeURIComponent(process.env.GOOGLE_CALENDAR_ID)}/events?sendUpdates=all`,
+      `/calendars/${encodeURIComponent(process.env.GOOGLE_CALENDAR_ID)}/events`,
       {
         method: 'POST',
         body: JSON.stringify({
           summary,
-          description: `Booked via mgcglobalconsulting.com\nClient: ${name} <${email}>\nNotes: ${notes || 'none'}\nFee: $${SESSION_PRICE_USD}`,
+          // No attendees: a service account on a shared calendar can't invite guests (Google returns
+          // 403 without Domain-Wide Delegation). The client gets the .ics file and confirmation email.
+          description: `Booked via mgcglobalconsulting.com\nClient: ${name} <${email}>${serviceLine ? `\nService line: ${serviceLine}` : ''}\nNotes: ${notes || 'none'}\nFee: $${SESSION_PRICE_USD}`,
           start: { dateTime: slot.start, timeZone: c.tz },
           end: { dateTime: new Date(endMs).toISOString(), timeZone: c.tz },
-          attendees: [{ email }],
         }),
       }
     );
     eventLink = event.htmlLink || null;
+    eventId = event.id || null;
+  }
+
+  // Supabase booking row, so the portal and admin see the same appointment as Google Calendar.
+  if (hasServiceRole()) {
+    await db('mgc_bookings', {
+      method: 'POST',
+      prefer: 'return=minimal',
+      body: {
+        client_id: clientId,
+        name, email, service,
+        service_line: serviceLine || null,
+        message: notes || null,
+        requested_date: slot.start.slice(0, 10),
+        scheduled_start: slot.start,
+        calendar_event_id: eventId,
+        status: mode === 'live' ? 'confirmed' : 'pending',
+      },
+    }).catch(err => console.error('Booking row failed:', err.message));
   }
 
   // CRM record in Notion through the existing lead-intake function. Failure here must not block the booking.
@@ -413,7 +448,10 @@ exports.handler = async (event) => {
       const { mode, slots } = await getSlots(body.days);
       return respond(200, origin, { mode, slots: slots.slice(0, 120), price_usd: SESSION_PRICE_USD });
     }
-    if (body.action === 'book') return respond(200, origin, await bookSession(body));
+    if (body.action === 'book') {
+      const token = (event.headers.authorization || event.headers.Authorization || '').replace(/^Bearer\s+/i, '');
+      return respond(200, origin, await bookSession(body, await clientIdFromToken(token)));
+    }
     if (body.action === 'chat') {
       return respond(200, origin, await chat(Array.isArray(body.messages) ? body.messages : []));
     }

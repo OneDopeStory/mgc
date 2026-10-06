@@ -3,10 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Solutions Gallery — MGC Global Consulting</title>
+<title>Services &amp; Pricing | MGC Global Consulting</title>
 <meta name="description" content="Targeted engagements. Measurable outcomes. AI consulting, automation, CRM, workshops, systems design — priced for serious operators.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="canonical" href="https://www.mgcglobalconsulting.com/services">
+<meta property="og:title" content="Services &amp; Pricing | MGC Global Consulting">
+<meta property="og:description" content="AI strategy, automation, CRM, systems design, workshops, and fractional AI ops. Scoped, fixed pricing.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.mgcglobalconsulting.com/services">
+<link rel="stylesheet" href="assets/mobile-nav.css">
 <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -32,7 +38,7 @@ nav{position:sticky;top:0;z-index:100;padding:1.25rem 2rem;display:flex;align-it
 .btn-book:hover{opacity:0.9;transform:translateY(-1px)}
 
 /* ── HERO ── */
-.hero{padding:5.5rem 2rem 3.5rem;text-align:center;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(19,89,151,0.2),transparent)}
+.hero{padding:8.5rem 2rem 3.5rem;text-align:center;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(19,89,151,0.2),transparent)}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:0.5rem;padding:0.3rem 1rem;border-radius:9999px;border:1px solid rgba(74,175,207,0.25);background:rgba(74,175,207,0.07);color:var(--cyan);font-family:var(--font-display);font-size:0.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:1.5rem}
 .hero h1{font-family:var(--font-display);font-size:clamp(2.25rem,4.5vw,3.5rem);font-weight:800;color:white;line-height:1.08;letter-spacing:-0.04em;margin-bottom:1.1rem}
 .hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--cyan),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -73,6 +79,9 @@ nav{position:sticky;top:0;z-index:100;padding:1.25rem 2rem;display:flex;align-it
 .btn-invoice{padding:0.65rem 1.1rem;border-radius:10px;font-family:var(--font-display);font-size:0.78rem;font-weight:700;cursor:pointer;transition:all 0.25s var(--ease);border:1.5px solid rgba(74,175,207,0.35);background:transparent;color:var(--cyan)}
 .btn-invoice:hover{background:rgba(74,175,207,0.12);border-color:var(--cyan)}
 .btn-pay{padding:0.65rem 1.25rem;border-radius:10px;font-family:var(--font-display);font-size:0.78rem;font-weight:700;cursor:pointer;transition:all 0.25s var(--ease);background:linear-gradient(135deg,var(--primary),var(--cyan));color:white;border:none}
+.svc-price-unit{font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.45);margin-left:0.15rem}
+a.btn-pay,a.btn-invoice{display:inline-flex;align-items:center;white-space:nowrap}
+@media(max-width:480px){.svc-footer{flex-direction:column;align-items:flex-start;gap:1rem}.svc-actions{width:100%}.svc-actions>*{flex:1;justify-content:center;text-align:center}}
 .btn-pay:hover{opacity:0.9;transform:translateY(-1px);box-shadow:0 6px 20px rgba(19,89,151,0.35)}
 
 /* ── INVOICE MODAL ── */
@@ -93,7 +102,7 @@ nav{position:sticky;top:0;z-index:100;padding:1.25rem 2rem;display:flex;align-it
 .btn-cancel{padding:0.875rem 1.25rem;border-radius:12px;border:1.5px solid rgba(255,255,255,0.12);background:transparent;color:rgba(255,255,255,0.55);font-family:var(--font-display);font-weight:600;font-size:0.9rem;cursor:pointer}
 
 /* ── TOAST ── */
-.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:#0d2035;border:1px solid rgba(74,175,207,0.3);border-radius:12px;padding:0.875rem 1.5rem;font-family:var(--font-display);font-size:0.85rem;font-weight:600;color:white;z-index:999;opacity:0;pointer-events:none;transition:all 0.35s var(--ease);white-space:nowrap}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:#0d2035;border:1px solid rgba(74,175,207,0.3);border-radius:12px;padding:0.875rem 1.5rem;font-family:var(--font-display);font-size:0.85rem;font-weight:600;color:white;z-index:999;opacity:0;pointer-events:none;transition:all 0.35s var(--ease);width:max-content;max-width:calc(100vw - 2rem);text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* ── FOOTER ── */
@@ -130,7 +139,7 @@ footer a:hover{color:var(--cyan)}
       <a href="membership.html" style="font-size:0.82rem;font-weight:600;color:rgba(255,255,255,0.7);transition:color 0.3s">Membership</a>
       <a href="onboarding-assistant.html" style="font-size:0.82rem;font-weight:600;color:var(--cyan);transition:color 0.3s">AI Assessment</a>
       <a href="dashboard.html" style="font-size:0.82rem;font-weight:600;color:var(--gold);transition:color 0.3s">Client Portal</a>
-      <a href="index.html#booking" class="nav-cta" style="background:linear-gradient(135deg,#0066FF,#00D4FF);color:white!important;padding:0.6rem 1.5rem;border-radius:100px;font-size:0.82rem!important;font-weight:700!important;letter-spacing:0.02em;display:inline-block;text-decoration:none;white-space:nowrap">Start a Project</a>
+      <a href="index.html#booking" class="nav-cta" style="background:linear-gradient(135deg,var(--primary),var(--cyan));color:white!important;padding:0.6rem 1.5rem;border-radius:100px;font-size:0.82rem!important;font-weight:700!important;letter-spacing:0.02em;display:inline-block;text-decoration:none;white-space:nowrap">Book a Strategy Call</a>
     </div>
   </div>
 </nav>
@@ -394,12 +403,12 @@ footer a:hover{color:var(--cyan)}
       </ul>
       <div class="svc-footer">
         <div>
-          <div class="svc-price">$2,200</div>
-          <div class="svc-price-note">One-time · 3-week engagement</div>
+          <div class="svc-price">Custom / Enterprise</div>
+          <div class="svc-price-note">Scoped after a strategy session</div>
         </div>
         <div class="svc-actions">
-          <button class="btn-invoice" onclick="openInvoice('Systems Design Engagement', 2200)">Request Invoice</button>
-          <button class="btn-pay" onclick="payNow('systems-design', 'Systems Design Engagement', 2200)">Pay Now</button>
+          <button class="btn-invoice" onclick="openInvoice('Systems Design Engagement', null)">Request Proposal</button>
+          <a class="btn-pay" href="index.html#booking">Book a Scoping Call</a>
         </div>
       </div>
     </div>
@@ -410,9 +419,9 @@ footer a:hover{color:var(--cyan)}
         <div class="svc-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg></div>
         <div class="svc-category gold">Systems</div>
       </div>
-      <div class="svc-name">Monthly Retainer</div>
+      <div class="svc-name">Retainer &amp; Fractional AI Ops</div>
       <p class="svc-tagline">Your fractional COO — on demand. Strategic bandwidth without the full-time hire.</p>
-      <p class="svc-description">Dedicated monthly hours for ongoing AI strategy, automation monitoring, system maintenance, new workflow deployments, and team support. Retainers are scoped during onboarding based on your current operational needs and growth objectives. Minimum 3-month commitment.</p>
+      <p class="svc-description">Dedicated monthly hours for ongoing AI strategy, automation monitoring, system maintenance, new workflow deployments, and team support. Three monthly tiers: Starter at $199, Pro at $499, and Elite at $1,299. Cancel or change tiers any month.</p>
       <ul class="svc-outcomes">
         <li class="svc-outcome">Dedicated monthly strategy hours</li>
         <li class="svc-outcome">Ongoing automation monitoring and optimization</li>
@@ -422,12 +431,11 @@ footer a:hover{color:var(--cyan)}
       </ul>
       <div class="svc-footer">
         <div>
-          <div class="svc-price">$1,950</div>
-          <div class="svc-price-note">Per month · 3-month minimum</div>
+          <div class="svc-price">$199 – $1,299<span class="svc-price-unit">/mo</span></div>
+          <div class="svc-price-note">Starter · Pro · Elite</div>
         </div>
         <div class="svc-actions">
-          <button class="btn-invoice" onclick="openInvoice('Monthly Retainer', 1950)">Request Invoice</button>
-          <button class="btn-pay" onclick="payNow('monthly-retainer', 'Monthly Retainer', 1950)">Pay Now</button>
+          <a class="btn-pay" href="membership.html">Compare Tiers</a>
         </div>
       </div>
     </div>
@@ -494,9 +502,10 @@ function filterCards(cat, btn) {
 /* ── Invoice modal ── */
 let currentService = '', currentPrice = 0;
 function openInvoice(name, price) {
-  currentService = name; currentPrice = price;
-  document.getElementById('modalSub').textContent =
-    `Requesting invoice for: ${name} — $${price.toLocaleString()}. We'll send it to your email within 1 business hour.`;
+  currentService = name; currentPrice = price || 0;
+  document.getElementById('modalSub').textContent = price
+    ? `Requesting invoice for: ${name} — $${price.toLocaleString()}. We'll email it within 1 business day.`
+    : `Requesting a proposal for: ${name}. We'll reply within 1 business day to schedule a scoping call.`;
   document.getElementById('invoiceModal').classList.add('active');
 }
 function closeModal(e) {
@@ -508,9 +517,9 @@ async function submitInvoiceRequest() {
   const email = document.getElementById('invoiceEmail').value.trim();
   if(!name || !email) { showToast('Please enter your name and email.'); return; }
   document.getElementById('invoiceModal').classList.remove('active');
-  showToast(`Invoice request sent for ${currentService}! Check your inbox.`, true);
-  // Webhook to invoice engine
-  fetch('/.netlify/functions/request-invoice', {
+  showToast('Sending your request…');
+  try {
+    const res = await fetch('/.netlify/functions/request-invoice', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({
@@ -520,8 +529,14 @@ async function submitInvoiceRequest() {
       customer_email: email,
       company: document.getElementById('invoiceCompany').value,
       note: document.getElementById('invoiceNote').value,
-    })
-  }).catch(console.error);
+      })
+    });
+    if (!res.ok) throw new Error('Request failed: ' + res.status);
+    showToast(`Request sent for ${currentService}. We'll be in touch within 1 business day.`, true);
+  } catch (err) {
+    console.error(err);
+    showToast('We could not send that. Email mark@mgcglobalconsulting.com and we will reply within 1 business day.');
+  }
 }
 
 /* ── Pay Now (Stripe) ── */
@@ -538,7 +553,8 @@ function showToast(msg, success) {
   setTimeout(() => t.classList.remove('show'), 3500);
 }
 </script>
-<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/245294674.js"></script>
+<script type="text/javascript" id="hs-script-loader" async defer src="https://js.hs-scripts.com/245294674.js"></script>
 <script src="/assets/js/hs-breeze-bridge.js" defer></script>
+<script src="assets/mobile-nav.js" defer></script>
 </body>
 </html>

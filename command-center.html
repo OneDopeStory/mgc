@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Command Center — MGC Global Consulting</title>
+<link rel="icon" href="assets/mgc-logo-transparent.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link rel="stylesheet" href="assets/command-center.css">
+<link rel="stylesheet" href="assets/command-center-glass.css">
+</head>
+<body>
+
+<!-- ── AUTH ── -->
+<div id="cc-auth" class="cc-auth">
+  <form class="cc-auth-card" id="cc-auth-form">
+    <img src="assets/mgc-logo-transparent.png" alt="MGC Global Consulting" class="cc-auth-logo">
+    <div class="cc-eyebrow">Admin only</div>
+    <h1 class="cc-auth-title">Command Center</h1>
+    <label class="cc-label" for="cc-email">Email</label>
+    <input class="cc-input" type="email" id="cc-email" autocomplete="username" required>
+    <label class="cc-label" for="cc-pass">Password</label>
+    <input class="cc-input" type="password" id="cc-pass" autocomplete="current-password" required>
+    <button class="cc-btn" type="submit">Sign in</button>
+    <p class="cc-auth-err" id="cc-auth-err" role="alert"></p>
+  </form>
+</div>
+
+<!-- ── APP ── -->
+<div id="cc-app" class="cc-app" hidden>
+  <aside class="cc-side" id="cc-side" aria-label="Sections">
+    <div class="cc-brand">
+      <img src="assets/mgc-logo-transparent.png" alt="" class="cc-brand-logo">
+      <div><div class="cc-eyebrow">MGC Global</div><div class="cc-brand-name">Command Center</div></div>
+    </div>
+    <nav class="cc-nav" id="cc-nav">
+      <div class="cc-nav-group">Overview</div>
+      <button type="button" data-view="overview" class="active"><svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10Zm0 8h8v-6H3v6Zm10 0h8V11h-8v10Zm0-18v6h8V3h-8Z"/></svg>Command overview</button>
+      <button type="button" data-view="inbox"><svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Zm0 12h-4a3 3 0 0 1-6 0H5V5h14v10Z"/></svg>Live inbox<span class="cc-badge" id="cc-inbox-count">0</span></button>
+      <div class="cc-nav-group">Team</div>
+      <button type="button" data-view="workforce"><svg viewBox="0 0 24 24"><path d="M16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 2c-2.3 0-7 1.2-7 3.5V19h14v-2.5C15 14.2 10.3 13 8 13Zm8 0c-.3 0-.6 0-1 .1 1.2.8 2 2 2 3.4V19h6v-2.5c0-2.3-4.7-3.5-7-3.5Z"/></svg>Staff and agents</button>
+      <button type="button" data-view="models"><svg viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5Zm0 13L4.2 11.1 2 12.2l10 5 10-5-2.2-1.1L12 15Zm0 5-7.8-3.9L2 17.2l10 5 10-5-2.2-1.1L12 20Z"/></svg>Models and usage</button>
+      <div class="cc-nav-group">Delivery</div>
+      <button type="button" data-view="delivery"><svg viewBox="0 0 24 24"><path d="M9 11 7.6 12.4 11 15.8l9-9-1.4-1.4-7.6 7.6L9 11Zm10 8H5V5h10V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-8h-2v8Z"/></svg>Projects and to-dos<span class="cc-badge" id="cc-task-count">0</span></button>
+      <button type="button" data-view="ideas"><svg viewBox="0 0 24 24"><path d="M9 21h6v-1H9v1Zm3-19a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2Z"/></svg>Intake ideas<span class="cc-badge gold" id="cc-idea-count">0</span></button>
+      <div class="cc-nav-group">Finance</div>
+      <button type="button" data-view="finance"><svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.3-.6-3-1.2-3-2.1 0-1.1 1-1.9 2.7-1.9 1.8 0 2.4.8 2.5 2.1h2.2c-.1-1.7-1.1-3.3-3.2-3.8V3h-3v2.2C8.1 5.6 6.5 6.9 6.5 8.8c0 2.3 1.9 3.4 4.6 4.1 2.5.6 3 1.5 3 2.4 0 .7-.5 1.8-2.7 1.8-2.1 0-2.9-.9-3-2.1H6.2c.1 2.2 1.8 3.5 3.8 3.9V21h3v-2.1c1.9-.4 3.5-1.5 3.5-3.6 0-2.8-2.4-3.8-4.7-4.4Z"/></svg>Revenue and approvals<span class="cc-badge violet" id="cc-approval-count">0</span></button>
+    </nav>
+    <div class="cc-side-foot">
+      <span class="cc-user" id="cc-user"></span>
+      <div class="cc-side-links"><a class="cc-ghost" href="admin.html">Admin portal</a><button class="cc-ghost" id="cc-signout" type="button">Sign out</button></div>
+    </div>
+  </aside>
+  <div class="cc-scrim" id="cc-scrim" hidden></div>
+
+  <div class="cc-body">
+    <header class="cc-top">
+      <button class="cc-burger" id="cc-burger" type="button" aria-label="Open sections"><svg viewBox="0 0 24 24"><path d="M3 6h18v2H3V6Zm0 5h18v2H3v-2Zm0 5h18v2H3v-2Z"/></svg></button>
+      <h1 class="cc-view-title" id="cc-view-title">Command overview</h1>
+      <div class="cc-pulse-strip" aria-hidden="true"><canvas id="cc-strip"></canvas></div>
+      <div class="cc-top-meta">
+        <span class="cc-live" id="cc-live"><span class="cc-live-dot"></span><span id="cc-live-label">Connecting</span></span>
+        <span class="cc-clock" id="cc-clock">--:--</span>
+      </div>
+    </header>
+
+    <div class="cc-sample-banner" id="cc-sample-banner" hidden>
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2 1 21h22L12 2Zm1 15h-2v-2h2v2Zm0-4h-2V9h2v4Z"/></svg>
+      <span id="cc-sample-text"></span>
+    </div>
+
+    <main class="cc-main">
+      <!-- ═══ OVERVIEW ═══ -->
+      <section class="cc-view" data-view="overview">
+        <div class="cc-grid cc-grid-mission">
+          <article class="cc-card cc-mission" data-src="mgc_agent_events mgc_leads mgc_questionnaires mgc_bookings mgc_invoices">
+            <div class="cc-card-head"><div><div class="cc-eyebrow">Mission control</div><h2 class="cc-h2">Your ecosystem, unified and live</h2><p class="cc-sub">Every intake source streams into MGC, and every agent works out from it. Each beam of light is a real event.</p></div></div>
+            <div class="cc-hub-wrap"><canvas id="cc-hub" role="img" aria-label="Live map of intake sources and agents connected to MGC"></canvas></div>
+            <div class="cc-hub-caption" id="cc-hub-caption"></div>
+          </article>
+          <article class="cc-card cc-brief" data-src="mgc_approvals mgc_invoices mgc_tasks mgc_intake_ideas">
+            <div class="cc-eyebrow">Owner briefing</div>
+            <p class="cc-greet" id="cc-greet">Good evening</p>
+            <ul class="cc-brief-list" id="cc-brief-list"></ul>
+            <div class="cc-brief-meta" id="cc-brief-meta"></div>
+          </article>
+        </div>
+        <div class="cc-grid cc-grid-today">
+          <article class="cc-card cc-today-card" data-src="mgc_leads mgc_bookings mgc_invoices mgc_agent_events">
+            <div class="cc-card-head"><div><div class="cc-eyebrow">Today</div><h2 class="cc-h2">Today's pulse</h2><p class="cc-sub">Since midnight Eastern, compared with yesterday</p></div></div>
+            <div class="cc-today" id="cc-today"></div>
+          </article>
+          <article class="cc-card" data-src="mgc_leads mgc_questionnaires mgc_agent_events">
+            <div class="cc-card-head"><div><div class="cc-eyebrow">Intake insights</div><h2 class="cc-h2">Where intakes come from, 30 days</h2></div></div>
+            <div class="cc-chart" id="cc-source-lines"></div>
+            <div class="cc-chart-legend" id="cc-source-legend"></div>
+          </article>
+        </div>
+
+        <section class="cc-kpis" id="cc-kpis" aria-label="Key metrics"></section>
+
+        <div class="cc-grid cc-grid-pulse">
+          <article class="cc-card cc-heart" data-src="mgc_agent_events">
+            <div class="cc-card-head">
+              <div><div class="cc-eyebrow">System heartbeat</div><h2 class="cc-h2">Live operations pulse</h2></div>
+              <div class="cc-bpm"><span id="cc-bpm">0</span><small>events / hr</small></div>
+            </div>
+            <canvas id="cc-ecg" class="cc-ecg"></canvas>
+            <div class="cc-heart-legend" id="cc-heart-legend"></div>
+          </article>
+          <article class="cc-card cc-feed-card">
+            <div class="cc-card-head"><div><div class="cc-eyebrow">Realtime</div><h2 class="cc-h2">Activity feed</h2></div><button class="cc-link" type="button" data-go="inbox">Open inbox</button></div>
+            <ol class="cc-feed" id="cc-feed"></ol>
+          </article>
+        </div>
+
+        <div class="cc-grid cc-grid-3">
+          <article class="cc-card" data-src="mgc_leads mgc_bookings">
+            <div class="cc-card-head"><div><div class="cc-eyebrow">Conversion</div><h2 class="cc-h2">Intakes vs booked calls</h2><p class="cc-sub">By weekday, last 4 weeks</p></div></div>
+            <div class="cc-chart" id="cc-weekday-bars"></div>
+            <div class="cc-chart-legend" id="cc-weekday-legend"></div>
+          </article>
+          <article class="cc-card" data-src="mgc_agent_events">
+            <div class="cc-card-head"><div><div class="cc-eyebrow">Agentic staff</div><h2 class="cc-h2">Agent activity, 24 hours</h2></div></div>
+            <div class="cc-chart" id="cc-agent-area"></div>
+            <div class="cc-chart-legend" id="cc-agent-legend"></div>
+          </article>
+          <article class="cc-card" data-src="mgc_invoices">
+            <div class="cc-card-head"><div><div class="cc-eyebrow">Finance</div><h2 class="cc-h2">Revenue vs target</h2></div></div>
+            <div class="cc-chart" id="cc-target-bars"></div>
+            <div class="cc-target-foot">
+              <div class="cc-ring-stat" id="cc-target-month"></div>
+              <label class="cc-target-input" for="cc-target">Monthly target
+                <span><span>$</span><input id="cc-target" type="number" min="0" step="500" inputmode="numeric"></span>
+              </label>
+            </div>
+          </article>
+        </div>
+
+        <div class="cc-grid cc-grid-2">
+          <article class="cc-card" data-src="mgc_leads mgc_bookings mgc_client_profiles mgc_invoices">
+            <div class="cc-card-head"><div><div class="cc-eyebrow">Pipeline</div><h2 class="cc-h2">Client journey, 30 days</h2></div></div>
+            <div class="cc-funnel" id="cc-funnel"></div>
+          </article>
+          <article class="cc-card" data-src="mgc_approvals">
+            <div class="cc-card-head"><div><div class="cc-eyebrow">Human gate</div><h2 class="cc-h2">Waiting on you</h2></div><button class="cc-link" type="button" data-go="finance">All approvals</button></div>
+            <ul class="cc-list" id="cc-approvals-mini"></ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- ═══ INBOX ═══ -->
+      <section class="cc-view" data-view="inbox" hidden>
+        <article class="cc-card" data-src="mgc_leads mgc_questionnaires mgc_bookings mgc_agent_events mgc_approvals">
+          <div class="cc-card-head">
+            <div><div class="cc-eyebrow">Slack and forms, live</div><h2 class="cc-h2">Everything coming in</h2><p class="cc-sub">New Slack posts, website forms, TrueAssist chats, bookings and agent requests land here as they happen.</p></div>
+          </div>
+          <div class="cc-inbox-tools">
+            <div class="cc-chips" id="cc-chips" role="tablist" aria-label="Filter by source"></div>
+            <label class="cc-search" for="cc-search"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.8l-.3-.3A6.5 6.5 0 1 0 14 15.5l.3.3v.8l5 5 1.5-1.5-5-5Zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Z"/></svg><input id="cc-search" type="search" placeholder="Search company, person or text"></label>
+          </div>
+          <ol class="cc-inbox" id="cc-inbox"></ol>
+        </article>
+      </section>
+
+      <!-- ═══ WORKFORCE ═══ -->
+      <section class="cc-view" data-view="workforce" hidden>
+        <article class="cc-card" data-src="mgc_time_entries mgc_staff">
+          <div class="cc-card-head"><div><div class="cc-eyebrow">Workforce</div><h2 class="cc-h2">Human staff, last 7 days</h2></div></div>
+          <div class="cc-table-wrap"><table class="cc-table" id="cc-humans"></table></div>
+        </article>
+        <article class="cc-card" data-src="mgc_staff mgc_agent_events">
+          <div class="cc-card-head"><div><div class="cc-eyebrow">Workforce</div><h2 class="cc-h2">Agentic staff</h2></div></div>
+          <div class="cc-table-wrap"><table class="cc-table" id="cc-agents"></table></div>
+        </article>
+      </section>
+
+      <!-- ═══ MODELS ═══ -->
+      <section class="cc-view" data-view="models" hidden>
+        <div class="cc-grid cc-grid-2">
+          <article class="cc-card" data-src="mgc_model_usage">
+            <div class="cc-card-head"><div><div class="cc-eyebrow">Models</div><h2 class="cc-h2">Spend by model, 30 days</h2></div><span class="cc-stat" id="cc-model-total"></span></div>
+            <div class="cc-donut-row"><div id="cc-donut"></div><ul class="cc-legend" id="cc-donut-legend"></ul></div>
+          </article>
+          <article class="cc-card" data-src="mgc_model_usage mgc_staff">
+            <div class="cc-card-head"><div><div class="cc-eyebrow">Models</div><h2 class="cc-h2">Usage per employee and agent</h2></div></div>
+            <div class="cc-hbars" id="cc-usage-bars"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ═══ DELIVERY ═══ -->
+      <section class="cc-view" data-view="delivery" hidden>
+        <article class="cc-card" data-src="mgc_tasks">
+          <div class="cc-card-head"><div><div class="cc-eyebrow">To-dos</div><h2 class="cc-h2">Task board</h2><p class="cc-sub">Tap a task to move it to the next column.</p></div></div>
+          <form class="cc-add-task" id="cc-add-task">
+            <label class="cc-visually-hidden" for="cc-new-task">New to-do</label>
+            <input id="cc-new-task" class="cc-input" type="text" placeholder="Add a to-do" maxlength="140" required>
+            <label class="cc-visually-hidden" for="cc-new-prio">Priority</label>
+            <select id="cc-new-prio" class="cc-input"><option value="normal">Normal</option><option value="high">High</option><option value="urgent">Urgent</option><option value="low">Low</option></select>
+            <button class="cc-btn cc-btn-sm" type="submit">Add</button>
+          </form>
+          <div class="cc-task-cols" id="cc-tasks"></div>
+        </article>
+        <article class="cc-card" data-src="mgc_projects">
+          <div class="cc-card-head"><div><div class="cc-eyebrow">Projects</div><h2 class="cc-h2">Active projects</h2></div></div>
+          <ul class="cc-projects" id="cc-projects"></ul>
+        </article>
+      </section>
+
+      <!-- ═══ IDEAS ═══ -->
+      <section class="cc-view" data-view="ideas" hidden>
+        <section class="cc-card cc-ideas-card" data-src="mgc_intake_ideas">
+          <div class="cc-card-head"><div><div class="cc-eyebrow">Intake Agent</div><h2 class="cc-h2">4 ideas for every new intake</h2><p class="cc-sub">Written for each client's own business. Turn any idea into a to-do, or dismiss it.</p></div></div>
+          <div class="cc-ideas" id="cc-ideas"></div>
+        </section>
+      </section>
+
+      <!-- ═══ FINANCE ═══ -->
+      <section class="cc-view" data-view="finance" hidden>
+        <article class="cc-card" data-src="mgc_invoices">
+          <div class="cc-card-head"><div><div class="cc-eyebrow">Finance</div><h2 class="cc-h2">Revenue collected, 12 weeks</h2></div><span class="cc-stat" id="cc-rev-total"></span></div>
+          <div class="cc-chart" id="cc-rev-chart"></div>
+        </article>
+        <div class="cc-grid cc-grid-2">
+          <article class="cc-card" data-src="mgc_approvals">
+            <div class="cc-card-head"><div><div class="cc-eyebrow">Human gate</div><h2 class="cc-h2">Approvals queue</h2><p class="cc-sub">Agents wait here before anything goes to a client.</p></div></div>
+            <ul class="cc-list" id="cc-approvals"></ul>
+          </article>
+          <article class="cc-card" data-src="mgc_invoices">
+            <div class="cc-card-head"><div><div class="cc-eyebrow">Finance</div><h2 class="cc-h2">Recent invoices</h2></div></div>
+            <div class="cc-table-wrap"><table class="cc-table" id="cc-invoices"></table></div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="cc-toast" id="cc-toast" role="status" aria-live="polite" hidden></div>
+</div>
+
+<script src="assets/command-center.js"></script>
+<script src="assets/command-center-fx.js"></script>
+</body>
+</html>
