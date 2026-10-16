@@ -7,6 +7,328 @@
   node_bundler = "esbuild"
 
 # ── Redirects ──────────────────────────────────────────────────────────
+# Consolidate audited page aliases. Force redirects even when a duplicate file exists.
+# Query strings pass through unchanged (checkout, payment returns, and OAuth links).
+[[redirects]]
+  from   = "/403.html"
+  to     = "/403"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/404.html"
+  to     = "/404"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/500.html"
+  to     = "/500"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/admin.html"
+  to     = "/admin"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/ai-consulting.html"
+  to     = "/ai-consulting"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/ai-workshops.html"
+  to     = "/ai-workshops"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/automation.html"
+  to     = "/automation"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/checkout.html"
+  to     = "/checkout"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/crm-optimization.html"
+  to     = "/crm-optimization"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/dashboard.html"
+  to     = "/dashboard"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/membership-v2.html"
+  to     = "/membership-v2"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/membership.html"
+  to     = "/membership"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/partner-success.html"
+  to     = "/partner-success"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/retainer-support.html"
+  to     = "/retainer-support"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/services.html"
+  to     = "/services"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/success.html"
+  to     = "/success"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/systems-design.html"
+  to     = "/systems-design"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/thank-you.html"
+  to     = "/thank-you"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/index"
+  to     = "/"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/index.html"
+  to     = "/"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public"
+  to     = "/"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/"
+  to     = "/"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/index"
+  to     = "/"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/index.html"
+  to     = "/"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/403.html"
+  to     = "/403"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/404.html"
+  to     = "/404"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/500.html"
+  to     = "/500"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/ai-consulting"
+  to     = "/ai-consulting"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/ai-consulting.html"
+  to     = "/ai-consulting"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/ai-workshops"
+  to     = "/ai-workshops"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/ai-workshops.html"
+  to     = "/ai-workshops"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/automation"
+  to     = "/automation"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/automation.html"
+  to     = "/automation"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/checkout"
+  to     = "/checkout"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/checkout.html"
+  to     = "/checkout"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/crm-optimization"
+  to     = "/crm-optimization"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/crm-optimization.html"
+  to     = "/crm-optimization"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/dashboard"
+  to     = "/dashboard"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/dashboard.html"
+  to     = "/dashboard"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/membership"
+  to     = "/membership"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/membership.html"
+  to     = "/membership"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/partner-success"
+  to     = "/partner-success"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/partner-success.html"
+  to     = "/partner-success"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/retainer-support"
+  to     = "/retainer-support"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/retainer-support.html"
+  to     = "/retainer-support"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/services"
+  to     = "/services"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/services.html"
+  to     = "/services"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/success.html"
+  to     = "/success"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/systems-design"
+  to     = "/systems-design"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/systems-design.html"
+  to     = "/systems-design"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/public/thank-you.html"
+  to     = "/thank-you"
+  status = 301
+  force  = true
+
+# Retired development preview; do not redirect it to an unrelated marketing page.
+[[redirects]]
+  from   = "/preview-footer.html"
+  to     = "/404.html"
+  status = 404
+  force  = true
+
+[[redirects]]
+  from   = "/preview-footer"
+  to     = "/404.html"
+  status = 404
+  force  = true
+
+
 # Block local Ruflo vector DB (lives in repo root; never serve it)
 [[redirects]]
   from   = "/ruvector.db"
@@ -59,6 +381,11 @@
   to     = "/privacy.html"
   status = 200
 
+[[redirects]]
+  from   = "/terms"
+  to     = "/terms.html"
+  status = 200
+
 # ── API routes (rewrites to Netlify functions) ─────────────────────────
 # TrueAssist web chat: POST to chat, GET to poll for relayed team replies.
 [[redirects]]
@@ -83,6 +410,11 @@
   from   = "/403"
   to     = "/403.html"
   status = 403
+
+[[redirects]]
+  from   = "/500"
+  to     = "/500.html"
+  status = 500
 
 # ── Security headers ───────────────────────────────────────────────────
 [[headers]]

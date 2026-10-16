@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://mgcglobalconsulting.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://mgcglobalconsulting.com/membership.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://mgcglobalconsulting.com/ai-consulting.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mgcglobalconsulting.com/automation.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mgcglobalconsulting.com/crm-optimization.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mgcglobalconsulting.com/systems-design.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mgcglobalconsulting.com/ai-workshops.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mgcglobalconsulting.com/retainer-support.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mgcglobalconsulting.com/services</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://mgcglobalconsulting.com/membership</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://mgcglobalconsulting.com/book</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://mgcglobalconsulting.com/ai-consulting</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mgcglobalconsulting.com/automation</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mgcglobalconsulting.com/crm-optimization</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mgcglobalconsulting.com/systems-design</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mgcglobalconsulting.com/ai-workshops</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mgcglobalconsulting.com/retainer-support</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mgcglobalconsulting.com/privacy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
 </urlset>

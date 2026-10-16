@@ -1,0 +1,19 @@
+[shell_environment_policy]
+inherit = "core"
+
+[shell_environment_policy.set]
+CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1"
+CLAUDE_FLOW_V3_ENABLED = "true"
+CLAUDE_FLOW_HOOKS_ENABLED = "true"
+
+[mcp_servers.higgsfield]
+url = "https://mcp.higgsfield.ai/mcp"
+
+[mcp_servers.hunter]
+url = "https://mcp.hunter.io/mcp"
+
+[mcp_servers.hunter.http_headers]
+X-API-Key = "bd0bbfe89a4de2362dce79fc445aec125c0f8f89E"
+
+[mcp_servers.supabase]
+url = "https://mcp.supabase.com/mcp?project_ref=zppuzfvchqxkzprfkhfz"

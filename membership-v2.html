@@ -11,13 +11,13 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --navy-deep:#0A1628;--navy:#112A60;--primary:#135997;--cyan:#4AAFCF;
-  --gold:#C9A84C;--gold-light:#F0D98A;--white:#FFFFFF;--off-white:#F8F9FC;
+  --navy-deep:#010C1A;--navy:#041C35;--primary:#0047CC;--cyan:#00D4FF;
+  --gold:#FFB347;--gold-light:#F0D98A;--white:#FFFFFF;--off-white:#F8F9FC;
   --text:#1A2235;--muted:#6B7899;--border:#E2E8F0;
-  --font-display:'Sora',system-ui,sans-serif;--font-body:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-display:'Raleway',system-ui,sans-serif;--font-body:'Plus Jakarta Sans',system-ui,sans-serif;
   --ease:cubic-bezier(0.16,1,0.3,1);
   /* Tier accent colours */
-  --starter:#2A9D8F;--pro:#135997;--elite:#C9A84C;
+  --starter:#2A9D8F;--pro:#0047CC;--elite:#FFB347;
 }
 html{font-size:16px;scroll-behavior:smooth}
 body{font-family:var(--font-body);color:var(--text);background:var(--navy-deep);overflow-x:hidden;-webkit-font-smoothing:antialiased}
@@ -62,13 +62,13 @@ nav{position:sticky;top:0;z-index:100;padding:1.25rem 2rem;display:flex;align-it
 .tier-starter .tier-btn:hover{background:var(--starter);color:white}
 
 /* Pro (featured) */
-.tier-pro{background:linear-gradient(160deg,#112A60,#0e2050);border:1px solid rgba(74,175,207,0.35);box-shadow:0 0 0 1px rgba(74,175,207,0.2),0 32px 80px rgba(19,89,151,0.3)}
+.tier-pro{background:linear-gradient(160deg,#041C35,#0e2050);border:1px solid rgba(74,175,207,0.35);box-shadow:0 0 0 1px rgba(74,175,207,0.2),0 32px 80px rgba(19,89,151,0.3)}
 .tier-pro .tier-accent{color:var(--cyan)}
 .tier-pro .tier-btn{background:linear-gradient(135deg,var(--primary),var(--cyan));color:white;border:none}
 .tier-pro .tier-btn:hover{opacity:0.9;transform:translateY(-2px);box-shadow:0 8px 24px rgba(19,89,151,0.4)}
 
 /* Elite */
-.tier-elite{background:linear-gradient(160deg,#1a1200,#0A1628);border:1px solid rgba(201,168,76,0.3)}
+.tier-elite{background:linear-gradient(160deg,#1a1200,#010C1A);border:1px solid rgba(201,168,76,0.3)}
 .tier-elite:hover{box-shadow:0 24px 60px rgba(201,168,76,0.12)}
 .tier-elite .tier-accent{color:var(--gold)}
 .tier-elite .tier-btn{background:linear-gradient(135deg,var(--gold),#e8c76a);color:#1a1200;font-weight:800;border:none}
@@ -147,7 +147,7 @@ footer a:hover{color:var(--cyan)}
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-eyebrow">💎 Membership Tiers</div>
+  <div class="hero-eyebrow"> Membership Tiers</div>
   <h1>Choose Your <span class="accent">Operating Level</span></h1>
   <p class="hero-sub">From emerging founder to enterprise operator — every tier is engineered to compound your advantage month over month.</p>
   <div class="trust-strip">
@@ -168,8 +168,8 @@ footer a:hover{color:var(--cyan)}
 
     <!-- STARTER -->
     <div class="tier-card tier-starter reveal">
-      <div class="tier-badge growth">🌱 Foundation</div>
-      <span class="tier-icon">🌱</span>
+      <div class="tier-badge growth"> Foundation</div>
+      <span class="tier-icon"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12h8M12 8v8"/></svg></span>
       <div class="tier-name tier-accent">Starter</div>
       <div class="tier-price-row">
         <div class="tier-price">$199</div>
@@ -204,7 +204,7 @@ footer a:hover{color:var(--cyan)}
 
     <!-- PRO -->
     <div class="tier-card tier-pro reveal">
-      <div class="tier-badge most-popular">⚡ Most Popular</div>
+      <div class="tier-badge most-popular"> Most Popular</div>
       <span class="tier-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
       <div class="tier-name tier-accent">Pro</div>
       <div class="tier-price-row">
@@ -244,8 +244,8 @@ footer a:hover{color:var(--cyan)}
 
     <!-- ELITE -->
     <div class="tier-card tier-elite reveal">
-      <div class="tier-badge prestige">👑 Prestige</div>
-      <span class="tier-icon">👑</span>
+      <div class="tier-badge prestige"> Prestige</div>
+      <span class="tier-icon"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12h8M12 8v8"/></svg></span>
       <div class="tier-name tier-accent">Elite</div>
       <div class="tier-price-row">
         <div class="tier-price">$1,299</div>

@@ -34,7 +34,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 #portal-stripe{display:none;position:fixed;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#C8922A 0%,#E8B94F 30%,#FFE99A 55%,#E8B94F 75%,#C8922A 100%);z-index:500;pointer-events:none}
 
 /* ─── AUTH SCREEN ─── */
-#auth-screen{position:fixed;inset:0;background:var(--abyss);display:flex;align-items:center;justify-content:center;z-index:200;padding:1rem}
+#auth-screen{position:fixed;inset:0;background:var(--abyss);display:flex;align-items:flex-start;justify-content:center;z-index:200;padding:1.5rem 1rem;overflow-y:auto}
+.auth-card{margin:auto 0}
+.auth-card :focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+.auth-card .form-input::placeholder{color:var(--muted)}
+@media(max-width:480px){.auth-card{padding:1.5rem!important}.auth-card .form-input{font-size:16px}}
 #auth-screen::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 40%,rgba(0,212,255,0.06),transparent),radial-gradient(ellipse 50% 40% at 80% 70%,rgba(14,84,148,0.1),transparent)}
 
 .auth-card{position:relative;width:100%;max-width:440px;background:rgba(6,29,53,0.9);border:1px solid var(--border);border-radius:24px;padding:2.5rem;backdrop-filter:blur(24px)}
@@ -526,7 +530,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
     <!-- LOGIN FORM -->
     <div class="auth-form" id="form-login">
-      <div id="login-error" class="auth-error"></div>
+      <div id="login-error" class="auth-error" role="alert"></div>
       <div class="form-group">
         <label class="form-label" for="login-email">Email Address</label>
         <input class="form-input" type="email" id="login-email" placeholder="you@company.com" autocomplete="email">
@@ -545,8 +549,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
     <!-- SIGNUP FORM -->
     <div class="auth-form hidden" id="form-signup">
-      <div id="signup-error" class="auth-error"></div>
-      <div id="signup-success" class="auth-success"></div>
+      <div id="signup-error" class="auth-error" role="alert"></div>
+      <div id="signup-success" class="auth-success" role="status"></div>
       <div class="form-group">
         <label class="form-label" for="signup-name">Full Name</label>
         <input class="form-input" type="text" id="signup-name" placeholder="Jane Smith" autocomplete="name">
@@ -1313,8 +1317,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 // ── SUPABASE INIT ──
 const SUPABASE_URL = 'https://bjnpibxaxlgvlzeegwnm.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_Nj15e9wDVGVjBANsOdcTbg_AyXa1UJD';
-const { createClient } = supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON, {
+const sb = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON, {
   auth: { detectSessionInUrl: true, persistSession: true, autoRefreshToken: true }
 });
 
@@ -1324,14 +1327,32 @@ let portalInitialized = false;
 
 // ── INIT ──
 window.addEventListener('DOMContentLoaded', async () => {
+  if (!sb) {
+    showAuthScreen();
+    showErr(document.getElementById('login-error'), 'Sign-in could not load. Please refresh or contact mark@mgcglobalconsulting.com.');
+    return;
+  }
+  const authTimeout = setTimeout(() => {
+    showAuthScreen();
+    showErr(document.getElementById('login-error'), 'Sign-in is taking longer than expected. Please refresh and try again.');
+  }, 15000);
   // Keep loading overlay visible while auth resolves — don't use a fixed timeout
   // onAuthStateChange fires for: existing session, OAuth callback, token refresh, sign-out
-  sb.auth.onAuthStateChange(async (event, session) => {
+  sb.auth.onAuthStateChange((event, session) => {
+    clearTimeout(authTimeout);
     if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') && session?.user) {
       if (portalInitialized) return; // prevent double-init on token refresh
       portalInitialized = true;
       currentUser = session.user;
-      await initPortal(session.user);
+      // Release Supabase's auth lock before querying authenticated data.
+      setTimeout(() => {
+        if (!portalInitialized || currentUser?.id !== session.user.id) return;
+        initPortal(session.user).catch(() => {
+          portalInitialized = false;
+          showAuthScreen();
+          showErr(document.getElementById('login-error'), 'Your sign-in succeeded, but the portal could not load. Please try again or contact mark@mgcglobalconsulting.com.');
+        });
+      }, 0);
     } else if (event === 'SIGNED_OUT' || (!session && event === 'INITIAL_SESSION')) {
       portalInitialized = false;
       currentUser = null;
@@ -1400,7 +1421,9 @@ async function doLogin() {
   const errEl = document.getElementById('login-error');
   errEl.classList.remove('show');
   if (!email || !pass) { showErr(errEl, 'Please fill in all fields.'); return; }
-  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (!sb) { showErr(errEl, 'Sign-in could not load. Please refresh the page.'); return; }
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass })
+    .catch(() => ({ error: { message: 'Unable to connect. Please check your connection and try again.' } }));
   if (error) { showErr(errEl, error.message); return; }
 }
 
@@ -1418,10 +1441,11 @@ async function doSignup() {
   if (!name || !email || !pass) { showErr(errEl, 'Name, email, and password are required.'); return; }
   if (pass.length < 8) { showErr(errEl, 'Password must be at least 8 characters.'); return; }
 
+  if (!sb) { showErr(errEl, 'Sign-in could not load. Please refresh the page.'); return; }
   const { data, error } = await sb.auth.signUp({
     email, password: pass,
-    options: { data: { full_name: name, company } }
-  });
+    options: { data: { full_name: name, company }, emailRedirectTo: window.location.origin + '/dashboard' }
+  }).catch(() => ({ error: { message: 'Unable to connect. Please check your connection and try again.' } }));
   if (error) { showErr(errEl, error.message); return; }
   succEl.textContent = 'Account created! Check your email to confirm, then sign in.';
   succEl.classList.add('show');
@@ -1434,10 +1458,18 @@ async function doSignup() {
 
 // ── GOOGLE AUTH ──
 async function doGoogleAuth() {
-  await sb.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: window.location.origin + '/dashboard' }
-  });
+  const errEl = document.getElementById(document.getElementById('form-login').classList.contains('hidden') ? 'signup-error' : 'login-error');
+  errEl.classList.remove('show');
+  try {
+    if (!sb) throw new Error('Sign-in could not load. Please refresh the page.');
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + '/dashboard' }
+    });
+    if (error) throw error;
+  } catch (error) {
+    showErr(errEl, error.message || 'Google sign-in is unavailable. Please try email sign-in.');
+  }
 }
 
 // ── LOGOUT ──

@@ -1,0 +1,81 @@
+MGC GLOBAL CONSULTING & TRUEASSIST DESIGN REPOSITORY
+Location: desktop/mgc-site-complete_1
+
+Purpose: Master architectural ledger, tool instructions, terminology, and prompt patterns for agentic multi-media generation (Slack, Google Studio, Claude Code, Higgsfield, Gemini).
+
+1. Brand Architecture & Aesthetic Tokens
+                               ┌───────────────────────────┐
+                               │   PARENT CONSULTING FIRM  │
+                               │  MGC Global Consulting    │
+                               └─────────────┬─────────────┘
+                                             │
+                                             ▼
+                               ┌───────────────────────────┐
+                               │     AGENTIC PLATFORM      │
+                               │         TrueAssist        │
+                               └───────────────────────────┘
+MGC Global Consulting
+Core Identity: Corporate, authoritative, high-end executive aesthetic designed for institutional trust, financial operations, and security contractor services.
+
+Color Palette:
+
+Primary Dark: Deep Charcoal (#0B0F19) and Midnight Navy (#020617)
+
+Accents: Brushed Platinum (#94A3B8) and Executive Gold (#D4AF37)
+
+Typography: Clean sans-serif hierarchy (Inter / JetBrains Mono for data displays).
+
+UI/UX Motif: Subtle glassmorphism, structured financial data tables, sharp borders, and low-contrast background motion loops.
+
+TrueAssist
+Core Identity: Modern, fluid, hyper-tech agentic assistant system designed for dynamic multi-modal interactions, real-time automation, and responsive workflows.
+
+Color Palette:
+
+Primary Dark: Obsidian Black (#000000)
+
+Accents: Neon Teal (#06B6D4) and Deep Violet (#8B5CF6)
+
+Typography: Kinetic headers, high-contrast monospace highlights.
+
+UI/UX Motif: Glowing particle reflections, floating glass widgets, spring physics, and high-velocity micro-interactions.
+
+2. Tooling Stack & Execution Pipelines
+Tool / Platform	Primary Role	Output Format / Target
+Higgsfield AI (MCP / CLI)	Cinematic video loops, character consistency, and dynamic web environments	React 19 + TanStack Start SSR web apps, WebM/AV1 video assets (16:9 or 9:16)
+Claude Code / GPT-6 Astra	Frontend component orchestration, spring-physics animations, parallax scroll timelines	Full-stack interactive code bundles
+Gemini Studio & Google Flow	Multi-modal prompt expansion, automated multi-angle frame synthesis, design specs	Structured asset guidelines & design matrices
+Slack / Google Workspace	Inbound request parsing, real-time agentic review, direct team delivery	Automated handoff summaries & file packages
+3. Format Specifications & Guidelines
+Instagram Reels & YouTube Shorts (9:16 - 1080x1920)
+Duration: Exactly 10 seconds.
+
+Hook Rule: The visual climax or core problem statement must occur within the first 1.5 seconds.
+
+Style: High visual inertia, kinetic subtitle overlays, seamless end-to-beginning loop for maximum retention.
+
+Interactive Web Motion (Desktop / Mobile)
+Format: Responsive layout via the Higgsfield Website Skill with embedded WebM video backgrounds.
+
+Performance: Must be lightweight, muted (muted), inline (playsinline), and looping (autoplay).
+
+Overlay Rule: Always utilize dark glassmorphism backdrops (backdrop-blur-md bg-black/40) to maintain text legibility over motion loops.
+
+Slide Ads & Presenter Kits (16:9 - 1920x1080)
+Style: Clean negative space, structural financial or operational charts, high-density readability, and prominent CTA blocks.
+
+4. Standard Prompt Library
+TrueAssist 10s Vertical Reel Hook (9:16)
+Hyper-realistic close-up shot of a futuristic holographic AI interface pulsing with glowing neon teal and deep violet light. Cinematic camera push-in, floating glass UI widgets, hyper-detailed particle reflections, volumetric lighting, photorealistic 8k, seamless loop.
+
+MGC Global Consulting Corporate Motion Loop (16:9)
+Abstract executive dark blue and charcoal geometric waves, smooth fluid motion, subtle ambient illumination, luxury corporate aesthetic, low contrast negative space in center for text overlay, cinematic render, 4k.
+
+5. Agentic Design Glossary
+Agentic Request: An automated instruction dispatched via Slack or Google Workspace that triggers an autonomous multimedia pipeline (video generation, code scaffolding, asset assembly).
+
+Ping-Pong Looping: A video playback mode where footage plays forward then reverses seamlessly, preventing jarring cuts on background loops.
+
+Kinetic Typography: Text elements that animate dynamically (scaling, fading, or sliding) to match the rhythm of short-form video hooks.
+
+Glassmorphism: A UI design style characterized by translucent frosted-glass elements, high blur levels, and delicate white borders.
