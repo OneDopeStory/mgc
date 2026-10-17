@@ -257,21 +257,23 @@
 
   var panel = document.getElementById('ta-widget');
   var launcher = document.getElementById('ta-launcher');
-  var backdrop = document.getElementById('ta-backdrop');
   var collapseBtn = document.getElementById('ta-collapse');
   var openInlineBtn = document.getElementById('ta-open-inline');
   var taInput = document.getElementById('ta-input');
-  if (!panel || !launcher || !backdrop) return;
+  if (!panel || !launcher) return;
 
-  var TRANSITION_MS = 300;
+  var TRANSITION_MS = 220;
   var hideTimer = null;
+  var isOpen = false;
 
   function open() {
+    if (isOpen) return;
+    isOpen = true;
     clearTimeout(hideTimer);
-    backdrop.hidden = false;
-    panel.hidden = false;
+    panel.classList.add('is-open');
+    launcher.classList.add('is-hidden');
     requestAnimationFrame(function () {
-      document.body.classList.add('ta-open');
+      panel.classList.add('is-visible');
     });
     launcher.setAttribute('aria-expanded', 'true');
     setTimeout(function () {
@@ -280,11 +282,13 @@
   }
 
   function close() {
-    document.body.classList.remove('ta-open');
+    if (!isOpen) return;
+    isOpen = false;
+    panel.classList.remove('is-visible');
+    launcher.classList.remove('is-hidden');
     launcher.setAttribute('aria-expanded', 'false');
     hideTimer = setTimeout(function () {
-      backdrop.hidden = true;
-      panel.hidden = true;
+      panel.classList.remove('is-open');
     }, TRANSITION_MS);
     launcher.focus();
   }
@@ -292,15 +296,14 @@
   launcher.addEventListener('click', open);
   if (openInlineBtn) openInlineBtn.addEventListener('click', open);
   if (collapseBtn) collapseBtn.addEventListener('click', close);
-  backdrop.addEventListener('click', close);
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && document.body.classList.contains('ta-open')) close();
+    if (e.key === 'Escape' && isOpen) close();
   });
 
   document.querySelectorAll('.ta-chip[data-ta-prompt]').forEach(function (chip) {
     chip.addEventListener('click', function () {
-      if (!document.body.classList.contains('ta-open')) open();
+      if (!isOpen) open();
     });
   });
 })();

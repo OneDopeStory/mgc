@@ -32,7 +32,7 @@
     "postalCode": "21202",
     "addressCountry": "US"
   },
-  "telephone": "+1-410-952-2846",
+  "telephone": "+1-443-208-8178",
   "email": "info@mgcglobalconsulting.com",
   "sameAs": [
     "https://x.com/just_mgc",
@@ -799,110 +799,6 @@ img{max-width:100%;display:block}
 .footer-logo-img{width:56px;height:56px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 0 10px rgba(0,187,255,0.35)) drop-shadow(0 2px 6px rgba(0,0,0,0.5))}
 
 /* ══════════════════════════════════════════════════════
-   AI NAVIGATOR WIDGET (Bottom Right — like Notion)
-   ══════════════════════════════════════════════════════ */
-#mgc-agent{position:fixed;bottom:2rem;right:2rem;z-index:99999;font-family:var(--ui)}
-.agent-bubble{
-  width:56px;height:56px;border-radius:50%;
-  background:linear-gradient(135deg,var(--royal),var(--bright));
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-  box-shadow:0 4px 28px var(--glow),0 0 0 2px rgba(0,187,255,0.3);
-  transition:all 0.35s var(--ease);
-  font-size:1.3rem;
-  position:relative;
-}
-.agent-bubble:hover{transform:scale(1.08);box-shadow:0 6px 36px var(--glow-sky)}
-.agent-pulse{
-  position:absolute;inset:-4px;border-radius:50%;
-  border:2px solid rgba(0,187,255,0.35);
-  animation:agentPulse 2.5s ease-in-out infinite;
-}
-@keyframes agentPulse{0%,100%{transform:scale(1);opacity:0.6}50%{transform:scale(1.15);opacity:0}}
-.agent-notif{
-  position:absolute;top:-2px;right:-2px;width:14px;height:14px;
-  background:var(--gold);border-radius:50%;border:2px solid var(--abyss);
-  display:flex;align-items:center;justify-content:center;
-  font-size:0.5rem;font-weight:700;color:var(--abyss);
-}
-.agent-panel{
-  position:absolute;bottom:68px;right:0;
-  width:320px;
-  background:rgba(2,17,31,0.97);
-  border:1px solid var(--b-hi);
-  border-radius:var(--radius);
-  overflow:hidden;
-  opacity:0;transform:translateY(12px) scale(0.97);pointer-events:none;
-  transition:all 0.35s var(--ease);
-  box-shadow:0 12px 60px rgba(0,0,0,0.7);
-}
-.agent-panel.open{opacity:1;transform:translateY(0) scale(1);pointer-events:all}
-.agent-panel-head{
-  padding:1rem 1.25rem;
-  background:linear-gradient(135deg,rgba(0,47,150,0.5),rgba(0,102,255,0.2));
-  border-bottom:1px solid var(--b-lo);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.agent-title{
-  display:flex;align-items:center;gap:0.6rem;
-}
-.agent-avatar{
-  width:32px;height:32px;border-radius:50%;
-  background:linear-gradient(135deg,var(--royal),var(--bright));
-  display:flex;align-items:center;justify-content:center;
-  font-size:0.85rem;
-}
-.agent-name{font-weight:700;font-size:0.85rem;color:white}
-.agent-status{font-size:0.62rem;color:var(--bright);display:flex;align-items:center;gap:0.3rem}
-.agent-status::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--bright);box-shadow:0 0 5px var(--bright)}
-.agent-close{background:none;border:none;color:var(--t-dim);cursor:pointer;font-size:1.1rem;padding:0;line-height:1;transition:color 0.3s}
-.agent-close:hover{color:white}
-
-.agent-messages{
-  height:200px;overflow-y:auto;padding:1rem 1.25rem;
-  display:flex;flex-direction:column;gap:0.75rem;
-  scrollbar-width:thin;scrollbar-color:var(--b-mid) transparent;
-}
-.agent-msg{max-width:85%;font-size:0.82rem;line-height:1.5}
-.agent-msg.bot{
-  background:rgba(0,47,150,0.2);border:1px solid var(--b-lo);
-  border-radius:12px 12px 12px 2px;padding:0.65rem 0.9rem;color:var(--t-hi);
-}
-.agent-msg.user{
-  align-self:flex-end;
-  background:linear-gradient(135deg,var(--royal),var(--sky));
-  border-radius:12px 12px 2px 12px;padding:0.65rem 0.9rem;color:white;
-}
-
-.agent-quicklinks{padding:0.75rem 1.25rem;border-top:1px solid var(--b-lo);display:flex;flex-wrap:wrap;gap:0.4rem}
-.agent-ql{
-  font-size:0.7rem;font-weight:600;
-  background:rgba(0,102,255,0.1);border:1px solid var(--b-mid);
-  color:var(--bright);border-radius:var(--pill);
-  padding:0.3rem 0.75rem;cursor:pointer;transition:all 0.3s;
-}
-.agent-ql:hover{background:rgba(0,102,255,0.25);border-color:var(--b-hi);color:white}
-
-.agent-input-row{
-  padding:0.75rem 1.25rem;border-top:1px solid var(--b-lo);
-  display:flex;gap:0.5rem;align-items:center;
-}
-.agent-input{
-  flex:1;background:rgba(1,12,26,0.7);border:1px solid var(--b-mid);
-  border-radius:var(--pill);padding:0.5rem 0.9rem;
-  color:white;font-family:var(--ui);font-size:0.8rem;outline:none;
-  transition:border-color 0.3s;
-}
-.agent-input:focus{border-color:var(--bright)}
-.agent-send{
-  width:32px;height:32px;border-radius:50%;
-  background:linear-gradient(135deg,var(--royal),var(--sky));
-  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  color:white;font-size:0.75rem;transition:all 0.3s;flex-shrink:0;
-}
-.agent-send:hover{filter:brightness(1.2);transform:scale(1.05)}
-
-/* ══════════════════════════════════════════════════════
    SCROLL REVEAL
    ══════════════════════════════════════════════════════ */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity 0.7s var(--ease),transform 0.7s var(--ease)}
@@ -947,8 +843,6 @@ img{max-width:100%;display:block}
   .trust-item:nth-child(n+4){display:none}
   .vision-content h2{font-size:1.9rem}
   .form-grid-2{grid-template-columns:1fr}
-  #mgc-agent{bottom:1.5rem;right:1.5rem}
-  .agent-panel{width:290px}
 }
 
 /* ══════════════════════════════════════════════════════
@@ -1096,14 +990,41 @@ img{max-width:100%;display:block}
   width:100%;max-height:420px;object-fit:cover;display:block;
 }
 .why-visual-caption{
-  position:absolute;bottom:0;left:0;right:0;
-  background:linear-gradient(to top,rgba(1,12,26,0.95) 0%,rgba(1,12,26,0.5) 70%,transparent 100%);
-  padding:2rem 2.5rem 1.5rem;
+  background:rgba(1,12,26,0.6);
+  border-top:1px solid var(--b-lo);
+  padding:1.5rem 2.5rem;
   display:flex;align-items:center;gap:1rem;
 }
 .wvc-icon{font-size:1.4rem}
 .why-visual-caption span:last-child{
   font-family:var(--body);font-size:.9rem;color:var(--t-mid);line-height:1.5;
+}
+
+/* ── Owner's thought bubble — frosted glass, animated, its own space ── */
+.mgc-thought{margin:2.5rem auto 0;max-width:520px;text-align:center}
+.mgc-thought-bubble{
+  position:relative;
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(0,153,255,0.18);
+  border-radius:28px;
+  padding:1.5rem 2.25rem;
+  box-shadow:0 20px 50px -24px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.06);
+  animation:mgc-thought-float 5s ease-in-out infinite;
+}
+.mgc-thought-text{font-family:var(--display);font-weight:600;font-size:1.15rem;line-height:1.4;color:var(--white)}
+@keyframes mgc-thought-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.mgc-thought-tail{display:flex;justify-content:center;gap:.4rem;margin-top:.5rem}
+.mgc-thought-tail span{display:block;border-radius:50%;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);background:rgba(255,255,255,0.04);border:1px solid rgba(0,153,255,0.14)}
+.mgc-thought-tail span:first-child{width:14px;height:14px}
+.mgc-thought-tail span:last-child{width:7px;height:7px;margin-left:-4px}
+.mgc-thought-sign{margin-top:1.1rem;font-family:var(--ui);font-style:italic;font-size:.85rem;color:var(--t-mid)}
+.mgc-thought-tag{display:inline-block;margin-left:.5rem;font-family:var(--mono);font-style:normal;font-size:.68rem;letter-spacing:.04em;color:var(--cyan)}
+@media(prefers-reduced-motion:reduce){.mgc-thought-bubble{animation:none}}
+@media(max-width:768px){
+  .why-visual-caption{padding:1.25rem 1.5rem}
+  .mgc-thought-bubble{padding:1.25rem 1.5rem}
+  .mgc-thought-text{font-size:1.05rem}
 }
 
 /* ══════════════════════════════════════════════════════
@@ -1271,7 +1192,7 @@ html{scroll-padding-top:80px}
 .eco-image-frame-sm{height:180px}
 
 </style>
-<link rel="stylesheet" href="assets/trueassist-widget.css">
+<link rel="stylesheet" href="assets/trueassist-widget.css?v=20261016c">
 <link rel="stylesheet" href="assets/hero-globe.css">
 </head>
 <body>
@@ -1718,14 +1639,22 @@ html{scroll-padding-top:80px}
     <!-- MGC Global Image — team + globe -->
     <div class="why-visual-row reveal">
       <div class="why-visual-wrap">
-        <img src="assets/mgc-global-image-2.jpg" alt="MGC Global Consulting — Notion, Globe, Team, Conversion Systems" class="why-visual-img">
+        <img src="assets/mgc-global-image-2.jpg" alt="MGC Global Consulting — global team, custom systems, conversion architecture" class="why-visual-img">
         <div class="why-visual-caption">
           <span class="wvc-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
           </span>
-          <span>From Notion-powered CRMs to world-class conversion systems — we build it all in one cohesive stack.</span>
+          <span>From custom-built CRMs to world-class conversion systems — every piece connects into one cohesive stack.</span>
         </div>
       </div>
+    </div>
+
+    <div class="mgc-thought reveal">
+      <div class="mgc-thought-bubble">
+        <span class="mgc-thought-text">Good systems don't just work. They connect.</span>
+      </div>
+      <div class="mgc-thought-tail" aria-hidden="true"><span></span><span></span></div>
+      <p class="mgc-thought-sign">— Make The Connection <span class="mgc-thought-tag">#MakeTheConnection</span></p>
     </div>
 
     <div class="stats-strip">
@@ -1791,8 +1720,8 @@ html{scroll-padding-top:80px}
           <div class="ci-row">
             <div class="ci-ico"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12h8M12 8v8"/></svg></div>
             <div>
-              <div class="ci-lbl">Phone</div>
-              <div class="ci-val"><a href="tel:4109522846">410-952-2846</a></div>
+              <div class="ci-lbl">Phone — Direct, 24/7 Client Support</div>
+              <div class="ci-val"><a href="tel:+14432088178">1.443.208.8178</a></div>
             </div>
           </div>
         </div>
@@ -1903,47 +1832,49 @@ html{scroll-padding-top:80px}
       <h2 id="ta-heading">Ask the MGC AI advisor <span class="sky-text">before you book</span></h2>
       <p>TrueAssist answers questions about AI strategy, automation, CRM design, and how an engagement with MGC works. For questions about your own account, sign in to the client portal.</p>
       <div class="ta-chips" role="group" aria-label="Suggested questions">
+        <button type="button" class="ta-chip" data-ta-prompt="What does MGC's pricing look like?">Pricing</button>
         <button type="button" class="ta-chip" data-ta-prompt="What does an AI readiness assessment include?">AI readiness assessment</button>
         <button type="button" class="ta-chip" data-ta-prompt="Which automation should a small business start with?">Where to start with automation</button>
         <button type="button" class="ta-chip" data-ta-prompt="How does a CRM optimization engagement work?">CRM optimization</button>
+        <a href="/book" class="ta-chip">Book a call</a>
+        <a href="/dashboard" class="ta-chip">Client Portal</a>
       </div>
       <button type="button" class="ta-open-btn" id="ta-open-inline">
-        <svg class="ta-sparkle-ico" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.6L19.4 9.4 13.8 11.2 12 17l-1.8-5.8L4.6 9.4l5.6-1.8L12 2z"/><path d="M19 15l.8 2.4L22 18l-2.2.6L19 21l-.8-2.4L16 18l2.2-.6L19 15z" opacity=".7"/></svg>
+        <svg class="ta-sparkle-ico" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.6L19.4 9.4 13.8 11.2 12 17l-1.8-5.8L4.6 9.4l5.6-1.8L12 2z"/><path d="M19 15l.8 2.4L22 18l-2.2.6L19 21l-.8-2.4L16 18l2.2-.6L19 15z" opacity=".7"/></svg>
         Open TrueAssist
       </button>
     </div>
   </div>
-
-  <!-- Floating launcher -->
-  <button type="button" class="ta-launcher" id="ta-launcher" aria-haspopup="dialog" aria-expanded="false" aria-controls="ta-widget" aria-label="Open TrueAssist, MGC's AI advisor">
-    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.6L19.4 10.4 13.8 12.2 12 18l-1.8-5.8L4.6 10.4l5.6-1.8L12 3z"/></svg>
-  </button>
-
-  <!-- Backdrop -->
-  <div class="ta-backdrop" id="ta-backdrop" hidden></div>
-
-  <!-- Assistant window -->
-  <div class="ta-panel" id="ta-widget" role="dialog" aria-modal="true" aria-labelledby="ta-panel-title" hidden>
-    <div class="ta-head">
-      <button type="button" class="ta-collapse" id="ta-collapse" aria-label="Close TrueAssist">
-        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-      </button>
-      <div class="ta-title" id="ta-panel-title"><span class="ta-dot" aria-hidden="true"></span>TrueAssist</div>
-      <button type="button" class="ta-reset" id="ta-reset">Start over</button>
-    </div>
-    <div class="ta-log" id="ta-log" role="log" aria-live="polite" aria-relevant="additions" aria-label="TrueAssist conversation"></div>
-    <p class="ta-status" id="ta-status" role="status"></p>
-    <form class="ta-form" id="ta-form">
-      <label class="ta-sr" for="ta-input">Message TrueAssist</label>
-      <svg class="ta-sparkle-ico ta-form-sparkle" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.6L19.4 9.4 13.8 11.2 12 17l-1.8-5.8L4.6 9.4l5.6-1.8L12 2z"/></svg>
-      <textarea id="ta-input" class="ta-input" rows="1" maxlength="1000" placeholder="Ask about strategy, automation, or next steps" required></textarea>
-      <button type="submit" class="ta-send" id="ta-send" aria-label="Send message">
-        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-      </button>
-    </form>
-    <div class="ta-count" id="ta-count" aria-hidden="true">0 / 1000</div>
-  </div>
 </section>
+
+<!-- TrueAssist floating launcher + assistant window. Deliberately NOT nested inside
+     .ta-section (or any other transformed/.reveal ancestor) — a CSS transform on an
+     ancestor redefines the containing block for position:fixed children, which breaks
+     the corner-floating behavior below. -->
+<button type="button" class="ta-launcher" id="ta-launcher" aria-haspopup="dialog" aria-expanded="false" aria-controls="ta-widget" aria-label="Open TrueAssist, MGC's AI advisor">
+  <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.6L19.4 10.4 13.8 12.2 12 18l-1.8-5.8L4.6 10.4l5.6-1.8L12 3z"/></svg>
+</button>
+
+<div class="ta-panel" id="ta-widget" role="dialog" aria-modal="true" aria-labelledby="ta-panel-title">
+  <div class="ta-head">
+    <button type="button" class="ta-collapse" id="ta-collapse" aria-label="Close TrueAssist">
+      <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="ta-title" id="ta-panel-title"><span class="ta-dot" aria-hidden="true"></span>TrueAssist</div>
+    <button type="button" class="ta-reset" id="ta-reset">Start over</button>
+  </div>
+  <div class="ta-log" id="ta-log" role="log" aria-live="polite" aria-relevant="additions" aria-label="TrueAssist conversation"></div>
+  <p class="ta-status" id="ta-status" role="status"></p>
+  <form class="ta-form" id="ta-form">
+    <label class="ta-sr" for="ta-input">Message TrueAssist</label>
+    <svg class="ta-sparkle-ico ta-form-sparkle" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.6L19.4 9.4 13.8 11.2 12 17l-1.8-5.8L4.6 9.4l5.6-1.8L12 2z"/></svg>
+    <textarea id="ta-input" class="ta-input" rows="1" maxlength="1000" placeholder="Ask about strategy, automation, or next steps" required></textarea>
+    <button type="submit" class="ta-send" id="ta-send" aria-label="Send message">
+      <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </button>
+  </form>
+  <div class="ta-count" id="ta-count" aria-hidden="true">0 / 1000</div>
+</div>
 
 <footer class="footer">
   <div class="container">
@@ -1986,7 +1917,7 @@ html{scroll-padding-top:80px}
         <a href="mailto:info@mgcglobalconsulting.com">info@mgcglobalconsulting.com</a>
         <a href="mailto:billing@mgcglobalconsulting.com">billing@mgcglobalconsulting.com</a>
         <a href="mailto:sales@mgcglobalconsulting.com">sales@mgcglobalconsulting.com</a>
-        <span>410-952-2846</span>
+        <span>1.443.208.8178</span>
         <span>101 W Lombard St, Baltimore, MD 21202</span>
       </div>
     </div>
@@ -2001,40 +1932,6 @@ html{scroll-padding-top:80px}
     </div>
   </div>
 </footer>
-
-<!-- ══════════════ AI NAVIGATOR WIDGET ══════════════ -->
-<div id="mgc-agent">
-  <div class="agent-bubble" id="agentBubble" title="MGC Navigator — Ask me anything">
-    <div class="agent-pulse"></div>
-    <span style="display:flex;align-items:center;justify-content:center;width:28px;height:28px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M9 11V7a3 3 0 0 1 6 0v4"/><circle cx="9" cy="16" r="1" fill="currentColor"/><circle cx="15" cy="16" r="1" fill="currentColor"/><path d="M12 3v2"/></svg></span>
-    <div class="agent-notif">1</div>
-  </div>
-  <div class="agent-panel" id="agentPanel">
-    <div class="agent-panel-head">
-      <div class="agent-title">
-        <div class="agent-avatar" style="display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M9 11V7a3 3 0 0 1 6 0v4"/><circle cx="9" cy="16" r="1" fill="currentColor"/><circle cx="15" cy="16" r="1" fill="currentColor"/><path d="M12 3v2"/></svg></div>
-        <div>
-          <div class="agent-name">MGC Navigator</div>
-          <div class="agent-status">Online · Ready to help</div>
-        </div>
-      </div>
-      <button class="agent-close" id="agentClose">×</button>
-    </div>
-    <div class="agent-messages" id="agentMessages">
-      <div class="agent-msg bot">Hi! I'm the MGC Navigator. I can help you explore our services, find pricing, or get to the right page fast. What are you looking for?</div>
-    </div>
-    <div class="agent-quicklinks">
-      <span class="agent-ql" data-action="pricing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="12" height="12"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Pricing</span>
-      <span class="agent-ql" data-action="services"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="12" height="12"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg> Services</span>
-      <span class="agent-ql" data-action="book"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="12" height="12"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Schedule</span>
-      <span class="agent-ql" data-action="portal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="12" height="12"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Client Portal</span>
-    </div>
-    <div class="agent-input-row">
-      <input class="agent-input" id="agentInput" type="text" placeholder="Ask me anything...">
-      <button class="agent-send" id="agentSendBtn">➤</button>
-    </div>
-  </div>
-</div>
 
 <!-- ══════════════ SCRIPTS ══════════════ -->
 <script>
@@ -2210,11 +2107,12 @@ document.getElementById('bkSubmit').addEventListener('click', async () => {
   };
 
   try {
-    await fetch('/.netlify/functions/lead-intake', {
+    const res = await fetch('/.netlify/functions/lead-intake', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
+    if (!res.ok) throw new Error('Request failed');
     document.getElementById('formArea').style.display = 'none';
     document.getElementById('formSuccess').style.display = 'block';
   } catch (err) {
@@ -2224,94 +2122,8 @@ document.getElementById('bkSubmit').addEventListener('click', async () => {
   }
 });
 
-// ── 8. AI Navigator Widget ─────────────────────────────────────────────────
-const agentBubble = document.getElementById('agentBubble');
-const agentPanel = document.getElementById('agentPanel');
-const agentClose = document.getElementById('agentClose');
-const agentMessages = document.getElementById('agentMessages');
-const agentInput = document.getElementById('agentInput');
-const agentSendBtn = document.getElementById('agentSendBtn');
-
-let agentOpen = false;
-
-agentBubble.addEventListener('click', () => {
-  agentOpen = !agentOpen;
-  agentPanel.classList.toggle('open', agentOpen);
-  document.querySelector('.agent-notif').style.display = 'none';
-  if (agentOpen) agentInput.focus();
-});
-agentClose.addEventListener('click', () => {
-  agentOpen = false;
-  agentPanel.classList.remove('open');
-});
-
-// Knowledge base for navigation
-const MGC_KB = [
-  { keywords: ['price','pricing','cost','how much','rate','fee','invest'], response: 'Our services start at $750 for the AI Readiness Assessment. Memberships run $199–$1,299/mo. Want to see all options?', link: 'membership.html', linkText: 'View Membership Plans' },
-  { keywords: ['ai','consulting','strategy','roadmap','assess'], response: 'Our AI Consulting & Strategy service includes readiness assessments, 90-day roadmaps, and ROI modeling.', link: 'ai-consulting.html', linkText: 'View AI Consulting' },
-  { keywords: ['automat','zapier','workflow','n8n','slack'], response: 'Our Automation Architecture service builds multi-platform workflows that eliminate manual work. Starter pack from $1,500.', link: 'automation.html', linkText: 'View Automation Services' },
-  { keywords: ['crm','hubspot','notion','pipeline','lead'], response: 'We build custom CRM systems in Notion and HubSpot — audit from $950, full build from $3,800.', link: 'crm-optimization.html', linkText: 'View CRM Services' },
-  { keywords: ['train','workshop','team','educat','learn'], response: 'Our AI Workshops help teams at any level adopt AI practically, not theoretically.', link: 'ai-workshops.html', linkText: 'View Workshops' },
-  { keywords: ['retainer','ongoing','support','membership','member'], response: 'We offer Starter ($199), Pro ($499), and Elite ($1,299) membership tiers for ongoing support.', link: 'membership.html', linkText: 'View Membership' },
-  { keywords: ['book','call','schedule','calendar','meeting','appoint'], response: 'Scroll down to pick a date on our calendar and submit a session request — we respond within 24 hours!', scrollTo: '#booking' },
-  { keywords: ['portal','dashboard','login','member area','client'], response: 'Client Portal is your hub for deliverables, invoices, and AI agent status.', link: 'dashboard.html', linkText: 'Go to Client Portal' },
-  { keywords: ['pay','invoice','checkout','purchase','buy'], response: 'Ready to invest? Head to our checkout or request an invoice.', link: 'checkout.html', linkText: 'Go to Checkout' },
-  { keywords: ['contact','email','phone','reach'], response: 'Email us at info@mgcglobalconsulting.com or call 410-952-2846. We respond within 24 hours.', scrollTo: '#booking' },
-];
-
-function agentRespond(userText) {
-  const txt = userText.toLowerCase();
-  let response = 'I\'m not sure about that one. Try asking about our pricing, services, or how to book a call — or email us at info@mgcglobalconsulting.com';
-  let link = null, linkText = null, scrollTo = null;
-
-  for (const entry of MGC_KB) {
-    if (entry.keywords.some(k => txt.includes(k))) {
-      response = entry.response;
-      link = entry.link || null;
-      linkText = entry.linkText || null;
-      scrollTo = entry.scrollTo || null;
-      break;
-    }
-  }
-
-  const msgEl = document.createElement('div');
-  msgEl.className = 'agent-msg bot';
-  let html = response;
-  if (link) html += `<br><br><a href="${link}" style="color:var(--bright);font-weight:600;text-decoration:underline">${linkText} →</a>`;
-  if (scrollTo) {
-    html += `<br><br><span style="color:var(--bright);font-weight:600;cursor:pointer;text-decoration:underline" onclick="document.querySelector('${scrollTo}').scrollIntoView({behavior:'smooth'});document.getElementById('agentPanel').classList.remove('open')">Jump to section →</span>`;
-  }
-  msgEl.innerHTML = html;
-  agentMessages.appendChild(msgEl);
-  agentMessages.scrollTop = agentMessages.scrollHeight;
-}
-
-function agentSend() {
-  const txt = agentInput.value.trim();
-  if (!txt) return;
-  const userMsg = document.createElement('div');
-  userMsg.className = 'agent-msg user';
-  userMsg.textContent = txt;
-  agentMessages.appendChild(userMsg);
-  agentInput.value = '';
-  agentMessages.scrollTop = agentMessages.scrollHeight;
-  setTimeout(() => agentRespond(txt), 400);
-}
-
-agentSendBtn.addEventListener('click', agentSend);
-agentInput.addEventListener('keydown', e => { if (e.key === 'Enter') agentSend(); });
-
-// Quick link actions
-document.querySelectorAll('.agent-ql').forEach(ql => {
-  ql.addEventListener('click', () => {
-    const action = ql.dataset.action;
-    const queries = { pricing: 'pricing', services: 'services list', book: 'book a call', portal: 'client portal' };
-    agentInput.value = queries[action] || action;
-    agentSend();
-  });
-});
 </script>
-<script src="assets/trueassist-widget.js" defer></script>
+<script src="assets/trueassist-widget.js?v=20261016c" defer></script>
 <script src="assets/hero-globe.js" defer></script>
 </body>
 </html>

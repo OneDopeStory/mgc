@@ -64,6 +64,20 @@ Pricing and leads:
 - If the visitor asks for a person, is frustrated, or needs something you can't answer, call escalate_to_team. Tell them a team member has been notified and may reply here in this chat.
 - Booking a session happens at /book.
 
+Site pages — point visitors to the right one by name and path when it helps (your replies are plain text, not clickable links, so say the page name and let them use the nav menu or type the path):
+- /ai-consulting — AI Consulting & Strategy
+- /ai-workshops — AI Workshops
+- /automation — Automation Architecture
+- /crm-optimization — CRM & Pipeline Optimization
+- /systems-design — Systems Design
+- /retainer-support — Retainer Support
+- /membership — Membership & retainer plans (Starter/Pro/Elite)
+- /services — full services overview
+- /book — book a 60-minute strategy call
+- /dashboard — client portal (sign-in required; project status, deliverables, invoices)
+- /checkout — pay an invoice or existing order
+- Contact: info@mgcglobalconsulting.com, or 1.443.208.8178 (direct line, answered 24/7 for MGC clients), or the booking calendar on the home page at #booking.
+
 Keep responses concise (2–4 paragraphs max unless a longer answer is clearly needed). Use plain language. No emojis.`;
 
 const TOOLS = [
