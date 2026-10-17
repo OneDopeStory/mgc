@@ -6,6 +6,141 @@
 [functions]
   node_bundler = "esbuild"
 
+# ── Block internal files from being served ───────────────────────────────
+# Repo docs, config, and dev-tool folders live at the publish root (".") alongside
+# the site. Without these, anything that slips past .netlifyignore (or a future
+# `netlify deploy --dir .` from a clean checkout) is publicly fetchable by name.
+[[redirects]]
+  from   = "/CLAUDE.md"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/AGENTS.md"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/ALEX.md"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/BRANDING.md"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/DESIGN.md"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/README.md"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/Gemini.md"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/cloud.md"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/2026-04-07.md"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/SYSTEM_CONTEXT_AND_ROLE_DEFINITION.md"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/netlify.toml"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/package.json"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/package-lock.json"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/.env.template"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/.env.local"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/slack-agent/*"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/supabase/*"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/open-seo/*"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/docs/*"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/wiki/*"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/data/*"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/integrations/*"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/utils/*"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/tests/*"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/.mgc-audit/*"
+  to     = "/404"
+  status = 404
+  force  = true
+[[redirects]]
+  from   = "/MGC-Vault/*"
+  to     = "/404"
+  status = 404
+  force  = true
+
 # ── Redirects ──────────────────────────────────────────────────────────
 # Consolidate audited page aliases. Force redirects even when a duplicate file exists.
 # Query strings pass through unchanged (checkout, payment returns, and OAuth links).
@@ -399,6 +534,15 @@
   from   = "/api/slack/events"
   to     = "/.netlify/functions/slack-events"
   status = 200
+  force  = true
+
+# Catch-all: blocks the unrelated api/ scaffold's static files (api/index.html, api/config/*,
+# etc. — a separate Zapier/webhook project living in this repo). Placed AFTER the two real
+# /api/chat and /api/slack/events rewrites above so it never shadows them.
+[[redirects]]
+  from   = "/api/*"
+  to     = "/404"
+  status = 404
   force  = true
 
 [[redirects]]

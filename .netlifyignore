@@ -1,0 +1,33 @@
+# Keeps `netlify deploy` from uploading everything in this folder.
+# Netlify CLI does NOT read .gitignore — without this file it uploads
+# every file it finds, including other projects' node_modules and
+# internal notes that have nothing to do with the live site.
+
+node_modules
+api
+slack-agent
+public
+
+.netlify
+.git
+.obsidian
+.claude
+.claude-flow
+.swarm
+.agents
+.codex
+.firecrawl
+.superpowers
+.vscode
+
+open-seo
+MGC-Vault
+wiki
+docs
+data
+integrations
+utils
+tests
+.mgc-audit
+.vercel.stale-backup
+supabase

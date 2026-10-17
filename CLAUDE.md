@@ -2,6 +2,37 @@
 
 Canonical project memory. Read this first; it is kept short on purpose to save tokens. Long reference material lives in `docs/reference/` (full archive: `docs/reference/CLAUDE-archive-2026-10-03.md`).
 
+## Session handoff (2026-10-16): START HERE — check this first, before anything else
+
+### P0 — Possible lost/orphaned site version — CHECK THIS FIRST next session
+
+A Vercel project named `mgc-site-complete_1-update` (id `prj_9xDoIEWeEJsyUInMiAVtpfsOTMTa`, under the owner's personal `onedopestory` Vercel account, created 2026-09-30) was **deleted** this session after the owner confirmed it looked like it was serving stale pages (it auto-built from this repo's `public/` folder, which was ~400 lines behind root on some pages). After deletion, the owner said this might have actually been **a different, more advanced site version** ("the other site we had") with admin/dashboard features and a different color style, not just a stale duplicate — this was never confirmed either way.
+
+**What's certain:** deleting a Vercel *project* never deletes local files or git history — it only removes Vercel's own deployment record. No file on disk was touched by this deletion.
+
+**What's unresolved:** no GitHub repo named to match `mgc-site-complete_1-update` exists under either the `mgcglobalconsulting` org or the owner's personal GitHub account (checked via `gh repo list` on both — only `mgc-site-complete_1`, `mgc`, `taste-tys-kitchen`, `lovelicare` exist). The owner has several other local folders on `~/Desktop` that were never compared against this repo and could be the real source: `MGC_V2`, `mgc-site`, `mgc-dashboard-examples`, `mgc-site-edits-todo`, `mgc-info-agent`, `mgc-automations`, `mgc-site-graphics` / `mgc-site-graphics copy` (the last two are already confirmed as the source of the v3 "liquid glass" Command Center restyle, so not the mystery). Owner's decision this session: don't chase it now, build from what's in `mgc-site-complete_1` — but asked explicitly that checking this comes first next time.
+**How to apply:** Next session, before other work, offer to diff `mgc-site-complete_1` against each of those candidate folders (file-count + a few key pages) to settle whether anything was actually missed.
+
+### Command Center dashboard — confirmed live, not lost, but running on sample data
+
+`command-center.html` (+ `assets/command-center*.{css,js}`) is fully built and **committed to git** (contrary to an earlier stale memory note claiming it was "uncommitted, not deployed" — that's no longer true as of this session). It's a real admin dashboard with a "Staff and agents" section tracking 5 seeded demo agents (Intake, Client Success, Billing, Outreach, Ops Monitor) — if the owner ever shows a screenshot of an "Agentic staff / Workforce" table with a gold SAMPLE badge, **that is this page**, not a lost or external feature. Full spec: `docs/command-center.md`.
+- **Still pending (owner decided this is next, 2026-10-16):** apply `supabase/migrations/20261005220000_command_center.sql` to the real Supabase project so the dashboard shows live data instead of SAMPLE fallbacks. Claude could not run this directly this session — the Supabase MCP connection available in this environment only reaches a different client's project (LoveLi), not MGC's `bjnpibxaxlgvlzeegwnm`. Needs to be run manually by the owner, or the MCP connection re-pointed.
+- After that: populate `mgc_staff` with real human staff + hourly rates (the 5 agents are already seeded).
+- **Not yet built:** the owner's bigger idea — TrueAssist/"Alex" automatically dispatching incoming form submissions to one of the 5 agent roles, with Slack approval for human oversight. This is a new feature on top of the existing (display-only) dashboard, not a restoration. Needs its own scoping session.
+- Resend: owner has a Resend account and sent a successful test email, wants it wired into TrueAssist/"Alex" for client communications. **Not implemented anywhere in `netlify/functions/` yet** — `RESEND_API_KEY` was anticipated in the env var list but never wired to actual code.
+
+### Other changes this session (2026-10-16), all local commit `be0082e` or later, nothing pushed to GitHub
+
+- TrueAssist absorbed the old "MGC Navigator" bottom-right chat widget's functionality (quick-link chips for Pricing/Book a call/Client Portal, full site-page map in its system prompt) and Navigator was deleted entirely (CSS/HTML/JS all removed from `index.html`).
+- Phone number corrected sitewide: `410-952-2846` → `1.443.208.8178` (direct, 24/7 client line), including `public/` but **not** `api/` (owner's call — `api/` is a separate Zapier/webhook scaffold, left untouched).
+- Footer address corrected on `onboarding-assistant.html`: "Owings Mills, MD" → "101 W Lombard St, Baltimore, MD 21202" (owner confirmed Lombard St is correct; this was the last page still showing the old address).
+- Fixed a real bug in `index.html`'s booking-form submit handler: it wasn't checking `res.ok` before showing "Request Received!" — a failed request looked identical to a successful one. Fixed to match `book.html`'s already-correct pattern.
+- Added a hero "thought bubble" component below the `why-visual` image on `index.html` (frosted-glass, animated, `#MakeTheConnection` tagline + "Make The Connection" signature), and reworded the image caption to drop "Notion" branding in favor of "custom-built" / "connects."
+- Added `.netlifyignore` — without it, `netlify deploy` was trying to upload 23,000+ files (other projects' `node_modules`, the `slack-agent` sub-app, `.netlify` cache, `open-seo`, vault notes, etc. that happen to live in this same folder). Cut to ~2,100 files deploy-ready.
+- **Security fix, found live during this session's draft deploy:** `CLAUDE.md`, `AGENTS.md`, `README.md`, `BRANDING.md`, `DESIGN.md`, `ALEX.md`, `package.json`, `package-lock.json`, and the stray `api/` scaffold were all publicly fetchable on the draft URL (netlify.toml had no block rule — this was flagged as a risk back on 2026-10-05 and it wasn't luck this time). Added ~25 explicit 404 redirect rules in `netlify.toml` to block all of them. **Caution for next session:** when adding more block rules, add them at the *end* of the redirects list, not the top — a first version of this fix accidentally shadowed the real `/api/chat` and `/api/slack/events` function rewrites (they're defined much further down the file) and broke TrueAssist's actual chat endpoint and the Slack relay until caught and fixed. Verified working again before moving on.
+- Netlify CLI deploy (`npx netlify deploy --dir .`, no `--prod`) was blocked once by this environment's sandbox safety classifier ("Data Exfiltration") when attempted from inside the session; it worked fine once the owner ran/re-triggered it directly. A draft preview was created and verified (security blocks working, API routes working, `/public/...` legacy redirects still working, real pages all 200). **Not promoted to production** — awaiting the owner's explicit go-ahead for `--prod`.
+- Deleted the orphaned Vercel project `mgc-site-complete_1-update` (see P0 section above for the open question this raised).
+
 ## Session handoff (2026-10-05): START HERE
 
 Everything in this section was verified live on 2026-10-05 with `netlify env:list`, `netlify api`, `curl` against production, and `git`. It **supersedes** any conflicting statement later in this file.
