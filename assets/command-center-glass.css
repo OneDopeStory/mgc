@@ -1,9 +1,11 @@
-/* MGC Command Center — "Liquid Glass" layer.
-   Matches ~/Desktop/mgc-site-graphics (glass panes, gold light streams into the MGC hub,
-   chrome hex badges, circuit floor) and DESIGN.md tokens. Loads after command-center.css. */
-@property --cc-ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+/* MGC Command Center — brand layer.
+   Applies the real BRANDING.md ocean-to-sky tokens on top of command-center.css's
+   own palette, and keeps the functional glass-card look. Loads after command-center.css.
+   (Previously also carried the "liquid glass" spectacle — mission-control hub canvas,
+   star field, circuit floor, pointer spotlight, glass-crack transitions. Removed
+   2026-10-16: too much visual noise for what should be a working back-office tool.
+   The owner briefing and agent hex badges below are real, data-driven UI, not spectacle.) */
 :root{
-  /* DESIGN.md ocean-to-sky palette */
   --abyss:#010C1A;--ocean:#02111F;--deep:#031525;--navy:#041C35;--mid:#062B52;
   --royal:#0047CC;--electric:#0066FF;--sky:#0099FF;--bright:#00BBFF;--cyan:#00D4FF;
   --ice:#B8D8F0;--fog:#7AB8E0;--gold:#FFB347;--gold-dim:#C98A2A;
@@ -13,45 +15,23 @@
   --muted:var(--t-mid);--dim:var(--t-dim);--border:var(--b-mid);
   --radius:20px;--r-sm:12px;--pill:100px;
   --font-body:'Outfit','Plus Jakarta Sans',system-ui,sans-serif;--font-ui:'Plus Jakarta Sans',system-ui,sans-serif;
-  /* glass recipe */
-  --glass:linear-gradient(150deg,rgba(184,216,240,.075) 0%,rgba(4,28,53,.62) 34%,rgba(2,17,31,.82) 100%);
-  --glass-edge:linear-gradient(135deg,rgba(0,212,255,.55),rgba(0,153,255,.08) 30%,rgba(0,153,255,.04) 70%,rgba(255,179,71,.28));
-  --glass-shadow:0 24px 48px -24px rgba(0,0,0,.7),inset 0 1px 0 rgba(184,216,240,.14),inset 0 -1px 0 rgba(0,0,0,.4);
   color-scheme:dark;
 }
 body{font-family:var(--font-body);color:var(--ice);background:
-  radial-gradient(ellipse 100% 80% at 60% 30%,rgba(0,71,204,.22) 0%,transparent 60%),
-  radial-gradient(ellipse 50% 40% at 10% 80%,rgba(0,153,255,.08) 0%,transparent 55%),
-  radial-gradient(ellipse 30% 25% at 90% 10%,rgba(0,212,255,.06) 0%,transparent 45%),
+  radial-gradient(ellipse 100% 80% at 60% 30%,rgba(0,71,204,.14) 0%,transparent 60%),
   var(--abyss) fixed}
-/* 72px precision grid + drifting stars + circuit floor */
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:linear-gradient(rgba(0,153,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,153,255,.025) 1px,transparent 1px);background-size:72px 72px}
-body::after{content:"";position:fixed;inset:-50% 0 0;pointer-events:none;z-index:0;opacity:.55;animation:cc-stars 60s linear infinite;
-  background-image:radial-gradient(1px 1px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 68% 8%,rgba(184,216,240,.9),transparent),radial-gradient(1.5px 1.5px at 84% 42%,#00D4FF,transparent),radial-gradient(1px 1px at 33% 61%,#fff,transparent),radial-gradient(1px 1px at 52% 34%,rgba(184,216,240,.8),transparent),radial-gradient(1px 1px at 91% 77%,#fff,transparent),radial-gradient(1.5px 1.5px at 6% 88%,#00BBFF,transparent),radial-gradient(1px 1px at 44% 92%,#fff,transparent);background-size:640px 640px}
-@keyframes cc-stars{to{transform:translateY(640px)}}
-.cc-app,.cc-auth{position:relative;z-index:1}
-.cc-main::after{content:"";display:block;height:120px;margin:8px -24px -48px;pointer-events:none;
-  background:linear-gradient(transparent,rgba(0,71,204,.12)),repeating-linear-gradient(90deg,transparent 0 46px,rgba(0,153,255,.09) 46px 47px),repeating-linear-gradient(0deg,transparent 0 22px,rgba(0,153,255,.07) 22px 23px);
-  transform:perspective(420px) rotateX(58deg);transform-origin:top;mask-image:linear-gradient(transparent,#000 40%)}
 
-/* ── Liquid glass panes ── */
-.cc-card,.cc-kpi,.cc-auth-card{background:var(--glass);border:1px solid transparent;border-radius:var(--radius);box-shadow:var(--glass-shadow);backdrop-filter:blur(14px) saturate(130%);-webkit-backdrop-filter:blur(14px) saturate(130%);isolation:isolate}
-.cc-card::before,.cc-kpi::before,.cc-auth-card::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;z-index:2;
-  background:var(--glass-edge);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+/* ── Cards: glass look, no pointer-tracking spotlight or border-beam ── */
+.cc-card,.cc-kpi,.cc-auth-card{background:linear-gradient(150deg,rgba(184,216,240,.06) 0%,rgba(4,28,53,.62) 34%,rgba(2,17,31,.82) 100%);
+  border:1px solid var(--b-mid);border-radius:var(--radius);
+  box-shadow:0 24px 48px -24px rgba(0,0,0,.7),inset 0 1px 0 rgba(184,216,240,.1);
+  backdrop-filter:blur(14px) saturate(130%);-webkit-backdrop-filter:blur(14px) saturate(130%)}
 .cc-auth-card{position:relative}
-/* spotlight that follows the pointer (set by command-center-fx.js) */
-.cc-card::after,.cc-kpi::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;opacity:0;transition:opacity .4s var(--ease);
-  background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(0,187,255,.09),transparent 45%)}
-.cc-card:hover::after,.cc-kpi:hover::after{opacity:1}
-.cc-card>*,.cc-kpi>*{position:relative;z-index:1}
-.cc-card>.cc-sample-tag,.cc-kpi>.cc-sample-tag{position:absolute;z-index:3}
-/* border beam: a light runs once around the pane when its data changes */
-.cc-card.blip::before,.cc-kpi.blip::before,.cc-tile.blip::before{background:conic-gradient(from var(--cc-ang),transparent 0 70%,var(--cyan) 82%,#fff 86%,var(--gold) 90%,transparent 96%);animation:cc-beam 1.4s var(--ease)}
-@keyframes cc-beam{from{--cc-ang:0deg}to{--cc-ang:360deg}}
-.cc-card.blip,.cc-kpi.blip{box-shadow:var(--glass-shadow),0 0 40px -10px var(--glow-cyan)}
+.cc-card>.cc-sample-tag,.cc-kpi>.cc-sample-tag{position:absolute;z-index:1}
+/* data just changed: a quiet glow, not an animated beam */
+.cc-card.blip,.cc-kpi.blip{box-shadow:0 24px 48px -24px rgba(0,0,0,.7),0 0 0 1px var(--b-hi),0 0 32px -8px var(--glow-cyan);transition:box-shadow .6s var(--ease)}
 
-/* Type per DESIGN.md */
+/* Type */
 .cc-eyebrow{font-weight:700;font-size:10px;letter-spacing:.32em;color:var(--bright);display:inline-flex;align-items:center;gap:8px}
 .cc-eyebrow::before{content:"";width:18px;height:1px;background:linear-gradient(90deg,transparent,var(--bright));opacity:.7}
 .cc-h2{font-weight:800;font-size:18px;color:#fff;text-wrap:balance}
@@ -61,31 +41,24 @@ body::after{content:"";position:fixed;inset:-50% 0 0;pointer-events:none;z-index
 .cc-kpi.gold .cc-kpi-value{background:linear-gradient(135deg,#fff,var(--gold) 60%,var(--gold-dim));-webkit-background-clip:text;background-clip:text;color:transparent}
 .cc-table td,.cc-hbar-val,.cc-funnel-n,.cc-stat{font-variant-numeric:tabular-nums}
 
-/* Pills everywhere (DESIGN.md: all CTAs pill) */
+/* Pills everywhere */
 .cc-btn,.cc-ghost,.cc-act,.cc-chip{border-radius:var(--pill)}
 .cc-btn{background:linear-gradient(135deg,var(--electric),var(--sky) 60%,var(--cyan));color:#fff;font-family:var(--font-ui);text-transform:uppercase;letter-spacing:.06em;font-size:12.5px;box-shadow:0 10px 30px -10px rgba(0,102,255,.6)}
 .cc-act{background:rgba(2,17,31,.7);border-color:var(--b-hi);font-family:var(--font-ui)}
 
-/* Sidebar: a tall glass pane */
+/* Sidebar */
 .cc-side{background:linear-gradient(180deg,rgba(4,28,53,.78),rgba(2,17,31,.92));backdrop-filter:blur(18px);border-right:1px solid var(--b-mid);box-shadow:inset -1px 0 0 rgba(0,212,255,.06)}
 .cc-brand-logo{filter:drop-shadow(0 0 10px rgba(0,212,255,.45))}
 .cc-nav button{font-family:var(--font-ui);border-radius:0 var(--pill) var(--pill) 0}
 .cc-nav button.active{background:linear-gradient(90deg,rgba(0,102,255,.28),rgba(0,212,255,.05));box-shadow:inset 0 1px 0 rgba(184,216,240,.1)}
 .cc-top{background:rgba(1,12,26,.7);border-bottom:1px solid var(--b-mid)}
 
-/* App-tile icons (the floating Slack/Gmail/Notion tiles in the graphics) */
+/* App-tile icons (used in integration-status chips elsewhere on the page) */
 .cc-tile{border-radius:16px;backdrop-filter:blur(10px);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 18px 30px -20px rgba(0,0,0,.8)}
 .cc-tile-icon{border-radius:12px;box-shadow:0 0 22px -4px currentColor,inset 0 1px 0 rgba(255,255,255,.5)}
 .cc-avatar{border-radius:12px;box-shadow:0 0 18px -6px currentColor,inset 0 1px 0 rgba(255,255,255,.45)}
 
-/* ── Mission control: hub + owner briefing ── */
-.cc-grid-mission{grid-template-columns:1.6fr 1fr}
-.cc-mission{padding-bottom:12px}
-.cc-hub-wrap{position:relative;height:330px;margin:0 -8px}
-.cc-hub-wrap canvas{width:100%;height:100%;display:block}
-.cc-hub-caption{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;color:var(--t-dim);font-family:var(--font-mono);letter-spacing:.06em}
-.cc-hub-caption span{display:inline-flex;align-items:center;gap:6px}
-.cc-hub-caption i{width:14px;height:2px;border-radius:2px}
+/* Owner briefing (Command overview). Real data, ranked by severity. */
 .cc-greet{font-family:var(--font-display);font-weight:800;font-size:26px;line-height:1.15;color:#fff;letter-spacing:-.01em;text-wrap:balance}
 .cc-greet em{font-style:normal;background:linear-gradient(135deg,#fff,var(--bright) 55%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
 .cc-brief-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:14px}
@@ -95,17 +68,10 @@ body::after{content:"";position:fixed;inset:-50% 0 0;pointer-events:none;z-index
 .cc-brief-item b{color:#fff;font-weight:600}
 .cc-brief-meta{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t-dim);margin-top:14px}
 
-/* Chrome hex agent badges */
+/* Agent hex badges (Staff and agents table) */
 .cc-hex{display:inline-grid;place-items:center;width:26px;height:28px;margin-right:8px;vertical-align:middle;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
   background:linear-gradient(160deg,#E8F1FA 0%,#8FA6BC 38%,#3D5167 52%,#AFC3D6 70%,#5E7489 100%);font:800 9px var(--font-display);color:var(--abyss)}
 .cc-hex.live{box-shadow:none;filter:drop-shadow(0 0 6px var(--success))}
 
-/* ── Section change: panes slide in like glass sheets ── */
-.cc-view.cc-enter>*,.cc-view.cc-enter .cc-grid>*{animation:cc-pane .7s var(--ease) backwards;animation-delay:calc(var(--i,0) * 55ms)}
-@keyframes cc-pane{from{opacity:0;transform:perspective(900px) translateY(22px) rotateX(9deg) scale(.985);filter:blur(4px)}}
-.cc-crack{position:fixed;inset:0;pointer-events:none;z-index:70}
-
-@media (max-width:1280px){.cc-grid-mission{grid-template-columns:1fr}}
-@media (max-width:760px){.cc-hub-wrap{height:300px}.cc-greet{font-size:22px}.cc-main::after{margin:8px -16px -40px}}
-@media (prefers-reduced-motion:reduce){body::after{animation:none}.cc-view.cc-enter>*,.cc-view.cc-enter .cc-grid>*{animation:none}}
+@media (max-width:760px){.cc-greet{font-size:22px}}
 .cc-body{overflow-x:clip}

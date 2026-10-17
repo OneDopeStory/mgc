@@ -1377,10 +1377,6 @@ html{scroll-padding-top:80px}
           <div class="data-chip-label">System Status</div>
           <div class="data-chip-val">Fully Operational</div>
         </div>
-        <div class="data-chip chip-2">
-          <div class="data-chip-label">Automations Live</div>
-          <div class="data-chip-val">47+ Active</div>
-        </div>
       </div>
     </div>
   </div>
@@ -1902,33 +1898,50 @@ html{scroll-padding-top:80px}
 <!-- ── TRUEASSIST (visitor chat) ── -->
 <section class="section ta-section reveal" id="trueassist" aria-labelledby="ta-heading">
   <div class="container">
-    <div class="ta-wrap">
-      <div class="ta-intro">
-        <div class="eyebrow">TrueAssist</div>
-        <h2 id="ta-heading">Ask the MGC AI advisor <span class="sky-text">before you book</span></h2>
-        <p>TrueAssist answers questions about AI strategy, automation, CRM design, and how an engagement with MGC works. For questions about your own account, sign in to the client portal.</p>
-        <div class="ta-chips" role="group" aria-label="Suggested questions">
-          <button type="button" class="ta-chip" data-ta-prompt="What does an AI readiness assessment include?">AI readiness assessment</button>
-          <button type="button" class="ta-chip" data-ta-prompt="Which automation should a small business start with?">Where to start with automation</button>
-          <button type="button" class="ta-chip" data-ta-prompt="How does a CRM optimization engagement work?">CRM optimization</button>
-        </div>
+    <div class="ta-intro">
+      <div class="eyebrow">TrueAssist</div>
+      <h2 id="ta-heading">Ask the MGC AI advisor <span class="sky-text">before you book</span></h2>
+      <p>TrueAssist answers questions about AI strategy, automation, CRM design, and how an engagement with MGC works. For questions about your own account, sign in to the client portal.</p>
+      <div class="ta-chips" role="group" aria-label="Suggested questions">
+        <button type="button" class="ta-chip" data-ta-prompt="What does an AI readiness assessment include?">AI readiness assessment</button>
+        <button type="button" class="ta-chip" data-ta-prompt="Which automation should a small business start with?">Where to start with automation</button>
+        <button type="button" class="ta-chip" data-ta-prompt="How does a CRM optimization engagement work?">CRM optimization</button>
       </div>
-
-      <div class="ta-panel" id="ta-widget">
-        <div class="ta-head">
-          <div class="ta-title"><span class="ta-dot" aria-hidden="true"></span>TrueAssist</div>
-          <button type="button" class="ta-reset" id="ta-reset">Start over</button>
-        </div>
-        <div class="ta-log" id="ta-log" role="log" aria-live="polite" aria-relevant="additions" aria-label="TrueAssist conversation"></div>
-        <p class="ta-status" id="ta-status" role="status"></p>
-        <form class="ta-form" id="ta-form">
-          <label class="ta-sr" for="ta-input">Message TrueAssist</label>
-          <textarea id="ta-input" class="ta-input" rows="1" maxlength="1000" placeholder="Ask about strategy, automation, or next steps" required></textarea>
-          <button type="submit" class="ta-send" id="ta-send">Send</button>
-        </form>
-        <div class="ta-count" id="ta-count" aria-hidden="true">0 / 1000</div>
-      </div>
+      <button type="button" class="ta-open-btn" id="ta-open-inline">
+        <svg class="ta-sparkle-ico" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.6L19.4 9.4 13.8 11.2 12 17l-1.8-5.8L4.6 9.4l5.6-1.8L12 2z"/><path d="M19 15l.8 2.4L22 18l-2.2.6L19 21l-.8-2.4L16 18l2.2-.6L19 15z" opacity=".7"/></svg>
+        Open TrueAssist
+      </button>
     </div>
+  </div>
+
+  <!-- Floating launcher -->
+  <button type="button" class="ta-launcher" id="ta-launcher" aria-haspopup="dialog" aria-expanded="false" aria-controls="ta-widget" aria-label="Open TrueAssist, MGC's AI advisor">
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.6L19.4 10.4 13.8 12.2 12 18l-1.8-5.8L4.6 10.4l5.6-1.8L12 3z"/></svg>
+  </button>
+
+  <!-- Backdrop -->
+  <div class="ta-backdrop" id="ta-backdrop" hidden></div>
+
+  <!-- Assistant window -->
+  <div class="ta-panel" id="ta-widget" role="dialog" aria-modal="true" aria-labelledby="ta-panel-title" hidden>
+    <div class="ta-head">
+      <button type="button" class="ta-collapse" id="ta-collapse" aria-label="Close TrueAssist">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="ta-title" id="ta-panel-title"><span class="ta-dot" aria-hidden="true"></span>TrueAssist</div>
+      <button type="button" class="ta-reset" id="ta-reset">Start over</button>
+    </div>
+    <div class="ta-log" id="ta-log" role="log" aria-live="polite" aria-relevant="additions" aria-label="TrueAssist conversation"></div>
+    <p class="ta-status" id="ta-status" role="status"></p>
+    <form class="ta-form" id="ta-form">
+      <label class="ta-sr" for="ta-input">Message TrueAssist</label>
+      <svg class="ta-sparkle-ico ta-form-sparkle" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.6L19.4 9.4 13.8 11.2 12 17l-1.8-5.8L4.6 9.4l5.6-1.8L12 2z"/></svg>
+      <textarea id="ta-input" class="ta-input" rows="1" maxlength="1000" placeholder="Ask about strategy, automation, or next steps" required></textarea>
+      <button type="submit" class="ta-send" id="ta-send" aria-label="Send message">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+      </button>
+    </form>
+    <div class="ta-count" id="ta-count" aria-hidden="true">0 / 1000</div>
   </div>
 </section>
 

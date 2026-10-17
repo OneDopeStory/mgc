@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MGC Console — Preview</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="../../assets/mgc-logo-transparent.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════════════════════════
+   MGC CONSOLE — consolidated owner console preview.
+   Sample data only. Combines: the KPI-row/table patterns from the
+   Dazeboard HR-dashboard reference, the AI-employee run-console
+   patterns from docs/design-preview/owner-dashboard-preview.html,
+   and new sections (onboarding, comms, CRM, weather/greeting, board)
+   the owner asked for directly. Colors are strictly the real site's
+   BRANDING.md ocean-to-sky tokens — no invented palette.
+   ════════════════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --abyss:#010C1A;--ocean:#02111F;--deep:#031525;--navy:#041C35;--mid:#062B52;
+  --royal:#0047CC;--electric:#0066FF;--sky:#0099FF;--bright:#00BBFF;--cyan:#00D4FF;
+  --ice:#B8D8F0;--fog:#7AB8E0;--white:#FFFFFF;--gold:#FFB347;--gold-dim:#C98A2A;
+  --t-dim:rgba(180,215,240,.45);--t-mid:rgba(180,215,240,.72);--t-hi:rgba(180,215,240,.92);
+  --b-lo:rgba(0,153,255,.07);--b-mid:rgba(0,153,255,.16);--b-hi:rgba(0,187,255,.32);--b-gold:rgba(255,179,71,.28);
+  --glow-sky:rgba(0,153,255,.26);--glow-cyan:rgba(0,212,255,.2);
+  /* status: reuses the convention already shipped on command-center.html, not a new palette */
+  --ok:#22C55E;--warn:var(--gold);--err:#EF4444;
+  --display:'Raleway',system-ui,sans-serif;--ui:'Plus Jakarta Sans',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+  --radius:20px;--r-sm:12px;--pill:100px;--ease:cubic-bezier(.16,1,.3,1);
+}
+html{font-size:16px}
+body{
+  font-family:var(--ui);color:var(--t-hi);min-height:100vh;background:
+    radial-gradient(ellipse 90% 70% at 70% -10%,rgba(0,71,204,.2) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 40% at 5% 90%,rgba(0,153,255,.07) 0%,transparent 55%),
+    var(--abyss) fixed;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+svg{display:block;flex-shrink:0}
+::selection{background:rgba(0,212,255,.3)}
+
+/* ── Glass primitive ── */
+.card{
+  position:relative;border-radius:var(--radius);
+  background:linear-gradient(150deg,rgba(184,216,240,.06) 0%,rgba(4,28,53,.62) 34%,rgba(2,17,31,.84) 100%);
+  border:1px solid var(--b-mid);box-shadow:0 24px 48px -28px rgba(0,0,0,.7),inset 0 1px 0 rgba(184,216,240,.08);
+  backdrop-filter:blur(16px) saturate(130%);-webkit-backdrop-filter:blur(16px) saturate(130%);
+  padding:1.4rem 1.5rem;
+}
+.eyebrow{font:700 .64rem/1 var(--mono);letter-spacing:.24em;text-transform:uppercase;color:var(--bright);display:inline-flex;align-items:center;gap:.5rem}
+.eyebrow::before{content:"";width:16px;height:1px;background:linear-gradient(90deg,transparent,var(--bright));opacity:.7}
+h2.ttl{font-family:var(--display);font-weight:800;font-size:1.05rem;color:#fff;margin-top:.35rem}
+.sub{color:var(--t-mid);font-size:.82rem;line-height:1.5;margin-top:.2rem}
+.pill{display:inline-flex;align-items:center;gap:.4rem;font:600 .68rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:.34rem .7rem;border-radius:var(--pill);white-space:nowrap}
+.pill.cy{color:var(--cyan);background:rgba(0,212,255,.1);border:1px solid var(--b-hi)}
+.pill.go{color:var(--gold);background:rgba(255,179,71,.1);border:1px solid var(--b-gold)}
+.pill.ok{color:var(--ok);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3)}
+.pill.err{color:var(--err);background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3)}
+.pill.dim{color:var(--t-dim);background:rgba(2,17,31,.5);border:1px solid var(--b-lo)}
+
+/* ── Shell / layout ── */
+.app{max-width:1440px;margin:0 auto;padding:1.1rem 1.25rem 3rem;display:flex;flex-direction:column;gap:1.1rem}
+.grid{display:grid;gap:1.1rem}
+.g-2{grid-template-columns:1fr 1fr}
+.g-3{grid-template-columns:repeat(3,1fr)}
+.g-4{grid-template-columns:repeat(4,1fr)}
+.g-left-wide{grid-template-columns:1.6fr 1fr}
+
+/* ── Notice ── */
+.notice{font-size:.8rem;color:var(--t-mid);padding:.75rem 1.1rem;border-radius:var(--r-sm);background:rgba(255,179,71,.05);border:1px solid var(--b-gold);line-height:1.55}
+.notice b{color:var(--gold)}
+
+/* ── Top nav ── */
+.topnav{display:flex;align-items:center;gap:.9rem;padding:.55rem .6rem .55rem .95rem;border-radius:var(--pill);
+  background:rgba(2,17,31,.7);border:1px solid var(--b-mid);backdrop-filter:blur(14px)}
+.logo{display:flex;align-items:center;gap:.6rem;flex-shrink:0;padding-right:.3rem}
+.logo img{width:30px;height:30px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(0,212,255,.4))}
+.logo b{font-family:var(--display);font-weight:800;font-size:.92rem;color:#fff;white-space:nowrap}
+.tabs{display:flex;gap:.2rem;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{padding:.52rem 1rem;border-radius:var(--pill);font:600 .82rem/1 var(--ui);color:var(--t-mid);white-space:nowrap;transition:background .2s,color .2s}
+.tabs button:hover{color:#fff;background:rgba(0,153,255,.08)}
+.tabs button[aria-current="page"]{background:linear-gradient(135deg,var(--royal),var(--sky));color:#fff;box-shadow:0 8px 20px -8px var(--glow-sky)}
+.nav-tools{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
+.icon-btn{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(0,153,255,.06);border:1px solid var(--b-mid);color:var(--t-mid);transition:color .2s,border-color .2s}
+.icon-btn:hover{color:#fff;border-color:var(--b-hi)}
+.icon-btn svg{width:16px;height:16px}
+.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font:700 .74rem/1 var(--ui);color:var(--abyss);background:linear-gradient(135deg,var(--cyan),var(--gold))}
+
+/* ── Header: weather + greeting ── */
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:1.2rem;flex-wrap:wrap;padding:.3rem .4rem 0}
+.head-left{display:flex;align-items:center;gap:1rem}
+.wx{display:flex;align-items:center;gap:.6rem;padding:.6rem .9rem .6rem .7rem;border-radius:var(--pill);background:rgba(2,17,31,.6);border:1px solid var(--b-mid)}
+.wx svg{width:26px;height:26px;color:var(--gold)}
+.wx .t{font-family:var(--mono);font-weight:600;font-size:1rem;color:#fff;line-height:1}
+.wx .d{font-size:.68rem;color:var(--t-dim);margin-top:.15rem}
+.greet h1{font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,2.6vw,2.15rem);letter-spacing:-.02em;color:#fff;line-height:1.1}
+.greet h1 em{font-style:normal;background:linear-gradient(135deg,#fff,var(--bright) 55%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.greet p{color:var(--t-mid);font-size:.84rem;margin-top:.3rem}
+.head-right{display:flex;align-items:center;gap:.6rem}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.1rem;border-radius:var(--pill);font:700 .8rem/1 var(--ui);border:1px solid var(--b-hi);background:rgba(0,153,255,.07);white-space:nowrap;transition:transform .2s var(--ease)}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,var(--royal),var(--sky));border-color:transparent;color:#fff;box-shadow:0 12px 28px -10px var(--glow-sky)}
+.live{display:inline-flex;align-items:center;gap:.45rem;font:600 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:.42rem .7rem;border-radius:var(--pill);color:var(--cyan);background:rgba(0,212,255,.08);border:1px solid var(--b-hi)}
+.live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:blink 1.6s ease-in-out infinite}
+@keyframes blink{50%{opacity:.3}}
+
+/* ── KPI tiles ── */
+.kpi{text-align:left}
+.kpi .k-top{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.kpi .v{font-family:var(--display);font-weight:900;font-size:2.1rem;letter-spacing:-.02em;margin-top:.5rem;
+  background:linear-gradient(135deg,#fff 0%,var(--bright) 55%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.kpi .l{font-size:.78rem;color:var(--t-mid);margin-top:.15rem}
+.kpi .ico{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:rgba(0,153,255,.1);color:var(--bright)}
+.kpi .ico svg{width:17px;height:17px}
+
+/* ── Funnel (lead CRM) ── */
+.funnel{display:flex;flex-direction:column;gap:.55rem;margin-top:1rem}
+.f-row{display:grid;grid-template-columns:86px 1fr 46px;align-items:center;gap:.7rem}
+.f-row .lbl{font-size:.76rem;color:var(--t-mid)}
+.f-row .bar{height:9px;border-radius:5px;background:rgba(0,153,255,.08);overflow:hidden}
+.f-row .bar i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--royal),var(--cyan))}
+.f-row .n{font:600 .78rem/1 var(--mono);color:#fff;text-align:right}
+.lead-list{list-style:none;margin-top:1.1rem;display:flex;flex-direction:column;gap:.5rem}
+.lead-list li{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.6rem .7rem;border-radius:var(--r-sm);background:rgba(2,17,31,.5);border:1px solid var(--b-lo);font-size:.82rem}
+.lead-list .nm{color:#fff;font-weight:600}
+.lead-list .src{color:var(--t-dim);font-size:.72rem}
+
+/* ── Client onboarding ── */
+.onb-list{display:flex;flex-direction:column;gap:.8rem;margin-top:1rem}
+.onb-row{padding:.8rem .9rem;border-radius:var(--r-sm);background:rgba(2,17,31,.5);border:1px solid var(--b-lo)}
+.onb-top{display:flex;align-items:center;justify-content:space-between;gap:.6rem}
+.onb-top .nm{font-weight:700;color:#fff;font-size:.86rem}
+.onb-steps{display:flex;gap:.3rem;margin-top:.65rem}
+.onb-steps i{flex:1;height:5px;border-radius:3px;background:rgba(0,153,255,.12)}
+.onb-steps i.done{background:linear-gradient(90deg,var(--royal),var(--cyan))}
+.onb-steps i.now{background:var(--gold)}
+.onb-foot{display:flex;align-items:center;justify-content:space-between;margin-top:.6rem}
+.onb-foot .step{font-size:.72rem;color:var(--t-dim)}
+.comms{display:flex;gap:.4rem}
+.comms a{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(0,153,255,.08);border:1px solid var(--b-mid);color:var(--t-mid);transition:color .2s,border-color .2s}
+.comms a:hover{color:var(--cyan);border-color:var(--b-hi)}
+.comms a svg{width:13px;height:13px}
+
+/* ── AI employee roster ── */
+.roster{display:grid;grid-template-columns:repeat(5,1fr);gap:.9rem}
+.emp{padding:1.1rem 1rem;text-align:center}
+.ring{width:56px;height:56px;margin:0 auto;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring .bg{stroke:rgba(0,153,255,.12)}
+.ring .fg{stroke:var(--cyan);stroke-linecap:round;transition:stroke-dashoffset 1s var(--ease)}
+.ring span{position:absolute;inset:0;display:grid;place-items:center;font:700 .76rem/1 var(--mono);color:#fff}
+.emp .nm{font-family:var(--display);font-weight:700;font-size:.84rem;color:#fff;margin-top:.7rem}
+.emp .role{font-size:.68rem;color:var(--t-dim);margin-top:.15rem;line-height:1.4}
+.emp .pill{margin-top:.6rem}
+
+/* ── Review queue / runs table ── */
+.q-list{list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-top:1rem}
+.q-item{display:flex;align-items:center;gap:.7rem;padding:.65rem .75rem;border-radius:var(--r-sm);background:rgba(2,17,31,.5);border:1px solid var(--b-lo)}
+.q-item .txt{flex:1;font-size:.82rem;color:var(--t-hi)}
+.q-item .txt b{color:#fff}
+.q-item .act{display:flex;gap:.35rem}
+.q-item .act button{font:700 .68rem/1 var(--ui);padding:.4rem .7rem;border-radius:var(--pill);border:1px solid var(--b-mid)}
+.q-item .act button.go{color:var(--ok);border-color:rgba(34,197,94,.35)}
+.q-item .act button.no{color:var(--err);border-color:rgba(239,68,68,.3)}
+table.tbl{width:100%;border-collapse:collapse;margin-top:1rem;font-size:.8rem}
+table.tbl th{text-align:left;color:var(--t-dim);font-weight:600;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;padding:0 .6rem .55rem}
+table.tbl td{padding:.6rem;border-top:1px solid var(--b-lo);color:var(--t-hi)}
+table.tbl td.mono{font-family:var(--mono);color:var(--t-dim)}
+
+/* ── Board ── */
+.board{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-top:1rem}
+.col h3{font:700 .72rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--t-dim);margin-bottom:.7rem;display:flex;align-items:center;justify-content:space-between}
+.col .ct{color:var(--t-dim);font-weight:500}
+.task{padding:.65rem .75rem;border-radius:var(--r-sm);background:rgba(2,17,31,.55);border:1px solid var(--b-lo);font-size:.8rem;color:var(--t-hi);margin-bottom:.5rem}
+.task b{display:block;color:#fff;font-weight:600;margin-bottom:.25rem}
+.task .meta{font-size:.68rem;color:var(--t-dim);margin-top:.35rem}
+
+/* ── Reveal on load ── */
+.card,.topnav{opacity:0;animation:rise .6s var(--ease) forwards}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+@media (max-width:1100px){
+  .g-4,.g-3{grid-template-columns:repeat(2,1fr)}
+  .g-left-wide,.g-2{grid-template-columns:1fr}
+  .roster{grid-template-columns:repeat(3,1fr)}
+  .board{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:640px){
+  .g-4,.g-3,.g-2{grid-template-columns:1fr}
+  .roster{grid-template-columns:repeat(2,1fr)}
+  .board{grid-template-columns:1fr}
+  .tabs{order:3;width:100%}
+  .topnav{flex-wrap:wrap;border-radius:var(--radius)}
+  .app{padding:.8rem .8rem 2.5rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .card,.topnav{animation:none;opacity:1}
+  .live::before{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="notice"><b>Preview.</b> Every number on this page is sample data. Nothing is connected to Supabase, Slack, or a weather API. Layout and interactions are real; the data behind them is not. See <code>docs/ai-employee-dashboard-spec.md</code> and <code>docs/owner-dashboard-kpi-spec.md</code> for what's needed before this goes live.</div>
+
+  <nav class="topnav" style="animation-delay:.02s">
+    <div class="logo"><img src="../../assets/mgc-logo-transparent.png" alt=""><b>MGC Console</b></div>
+    <div class="tabs" id="tabs">
+      <button type="button" aria-current="page" data-tab="overview">Overview</button>
+      <button type="button" data-tab="employees">AI Employees</button>
+      <button type="button" data-tab="leads">Leads</button>
+      <button type="button" data-tab="clients">Clients</button>
+      <button type="button" data-tab="board">Projects</button>
+      <button type="button" data-tab="review">Review queue</button>
+    </div>
+    <div class="nav-tools">
+      <button class="icon-btn" type="button" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      <button class="icon-btn" type="button" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1112 0c0 7 2 9 2 9H4s2-2 2-9Z"/><path d="M10 21a2 2 0 004 0"/></svg></button>
+      <div class="avatar">MC</div>
+    </div>
+  </nav>
+
+  <header class="head" style="animation-delay:.05s">
+    <div class="head-left">
+      <div class="wx">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke-linecap="round"/></svg>
+        <div><div class="t" id="wx-temp">57°F</div><div class="d" id="wx-place">Baltimore, MD</div></div>
+      </div>
+      <div class="greet">
+        <h1 id="greet-h1">Good evening, <em>Mr. Cartwright</em></h1>
+        <p id="greet-p">Here's where things stand across MGC.</p>
+      </div>
+    </div>
+    <div class="head-right">
+      <span class="live">Sample feed</span>
+      <button class="btn" type="button">+ Add client</button>
+      <button class="btn primary" type="button">+ Start a run</button>
+    </div>
+  </header>
+
+  <!-- KPI row -->
+  <section class="grid g-4" data-section="overview">
+    <article class="card kpi" style="animation-delay:.08s"><div class="k-top"><span class="eyebrow">Projects</span><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg></span></div><div class="v">11</div><div class="l">Active · 3 paused</div></article>
+    <article class="card kpi" style="animation-delay:.1s"><div class="k-top"><span class="eyebrow">Invoices</span><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H7"/></svg></span></div><div class="v">$14.2k</div><div class="l">Outstanding · 2 overdue</div></article>
+    <article class="card kpi" style="animation-delay:.12s"><div class="k-top"><span class="eyebrow">Sessions</span><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span></div><div class="v">6</div><div class="l">Confirmed, upcoming</div></article>
+    <article class="card kpi" style="animation-delay:.14s"><div class="k-top"><span class="eyebrow">Intake</span><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 4v16"/></svg></span></div><div class="v">9</div><div class="l">New profiles, 30 days</div></article>
+  </section>
+
+  <!-- Lead CRM + Client onboarding -->
+  <section class="grid g-2">
+    <article class="card" style="animation-delay:.16s" data-section="leads">
+      <span class="eyebrow">Lead CRM</span>
+      <h2 class="ttl">Pipeline by stage</h2>
+      <div class="funnel">
+        <div class="f-row"><span class="lbl">New</span><span class="bar"><i style="width:100%"></i></span><span class="n">24</span></div>
+        <div class="f-row"><span class="lbl">Qualified</span><span class="bar"><i style="width:62%"></i></span><span class="n">15</span></div>
+        <div class="f-row"><span class="lbl">Booked</span><span class="bar"><i style="width:33%"></i></span><span class="n">8</span></div>
+        <div class="f-row"><span class="lbl">Won</span><span class="bar"><i style="width:17%"></i></span><span class="n">4</span></div>
+      </div>
+      <ul class="lead-list">
+        <li><span><span class="nm">Harbor Fitness Co.</span> <span class="src">· TrueAssist</span></span><span class="pill cy">Qualified</span></li>
+        <li><span><span class="nm">Alden &amp; Pryce Law</span> <span class="src">· Booking form</span></span><span class="pill go">New</span></li>
+        <li><span><span class="nm">Oriole Freight Group</span> <span class="src">· Referral</span></span><span class="pill ok">Booked</span></li>
+      </ul>
+    </article>
+
+    <article class="card" style="animation-delay:.18s" data-section="clients">
+      <span class="eyebrow">Client onboarding</span>
+      <h2 class="ttl">In progress</h2>
+      <div class="onb-list">
+        <div class="onb-row">
+          <div class="onb-top"><span class="nm">Harbor Fitness Co.</span><span class="comms">
+            <a href="tel:4100000000" aria-label="Call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .3 2 .6 2.9a2 2 0 01-.5 2.1L8 10a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.9.5 2.9.6a2 2 0 011.7 2Z"/></svg></a>
+            <a href="sms:4100000000" aria-label="Text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></a>
+            <a href="mailto:hello@harborfitness.example" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a>
+            <a href="https://meet.google.com" target="_blank" rel="noopener" aria-label="Google Meet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3.5v11L16 14"/></svg></a>
+            <a href="https://zoom.us" target="_blank" rel="noopener" aria-label="Zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3.5v11L16 14"/></svg></a>
+          </span></div>
+          <div class="onb-steps"><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i></div>
+          <div class="onb-foot"><span class="step">Step 3 of 5 — Kickoff call</span><span class="pill go">Needs you</span></div>
+        </div>
+        <div class="onb-row">
+          <div class="onb-top"><span class="nm">Oriole Freight Group</span><span class="comms">
+            <a href="tel:4100000001" aria-label="Call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .3 2 .6 2.9a2 2 0 01-.5 2.1L8 10a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.9.5 2.9.6a2 2 0 011.7 2Z"/></svg></a>
+            <a href="sms:4100000001" aria-label="Text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></a>
+            <a href="mailto:ops@oriolefreight.example" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a>
+          </span></div>
+          <div class="onb-steps"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="now"></i></div>
+          <div class="onb-foot"><span class="step">Step 5 of 5 — Access granted</span><span class="pill ok">Live Friday</span></div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- AI Employees -->
+  <section class="card" style="animation-delay:.2s" data-section="employees">
+    <span class="eyebrow">AI Employees</span>
+    <h2 class="ttl">Agent roster — placeholders, name confirmed with Mark before build</h2>
+    <div class="roster">
+      <div class="emp"><div class="ring"><svg width="56" height="56"><circle class="bg" cx="28" cy="28" r="24" fill="none" stroke-width="4"/><circle class="fg" cx="28" cy="28" r="24" fill="none" stroke-width="4" stroke-dasharray="151" stroke-dashoffset="54"/></svg><span>64%</span></div><div class="nm">Site auditor</div><div class="role">Audits pages for broken links</div><div class="pill cy">Running</div></div>
+      <div class="emp"><div class="ring"><svg width="56" height="56"><circle class="bg" cx="28" cy="28" r="24" fill="none" stroke-width="4"/><circle class="fg" cx="28" cy="28" r="24" fill="none" stroke-width="4" stroke-dasharray="151" stroke-dashoffset="0"/></svg><span>100%</span></div><div class="nm">Invoice drafter</div><div class="role">Drafts from approved scope</div><div class="pill go">Needs review</div></div>
+      <div class="emp"><div class="ring"><svg width="56" height="56"><circle class="bg" cx="28" cy="28" r="24" fill="none" stroke-width="4"/><circle class="fg" cx="28" cy="28" r="24" fill="none" stroke-width="4" stroke-dasharray="151" stroke-dashoffset="0"/></svg><span>100%</span></div><div class="nm">Booking reminders</div><div class="role">24-hour confirmations</div><div class="pill ok">Done</div></div>
+      <div class="emp"><div class="ring"><svg width="56" height="56"><circle class="bg" cx="28" cy="28" r="24" fill="none" stroke-width="4"/><circle class="fg" cx="28" cy="28" r="24" fill="none" stroke-width="4" stroke-dasharray="151" stroke-dashoffset="118"/></svg><span>22%</span></div><div class="nm">Content drafter</div><div class="role">Drafts from approved briefs</div><div class="pill cy">Running</div></div>
+      <div class="emp"><div class="ring"><svg width="56" height="56"><circle class="bg" cx="28" cy="28" r="24" fill="none" stroke-width="4"/><circle class="fg" cx="28" cy="28" r="24" fill="none" stroke-width="4" stroke="#EF4444" stroke-dasharray="151" stroke-dashoffset="94"/></svg><span>38%</span></div><div class="nm">CRM hygiene</div><div class="role">Dry-run duplicate checks</div><div class="pill err">Failed</div></div>
+    </div>
+  </section>
+
+  <!-- Review queue + completed runs -->
+  <section class="grid g-2" data-section="review">
+    <article class="card" style="animation-delay:.22s">
+      <span class="eyebrow">Review queue</span>
+      <h2 class="ttl">Waiting on you</h2>
+      <p class="sub">Agents pause here before anything leaves the system — an invoice, an email, a publish.</p>
+      <ul class="q-list">
+        <li class="q-item"><span class="txt"><b>Invoice drafter</b> — $2,450 invoice ready for Harbor Fitness Co.</span><span class="act"><button class="go">Approve</button><button class="no">Reject</button></span></li>
+        <li class="q-item"><span class="txt"><b>Content drafter</b> — LinkedIn post from brief 15 ready to publish</span><span class="act"><button class="go">Approve</button><button class="no">Reject</button></span></li>
+      </ul>
+    </article>
+    <article class="card" style="animation-delay:.24s">
+      <span class="eyebrow">Completed runs</span>
+      <h2 class="ttl">Newest first</h2>
+      <table class="tbl">
+        <thead><tr><th>Run</th><th>Agent</th><th>Time</th><th>Sheets</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">r-0937</td><td>Booking reminders</td><td class="mono">9:08 PM</td><td><span class="pill ok">Synced</span></td></tr>
+          <tr><td class="mono">r-0936</td><td>Content drafter</td><td class="mono">9:05 PM</td><td><span class="pill ok">Synced</span></td></tr>
+          <tr><td class="mono">r-0935</td><td>Site auditor</td><td class="mono">9:01 PM</td><td><span class="pill ok">Synced</span></td></tr>
+        </tbody>
+      </table>
+    </article>
+  </section>
+
+  <!-- Project board -->
+  <section class="card" style="animation-delay:.26s" data-section="board">
+    <span class="eyebrow">Projects</span>
+    <h2 class="ttl">Board</h2>
+    <div class="board">
+      <div class="col"><h3>To do <span class="ct">3</span></h3>
+        <div class="task"><b>Draft terms.html legal review</b>Send to counsel<div class="meta">Due Oct 20</div></div>
+        <div class="task"><b>Oriole Freight kickoff deck</b><div class="meta">Due Oct 18</div></div>
+      </div>
+      <div class="col"><h3>Doing <span class="ct">2</span></h3>
+        <div class="task"><b>CRM optimization — Harbor Fitness</b>Pipeline redesign, phase 2<div class="meta">Due Oct 24</div></div>
+      </div>
+      <div class="col"><h3>Blocked <span class="ct">1</span></h3>
+        <div class="task"><b>Automation build — Alden &amp; Pryce</b>Waiting on their API key<div class="meta">Blocked 2 days</div></div>
+      </div>
+      <div class="col"><h3>Done <span class="ct">4</span></h3>
+        <div class="task"><b>Systems design audit — Oriole</b><div class="meta">Completed Oct 14</div></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* Sample-data preview only. Real build reads from mgc_* tables per
+ * docs/owner-dashboard-kpi-spec.md and docs/ai-employee-dashboard-spec.md.
+ * Weather would come from Open-Meteo (free, no key) for MGC's Baltimore
+ * coordinates — not wired here since this file has no live dependencies. */
+(function () {
+  'use strict';
+  var hr = new Date().getHours();
+  var part = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greet-h1').innerHTML = part + ', <em>Mr. Cartwright</em>';
+
+  document.querySelectorAll('#tabs button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('#tabs button').forEach(function (b) { b.removeAttribute('aria-current'); });
+      btn.setAttribute('aria-current', 'page');
+      var target = document.querySelector('[data-section="' + btn.dataset.tab + '"]');
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+})();
+</script>
+</body>
+</html>

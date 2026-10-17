@@ -249,3 +249,58 @@
   updateCounter();
   if (session && history.some(function (m) { return m.agent; })) startPolling();
 })();
+
+/* Launcher / overlay toggle for the assistant window. Separate from the chat
+ * logic above so a failure here never blocks TrueAssist itself from working. */
+(function () {
+  'use strict';
+
+  var panel = document.getElementById('ta-widget');
+  var launcher = document.getElementById('ta-launcher');
+  var backdrop = document.getElementById('ta-backdrop');
+  var collapseBtn = document.getElementById('ta-collapse');
+  var openInlineBtn = document.getElementById('ta-open-inline');
+  var taInput = document.getElementById('ta-input');
+  if (!panel || !launcher || !backdrop) return;
+
+  var TRANSITION_MS = 300;
+  var hideTimer = null;
+
+  function open() {
+    clearTimeout(hideTimer);
+    backdrop.hidden = false;
+    panel.hidden = false;
+    requestAnimationFrame(function () {
+      document.body.classList.add('ta-open');
+    });
+    launcher.setAttribute('aria-expanded', 'true');
+    setTimeout(function () {
+      if (taInput) taInput.focus();
+    }, TRANSITION_MS);
+  }
+
+  function close() {
+    document.body.classList.remove('ta-open');
+    launcher.setAttribute('aria-expanded', 'false');
+    hideTimer = setTimeout(function () {
+      backdrop.hidden = true;
+      panel.hidden = true;
+    }, TRANSITION_MS);
+    launcher.focus();
+  }
+
+  launcher.addEventListener('click', open);
+  if (openInlineBtn) openInlineBtn.addEventListener('click', open);
+  if (collapseBtn) collapseBtn.addEventListener('click', close);
+  backdrop.addEventListener('click', close);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && document.body.classList.contains('ta-open')) close();
+  });
+
+  document.querySelectorAll('.ta-chip[data-ta-prompt]').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      if (!document.body.classList.contains('ta-open')) open();
+    });
+  });
+})();
