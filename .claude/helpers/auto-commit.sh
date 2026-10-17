@@ -2,6 +2,13 @@
 # Auto-commit helper for Claude Code hooks
 # Handles git add, commit, and push in a robust way
 
+# DISABLED 2026-10-16: this silently committed (and could have pushed, since
+# AUTO_PUSH defaulted to true) the entire working tree mid-session without
+# being asked. Remove this guard to re-enable, and fix AUTO_PUSH's default
+# to false first if you do.
+echo "[auto-commit] disabled — exiting without touching git" >&2
+exit 0
+
 set -e
 
 # Colors

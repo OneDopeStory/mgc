@@ -1,6 +1,11 @@
 #!/bin/bash
 # Standard checkpoint hook functions for Claude settings.json (without GitHub features)
 
+# DISABLED 2026-10-16: these functions run `git add -A` + `git commit` on
+# edits/tasks/session-end without asking. Remove this guard to re-enable.
+echo "[standard-checkpoint-hooks] disabled — exiting without touching git" >&2
+exit 0
+
 # Function to handle pre-edit checkpoints
 pre_edit_checkpoint() {
     local tool_input="$1"
