@@ -222,6 +222,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <input class="form-input" type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')adminLogin()">
     </div>
     <button class="btn-auth" onclick="adminLogin()">Sign In to Admin</button>
+    <button type="button" class="auth-forgot" onclick="adminForgotPassword()" style="margin-top:.75rem;background:none;border:0;color:var(--cyan,#00D4FF);font-size:.78rem;cursor:pointer;text-decoration:underline;text-underline-offset:2px">Forgot password?</button>
     <div class="auth-error" id="auth-err"></div>
   </div>
 </div>
@@ -523,6 +524,16 @@ async function adminLogin() {
 function showAuthErr(msg) {
   const el = document.getElementById('auth-err');
   el.textContent = msg; el.classList.add('show');
+}
+
+async function adminForgotPassword() {
+  const email = document.getElementById('auth-email').value.trim().toLowerCase();
+  if (!email) { showAuthErr('Enter your admin email above first, then tap "Forgot password?" again.'); return; }
+  // Same message either way: don't reveal whether an email is on the admin list.
+  if (ADMIN_EMAILS.includes(email)) {
+    await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/admin.html' });
+  }
+  showAuthErr('If that email has admin access, a password reset link was just sent to it.');
 }
 
 function bootAdmin(user) {
