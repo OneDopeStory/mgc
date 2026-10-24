@@ -1,0 +1,5 @@
+# Legacy Zapier automation scaffold — not used by the live Netlify site
+# (real serverless functions live in netlify/functions/). Excluded here because
+# Vercel auto-treats every .js under /api as a Serverless Function, and this
+# folder's 18 files exceed the Hobby plan's 12-function-per-deployment limit.
+api/
