@@ -2,7 +2,61 @@
 
 Canonical project memory. Read this first; it is kept short on purpose to save tokens. Long reference material lives in `docs/reference/` (full archive: `docs/reference/CLAUDE-archive-2026-10-03.md`).
 
-## Session handoff (2026-10-16): START HERE — check this first, before anything else
+## Document templates / stationery kit — source of truth for all outgoing MGC paperwork (planned feature, not yet built)
+
+`mgc-stationary/` (local only, **not in git** — 329MB of raw `.ai`/`.psd`/`.jpg`/`.png`/`.zip`, see `.gitignore`) is the **official MGC stationery kit**: letterhead, executive letterhead, corporate letter, cover letter, fax cover, newsletter, report cover, memorandum, continuation sheet — each in US-Letter and 8x11, plus the brand guide and logo originals. `MGC-Global-Stationery-Kit` and `MGC-Global-Stationery-Kit 2` are identical duplicates (only differ by a stray `.DS_Store`) — treat `MGC-Global-Stationery-Kit` as canonical, `Kit 2` can be deleted.
+
+**The owner's intent (stated 2026-10-24):** this kit is the permanent default "blank paper" for every piece of written documentation MGC ever sends out — thank-you letters, congratulations letters, form-submission confirmations, newsletters — whether written by staff or generated automatically by the TrueAssist/"Alex" agents. Two consumers, both unbuilt:
+1. **Staff-facing admin tool** — a section of the admin panel (likely `admin.html` or a new `command-center.html` tab) where staff draft letters for clients (e.g., triggered by a portal form submission) using these templates, producing an editable/downloadable PDF.
+2. **Agent-facing default** — TrueAssist/Alex should use the same templates as the default output format any time it generates client-facing written documentation from the website/functions side.
+
+**Not yet done, open before building either:** the raw kit is full Illustrator/Photoshop source files, too large and wrong format to ship to the browser or a Netlify function as-is. Will need a lightweight derivative (e.g. flattened PNG/PDF backgrounds or an HTML/CSS template) committed into the actual repo (e.g. `assets/letterhead/`) before any PDF-generation code can reference it — do not point code at `mgc-stationary/` directly since it won't exist in deployed environments (it's gitignored). Scope the admin-tool UI and the PDF-generation approach (library choice, where it runs — function vs. client-side) as their own task before writing code; nothing here has been designed yet.
+
+## Session handoff (2026-10-23, later): membership.html color/polish pass — START HERE for Client Portal feature
+
+### Next session's lead task: build an actual Client Portal feature — BLOCKED, awaiting owner's reference material
+
+The owner wants a real **Client Portal feature** (not the existing nav link — see below) that "stands out and matches the theme," with motion effects and images arranged "with a flow." **They explicitly said they will supply reference context/images before this should be designed** — do not start speculatively. When they return with that material, scope it as its own task (page location, content, layout) before writing any code. Likely relevant but unconfirmed: this may relate to `dashboard.html` (the existing client portal page) or may be a wholly new page — ask/confirm once reference material arrives, don't assume.
+
+### Done this session — `membership.html` only, color/value-level edits, no structural changes
+
+Per explicit owner instruction ("You're not changing them... Do not change the page because it's already designed... just change the colors... Don't duplicate the work"), every edit below was scoped to CSS token values and two small additions (a footer link swap, a nav jump-menu) — no tier-card content, layout, or structure was touched or duplicated.
+
+- **Footer:** replaced the physical address with a clickable Instagram link (`@mgcglobal_ai` → `https://www.instagram.com/mgcglobal_ai/`), styled by the existing `footer a` rules.
+- **Hero "MEMBERSHIP TIERS" pill → real jump-menu:** replaced the static eyebrow pill with `.hero-menu`, three links (`Membership Tiers` / `Compare Tiers` / `FAQ`) jumping to new `id="pricing"` / `id="compare"` / `id="faq"` anchors on the three main sections (`scroll-margin-top:110px` added so the sticky header doesn't cover the target). `html{scroll-behavior:smooth}` was already present.
+- **Color palette reverted to officially match `index.html`:** the `:root` tokens (`--abyss`, `--navy`, `--sky`, `--royal`, `--pro`, `--t-mid`) had been brightened ~40% in an earlier, pre-this-session pass. Reverted them back to index.html's values (`--abyss:#010C1A`, `--navy:#041C35`, `--sky:#0A3A6B`, `--royal:#0055CC`), plus two hardcoded gradient literals in `.tier-starter`/`.tier-pro` that still referenced the brightened hex values after the token revert. Re-ran the WCAG 2.2 AA contrast script against the darker tokens and recorded ratios in a `:root` comment block — all pass. **Deliberately kept** `--t-dim` at 0.5 alpha (not reverted to the original 0.35) because 0.35 alpha fails AA on this darker abyss (3.14:1, needs 4.5:1) — this is a legitimate accessibility fix, not part of the unwanted brightening.
+- **Preserved as explicitly requested:** the Elite tier's metallic-silver theme, and all existing motion (shine sweep, aura pulse, hero shimmer, staggered reveal, 3D tilt) — none of this was altered by the revert.
+- **Client Portal nav link vs. Elite silver — fixed a real visual-identity collision:** my first pass gave the "Client Portal" nav link a silver/gray glow, which the owner correctly flagged as visually identical to Elite's signature metallic silver ("the gray... was like a metallic silver gray that I asked for and you made the client portal logo the same color gray"). Fixed: Client Portal is now pure white (`#fff`) with a **cyan**-tinted `text-shadow` glow instead, keeping Elite's silver unique.
+- **Elite tier "pop" boost** (owner: "make that part of the page pop"): added a static (non-hover) `box-shadow`/border glow matching the weight Pro already had at rest, brightened `.tier-accent` to `--silver-light` with its own text-shadow, and increased the aura-pulse opacity range (0.4–0.85, was 0.3–0.65) and its radial-gradient alpha (0.55, was 0.35).
+- Verified after each edit: div-tag balance (regex count of `<div` vs `</div>`), and `node --check` on the extracted inline `<script>` block. All passed. No browser/screenshot tool available in this environment — visual confirmation at 1440/390px per `DESIGN-STANDARDS.md` is still owner's to do, same as the Command Center item below.
+
+**How to apply:** If the owner reports any color still looks wrong on membership.html, diff against `index.html`'s current `:root` first — that's now the source of truth for this page's palette. Do not re-brighten without a fresh explicit request.
+
+## Session handoff (2026-10-23): START HERE
+
+### Command Center "Overview" redesign — code complete, NOT visually verified
+
+Implemented the full plan at `~/.claude/plans/moonlit-whistling-eclipse.md` (Outcrowd-style dashboard restyle of `command-center.html`'s Overview tab). All four target files touched: `command-center.html`, `assets/command-center.js`, `assets/command-center-glass.css`, `assets/command-center-fx.js`. No other page or function was touched.
+
+**Done:**
+- Sidebar collapsed to an icon-only rail (`.cc-rail`/`.cc-rail-icon`, 84px wide); top bar gained a `.cc-tabs` pill row. Both wired to the existing generic `data-view` router — no new routing logic needed.
+- ECG heartbeat (canvas + `Ecg` class + `startHeart()`/`renderPulseStats()`) deleted entirely. Four straight-line chart functions deleted (`renderFunnel`, `renderSourceLines`, `renderWeekdayBars`, `renderAgentArea`). KPI sparklines stripped from `renderKpis()` — tiles are now flat label/value/delta.
+- New Overview hero row: Welcome/TrueAssist-chat orb card, "Future events" card (from `mgc_bookings`), staff/agent roster preview (from `mgc_staff`) — rendered by three new functions `renderRosterPreview()`, `renderUrgentEvents()`, `renderWeeklyActivity()` (the third also drives a new 7-day activity-pill grid below the hero row).
+- `#cc-target` monthly-revenue-target input relocated into the retained KPI/approvals cluster; `getTarget()`/`renderTarget()` logic unchanged, localStorage key unchanged — verified by grep that wiring is intact.
+- Live chat box added to the Welcome orb: `initBriefChat()` in `command-center-fx.js` posts to `/api/chat`, history is a local JS array (NOT sessionStorage, deliberately isolated from `trueassist-widget.js`'s `mgc_trueassist_history`/`mgc_trueassist_session` keys), replies rendered via `textContent` only.
+- `node --check` passed on both JS files. Grepped the whole repo for every deleted identifier/class (`cc-ecg`, `cc-strip`, `Ecg`, `startHeart`, `renderFunnel`, etc.) — zero leftover references. Caught and fixed a near-miss: `series()` was almost deleted as unused but is still called by `renderRevenue()` (Finance view, out of scope) — restored it.
+- Confirmed `http://localhost:3456/command-center.html` returns 200 on the already-running static server.
+
+**NOT done — this environment has no browser/screenshot tool, so none of this could be verified visually:**
+- Desktop (1440px) / mobile (390px) screenshots per `DESIGN-STANDARDS.md`.
+- Clicking through nav in both the new icon rail and new top tab bar to confirm active-state sync.
+- Live round-trip test of the chat box (needs `npx netlify dev` for same-origin `/api/chat` — plain `http.server` will CORS-fail).
+- Re-running the audit agent to compare the live result against the three original reference images.
+**How to apply:** Next session, either run these checks yourself (open the page in an actual browser / use a screenshot-capable tool) or ask the owner to eyeball `http://localhost:3456/command-center.html?demo=1#overview` and report back before calling this redesign done.
+
+**One design call made without owner sign-off, flag it:** the sidebar was narrowed to a pure icon rail, which means Mark's name/role text (`cc-user-meta`) is now hidden at the bottom (`.cc-side .cc-user-meta{display:none}` in `command-center-glass.css`) — only the avatar initials show. The plan said "keep the profile block," which was read as "don't delete the DOM," not "keep it visible at this width." If the owner wants the name visible, widen `.cc-side` back up or show it on hover/tooltip.
+
+## Session handoff (2026-10-16): still outstanding, check next
 
 ### P0 — Possible lost/orphaned site version — CHECK THIS FIRST next session
 

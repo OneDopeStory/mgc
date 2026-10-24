@@ -31,8 +31,8 @@
   --ice:      #B8D8F0;
   --fog:      #7AB8E0;
   --white:    #FFFFFF;
-  --gold:     #FFB347;
-  --gold-dim: #C98A2A;
+  --gold:     #CBD5DE;
+  --gold-dim: #828E99;
   --emerald:  #10B981;
   --rose:     #F43F5E;
   --t-dim:  rgba(180,215,240,0.45);
@@ -41,7 +41,7 @@
   --b-lo:   rgba(0,153,255,0.07);
   --b-mid:  rgba(0,153,255,0.16);
   --b-hi:   rgba(0,187,255,0.32);
-  --b-gold: rgba(255,179,71,0.25);
+  --b-gold: rgba(203,213,222,0.25);
   --glow:      rgba(0,102,255,0.35);
   --glow-sky:  rgba(0,153,255,0.28);
   --glow-cyan: rgba(0,212,255,0.22);
@@ -67,7 +67,7 @@ img{max-width:100%;display:block}
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 .gold-text{
-  background:linear-gradient(135deg,var(--gold) 0%,#FFD580 50%,var(--gold-dim) 100%);
+  background:linear-gradient(135deg,var(--gold) 0%,#EFF3F7 50%,var(--gold-dim) 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 
@@ -101,7 +101,7 @@ img{max-width:100%;display:block}
 .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1.5px;background:var(--sky);transform:scaleX(0);transition:transform 0.3s var(--ease);transform-origin:left}
 .nav-links a:hover{color:white}
 .nav-links a:hover::after{transform:scaleX(1)}
-.nav-portal{color:var(--gold)!important;font-weight:600!important;background:linear-gradient(135deg,rgba(255,179,71,0.15),rgba(201,138,42,0.1))!important;border:1px solid rgba(255,179,71,0.4)!important;border-radius:var(--pill)!important;padding:.42rem 1.1rem!important}
+.nav-portal{color:var(--gold)!important;font-weight:600!important;background:linear-gradient(135deg,rgba(203,213,222,0.15),rgba(201,138,42,0.1))!important;border:1px solid rgba(203,213,222,0.4)!important;border-radius:var(--pill)!important;padding:.42rem 1.1rem!important}
 .nav-portal:hover{filter:brightness(1.2)}
 .nav-cta{
   font-family:var(--ui)!important;font-size:0.78rem!important;font-weight:700!important;
@@ -367,14 +367,14 @@ img{max-width:100%;display:block}
 .scan-alert{
   display:flex;align-items:center;gap:0.7rem;
   padding:0.85rem 1rem;
-  background:rgba(255,179,71,0.06);
-  border:1px solid rgba(255,179,71,0.22);
+  background:rgba(203,213,222,0.06);
+  border:1px solid rgba(203,213,222,0.22);
   border-radius:var(--r-sm);
   margin-bottom:1.25rem;
 }
 .scan-alert-icon{
   width:28px;height:28px;border-radius:var(--r-sm);
-  background:rgba(255,179,71,0.12);
+  background:rgba(203,213,222,0.12);
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;
 }
@@ -1055,8 +1055,8 @@ img{max-width:100%;display:block}
             Score My Operations
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
           </a>
-          <a href="services.html" class="btn-hero-secondary">
-            View Services
+          <a href="membership.html" class="btn-hero-secondary">
+            View Membership
           </a>
         </div>
 
@@ -1486,8 +1486,8 @@ img{max-width:100%;display:block}
             Book a Strategy Session
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
           </a>
-          <a class="btn-cta-ghost" href="services.html">
-            Explore Services
+          <a class="btn-cta-ghost" href="membership.html">
+            Explore Membership
           </a>
         </div>
 
@@ -1669,7 +1669,7 @@ const READINESS_QUESTIONS = [
 
 const SCORE_CATEGORIES = [
   { min:0,  max:30,  label:'Manual Operations Risk',          color:'#F43F5E', rec:'Your business is running primarily on manual effort. MGC can build a connected systems foundation so nothing falls through the cracks.' },
-  { min:31, max:60,  label:'Automation Ready but Fragmented', color:'#FFB347', rec:'You have tools in place but they are not working together. MGC can integrate and optimize your stack for real efficiency.' },
+  { min:31, max:60,  label:'Automation Ready but Fragmented', color:'#CBD5DE', rec:'You have tools in place but they are not working together. MGC can integrate and optimize your stack for real efficiency.' },
   { min:61, max:80,  label:'System Upgrade Recommended',      color:'#00BBFF', rec:'Your operations are solid, but there are clear upgrade opportunities. MGC can help you close the gaps and scale faster.' },
   { min:81, max:100, label:'AI Operations Ready',             color:'#00D4FF', rec:'You are ahead of the curve. MGC can help you implement advanced AI operations and maintain your competitive edge.' },
 ];

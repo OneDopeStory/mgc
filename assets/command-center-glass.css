@@ -1,77 +1,301 @@
-/* MGC Command Center — brand layer.
-   Applies the real BRANDING.md ocean-to-sky tokens on top of command-center.css's
-   own palette, and keeps the functional glass-card look. Loads after command-center.css.
-   (Previously also carried the "liquid glass" spectacle — mission-control hub canvas,
-   star field, circuit floor, pointer spotlight, glass-crack transitions. Removed
-   2026-10-16: too much visual noise for what should be a working back-office tool.
-   The owner briefing and agent hex badges below are real, data-driven UI, not spectacle.) */
-:root{
-  --abyss:#010C1A;--ocean:#02111F;--deep:#031525;--navy:#041C35;--mid:#062B52;
-  --royal:#0047CC;--electric:#0066FF;--sky:#0099FF;--bright:#00BBFF;--cyan:#00D4FF;
-  --ice:#B8D8F0;--fog:#7AB8E0;--gold:#FFB347;--gold-dim:#C98A2A;
-  --t-dim:rgba(180,215,240,.45);--t-mid:rgba(180,215,240,.72);--t-hi:rgba(180,215,240,.92);
-  --b-lo:rgba(0,153,255,.07);--b-mid:rgba(0,153,255,.16);--b-hi:rgba(0,187,255,.32);--b-gold:rgba(255,179,71,.25);
-  --glow-cyan:rgba(0,212,255,.22);
-  --muted:var(--t-mid);--dim:var(--t-dim);--border:var(--b-mid);
-  --radius:20px;--r-sm:12px;--pill:100px;
-  --font-body:'Outfit','Plus Jakarta Sans',system-ui,sans-serif;--font-ui:'Plus Jakarta Sans',system-ui,sans-serif;
-  color-scheme:dark;
-}
-body{font-family:var(--font-body);color:var(--ice);background:
-  radial-gradient(ellipse 100% 80% at 60% 30%,rgba(0,71,204,.14) 0%,transparent 60%),
-  var(--abyss) fixed}
+/* MGC Command Center — brand layer, LIGHT THEME (2026-10-22 restyle).
+   Reference: Dribbble "Employee Management Dashboard" (Outcrowd) — bright
+   white/light-gray cards, soft shadows, large rounded corners, colored
+   pill badges, pastel avatar circles. Requested palette: blue + silver +
+   white + light gray. Font: Roboto only (single family, all weights).
 
-/* ── Cards: glass look, no pointer-tracking spotlight or border-beam ── */
-.cc-card,.cc-kpi,.cc-auth-card{background:linear-gradient(150deg,rgba(184,216,240,.06) 0%,rgba(4,28,53,.62) 34%,rgba(2,17,31,.82) 100%);
-  border:1px solid var(--b-mid);border-radius:var(--radius);
-  box-shadow:0 24px 48px -24px rgba(0,0,0,.7),inset 0 1px 0 rgba(184,216,240,.1);
-  backdrop-filter:blur(14px) saturate(130%);-webkit-backdrop-filter:blur(14px) saturate(130%)}
+   Loads after command-center.css and redefines its tokens, so most of the
+   dark "liquid glass" look becomes a light "frosted paper" look just by
+   token cascade. Rules below are only needed where command-center.css (or
+   the old version of this file) used a LITERAL color instead of a var(),
+   or where a dark-theme effect (white-text gradient clip, glass blur on
+   near-black) needs a genuinely different light-theme treatment rather
+   than a token swap.
+
+   Every text-on-background pairing below is commented with its measured
+   WCAG 2.2 AA ratio (relative-luminance formula) against the surface it
+   actually sits on. Small text / labels / pills must clear 4.5:1; large
+   text (≥24px / ≥19px bold), icons and UI chrome only need 3:1. */
+:root{
+  /* ── Neutrals: silver / white / light-gray family ── */
+  --paper:#F4F6FB;        /* page background */
+  --paper-2:#E9EDF3;      /* sidebar / inset tracks / input fields */
+  --surface-0:#FFFFFF;    /* card surface */
+  --surface-1:#F7F9FC;    /* table stripe, nested panel */
+  --line:#E2E8F0;         /* hairline border, decorative (not text) */
+  --line-strong:#CBD5E1;  /* silver accent border */
+
+  /* ── Ink: dark navy used anywhere the old theme needed "white" text,
+     and for icon fills on colored chips. #0F1A2B on white = 15.9:1. ── */
+  --ink:#0F1A2B;
+  --abyss:#0F1A2B;        /* re-pointed: was the dark page-bg, now the ink */
+  --white:#0F1A2B;        /* re-pointed: was literal white TEXT, now ink —
+                              named --white in the base stylesheet but only
+                              ever consumed as a text color, never a fill */
+  --ice:#0F1A2B;          /* glass.css's old "primary text" token */
+
+  /* ── Blue accent ("today's blue"). #0B5FFF on white = 5.13:1 (passes
+     4.5:1 body-text minimum; also passes as white-on-blue button text). ── */
+  --electric:#0B5FFF;
+  --royal:#0B5FFF;
+  --sky:#2F7BFF;          /* decorative gradient step only, not text */
+  --bright:#0B5FFF;       /* was glass.css's eyebrow/link color — kept as
+                              the AA-safe accent so eyebrows stay legible */
+  --cyan:#0B5FFF;         /* base css uses --cyan for links/active/focus —
+                              point it at the same AA-safe accent blue */
+
+  /* ── Gold: kept as a DECORATIVE accent only (icons, large glyphs, dot
+     fills, gradients). #D97706 on white = 3.19:1 — fails 4.5:1 small text,
+     passes 3:1 large/icon. Any place gold was used as small TEXT now uses
+     --gold-dark instead (#92400E on white = 7.09:1). ── */
+  --gold:#D97706;
+  --gold-dark:#92400E;
+  --gold-dim:#C98A2A;
+
+  /* ── Status colors, all re-picked to clear 4.5:1 on white as text ── */
+  --success:#15803D;      /* 5.02:1 */
+  --warning:#B45309;      /* 4.52:1 (replaces --gold where used as a
+                              status/idle indicator, same hue family) */
+  --error:#B91C1C;        /* 6.47:1 */
+  --info:#0B5FFF;
+
+  /* ── Categorical set (donut/legend/avatar/source colors). Each has a
+     TEXT shade (small-text safe, ≥4.5:1 on white) and a PASTEL shade
+     (avatar / icon-chip fill, paired with --ink text, ≥4.5:1). ── */
+  --violet:#6D28D9;        --violet-pastel:#DDD6FE;  --violet-tint:#F5F3FF;
+  --teal:#0F766E;          --teal-pastel:#99F6E4;    --teal-tint:#ECFEFF;
+  --skyblue:#0369A1;       --skyblue-pastel:#BAE6FD; --skyblue-tint:#F0F9FF;
+  --slate:#475569;         --slate-pastel:#E2E8F0;   --slate-tint:#F1F5F9;
+  --accent-pastel:#BFDBFE; --accent-tint:#EFF6FF;
+  --gold-pastel:#FDE68A;   --gold-tint:#FFFBEB;
+  --green-pastel:#BBF7D0;  --green-tint:#F0FDF4;
+  --red-pastel:#FECACA;    --red-tint:#FEF2F2;
+
+  /* ── Text roles (base css: --muted / --dim) ── */
+  --muted:#475569;        /* 7.58:1 — secondary text */
+  --dim:#64748B;          /* 4.76:1 — tertiary/meta text, still AA-safe */
+  --t-dim:#64748B;--t-mid:#475569;--t-hi:#0F1A2B;
+
+  /* ── Surfaces consumed by base css via var() ── */
+  --deep:var(--paper-2);  /* input / track / chip backgrounds */
+  --navy:var(--paper-2);
+  --ocean:#0F1A2B;        /* toast background only — stays dark-on-light */
+  --blue:#0B5FFF;
+  --mid:#2563EB;          /* funnel/progress gradient start */
+  --surface:var(--surface-0);
+  --surface-2:var(--surface-1);
+  --border:var(--line);
+  --b-lo:rgba(11,95,255,.06);--b-mid:#E2E8F0;--b-hi:#0B5FFF;--b-gold:rgba(217,119,6,.3);
+  --glow-cyan:rgba(11,95,255,.18);
+  --glow:0 0 0 1px rgba(11,95,255,.25),0 10px 30px -14px rgba(11,95,255,.25);
+
+  --radius:20px;--r-sm:12px;--pill:100px;
+  --font-display:'Roboto',sans-serif;--font-body:'Roboto',sans-serif;
+  --font-ui:'Roboto',sans-serif;--font-mono:'Roboto',sans-serif;
+  color-scheme:light;
+}
+
+html,body{background:var(--paper)}
+body{font-family:var(--font-body);color:var(--ink);background:
+  radial-gradient(1000px 520px at 85% -8%,rgba(11,95,255,.05),transparent 60%),
+  var(--paper) fixed}
+
+/* ── Cards: solid white, soft shadow, large rounded corners — no blur ── */
+.cc-card,.cc-kpi,.cc-auth-card{background:var(--surface-0);
+  border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:0 1px 2px rgba(15,26,43,.04),0 16px 32px -24px rgba(15,26,43,.16);
+  backdrop-filter:none;-webkit-backdrop-filter:none}
 .cc-auth-card{position:relative}
 .cc-card>.cc-sample-tag,.cc-kpi>.cc-sample-tag{position:absolute;z-index:1}
-/* data just changed: a quiet glow, not an animated beam */
-.cc-card.blip,.cc-kpi.blip{box-shadow:0 24px 48px -24px rgba(0,0,0,.7),0 0 0 1px var(--b-hi),0 0 32px -8px var(--glow-cyan);transition:box-shadow .6s var(--ease)}
+.cc-card.blip,.cc-kpi.blip{box-shadow:0 0 0 1px var(--electric),0 16px 32px -20px rgba(11,95,255,.28);transition:box-shadow .6s var(--ease)}
 
 /* Type */
-.cc-eyebrow{font-weight:700;font-size:10px;letter-spacing:.32em;color:var(--bright);display:inline-flex;align-items:center;gap:8px}
-.cc-eyebrow::before{content:"";width:18px;height:1px;background:linear-gradient(90deg,transparent,var(--bright));opacity:.7}
-.cc-h2{font-weight:800;font-size:18px;color:#fff;text-wrap:balance}
-.cc-sub,.cc-kpi-sub,.cc-feed .muted,.cc-msg p{color:var(--t-mid)}
-.cc-kpi-label,.cc-table th,.cc-nav-group,.cc-axis{color:var(--t-dim)}
-.cc-kpi-value,.cc-tile-v,.cc-bpm{background:linear-gradient(135deg,#fff 0%,var(--bright) 55%,var(--cyan) 80%,var(--ice));-webkit-background-clip:text;background-clip:text;color:transparent}
-.cc-kpi.gold .cc-kpi-value{background:linear-gradient(135deg,#fff,var(--gold) 60%,var(--gold-dim));-webkit-background-clip:text;background-clip:text;color:transparent}
-.cc-table td,.cc-hbar-val,.cc-funnel-n,.cc-stat{font-variant-numeric:tabular-nums}
+.cc-eyebrow{font-weight:700;font-size:10px;letter-spacing:.24em;color:var(--electric);display:inline-flex;align-items:center;gap:8px}
+.cc-eyebrow::before{content:"";width:18px;height:1px;background:var(--electric);opacity:.5}
+.cc-h2{font-weight:700;font-size:18px;color:var(--ink);text-wrap:balance}
+.cc-sub,.cc-kpi-sub,.cc-feed .muted,.cc-msg p{color:var(--muted)}
+.cc-kpi-label,.cc-table th,.cc-nav-group,.cc-axis{color:var(--dim)}
+/* KPI numbers: solid ink instead of the old white→cyan gradient-clip
+   (a light-on-light gradient would be invisible on a white card) */
+.cc-kpi-value,.cc-tile-v{background:none;-webkit-background-clip:unset;background-clip:unset;color:var(--ink)}
+.cc-kpi.gold .cc-kpi-value{background:none;-webkit-background-clip:unset;background-clip:unset;color:var(--gold-dark)}
+.cc-table td,.cc-hbar-val,.cc-stat{font-variant-numeric:tabular-nums}
 
 /* Pills everywhere */
 .cc-btn,.cc-ghost,.cc-act,.cc-chip{border-radius:var(--pill)}
-.cc-btn{background:linear-gradient(135deg,var(--electric),var(--sky) 60%,var(--cyan));color:#fff;font-family:var(--font-ui);text-transform:uppercase;letter-spacing:.06em;font-size:12.5px;box-shadow:0 10px 30px -10px rgba(0,102,255,.6)}
-.cc-act{background:rgba(2,17,31,.7);border-color:var(--b-hi);font-family:var(--font-ui)}
+.cc-btn{background:linear-gradient(135deg,var(--electric),var(--sky));color:#fff;font-family:var(--font-ui);text-transform:uppercase;letter-spacing:.06em;font-size:12.5px;box-shadow:0 10px 24px -10px rgba(11,95,255,.45)}
+.cc-act{background:var(--paper-2);border-color:var(--line-strong);color:var(--ink);font-family:var(--font-ui)}
+.cc-act:hover{border-color:var(--electric)}
+.cc-ghost{color:var(--ink);border-color:var(--line-strong)}
+.cc-ghost:hover{border-color:var(--electric)}
 
 /* Sidebar */
-.cc-side{background:linear-gradient(180deg,rgba(4,28,53,.78),rgba(2,17,31,.92));backdrop-filter:blur(18px);border-right:1px solid var(--b-mid);box-shadow:inset -1px 0 0 rgba(0,212,255,.06)}
-.cc-brand-logo{filter:drop-shadow(0 0 10px rgba(0,212,255,.45))}
-.cc-nav button{font-family:var(--font-ui);border-radius:0 var(--pill) var(--pill) 0}
-.cc-nav button.active{background:linear-gradient(90deg,rgba(0,102,255,.28),rgba(0,212,255,.05));box-shadow:inset 0 1px 0 rgba(184,216,240,.1)}
-.cc-top{background:rgba(1,12,26,.7);border-bottom:1px solid var(--b-mid)}
+.cc-side{background:var(--surface-0);backdrop-filter:none;border-right:1px solid var(--line);box-shadow:2px 0 16px -12px rgba(15,26,43,.15)}
+.cc-brand-logo{filter:none}
+.cc-nav button{font-family:var(--font-ui);border-radius:0 var(--pill) var(--pill) 0;color:var(--muted)}
+.cc-nav button:hover{background:var(--accent-tint);color:var(--ink)}
+.cc-nav button.active{color:var(--ink);background:var(--accent-tint);box-shadow:none;border-left-color:var(--electric)}
+.cc-nav button.active svg{fill:var(--electric)}
+.cc-top{background:rgba(244,246,251,.9);border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}
+.cc-user,.cc-clock{color:var(--muted)}
 
-/* App-tile icons (used in integration-status chips elsewhere on the page) */
-.cc-tile{border-radius:16px;backdrop-filter:blur(10px);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 18px 30px -20px rgba(0,0,0,.8)}
-.cc-tile-icon{border-radius:12px;box-shadow:0 0 22px -4px currentColor,inset 0 1px 0 rgba(255,255,255,.5)}
-.cc-avatar{border-radius:12px;box-shadow:0 0 18px -6px currentColor,inset 0 1px 0 rgba(255,255,255,.45)}
+/* ── Icon-only rail + top tab bar (Overview redesign, 2026-10-23) ──
+   Reference: Outcrowd dashboard's slim icon sidebar + pill tab bar. */
+.cc-side{width:84px;padding:18px 8px;align-items:center}
+.cc-side .cc-brand{padding:0 0 6px;justify-content:center}
+.cc-side .cc-brand>div{display:none}
+.cc-rail{align-items:center;gap:6px}
+.cc-rail-icon{position:relative;display:flex;justify-content:center;align-items:center;width:48px;height:48px;padding:0;border-radius:14px;border-left:0}
+.cc-rail-icon svg{width:20px;height:20px;fill:var(--muted)}
+.cc-rail-icon:hover{background:var(--accent-tint)}
+.cc-rail-icon:hover svg{fill:var(--ink)}
+.cc-rail-icon.active{background:var(--accent-tint);border-left:0;box-shadow:inset 0 0 0 1.5px var(--electric)}
+.cc-rail-icon.active svg{fill:var(--electric)}
+.cc-rail-icon .cc-badge{position:absolute;top:2px;right:2px;margin-left:0;min-width:16px;height:16px;line-height:16px;font-size:9px;padding:0 4px}
+.cc-side-foot{padding:14px 0 0;align-items:center;text-align:center;border-top:1px solid var(--line)}
+.cc-side .cc-user-id{flex-direction:column;gap:6px}
+.cc-side .cc-user-meta{display:none}
+.cc-side .cc-side-links{flex-direction:column;align-items:center;gap:8px}
 
-/* Owner briefing (Command overview). Real data, ranked by severity. */
-.cc-greet{font-family:var(--font-display);font-weight:800;font-size:26px;line-height:1.15;color:#fff;letter-spacing:-.01em;text-wrap:balance}
-.cc-greet em{font-style:normal;background:linear-gradient(135deg,#fff,var(--bright) 55%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+/* Top tab bar — replaces the deleted ECG pulse-strip canvas as the bar's
+   flexible middle section (same flex:1 spacer role). */
+.cc-tabs{flex:1;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.cc-tabs::-webkit-scrollbar{display:none}
+.cc-tab{flex-shrink:0;padding:8px 14px;border-radius:var(--pill);border:1px solid transparent;background:none;color:var(--muted);font-family:var(--font-ui);font-size:13px;white-space:nowrap;cursor:pointer}
+.cc-tab:hover{background:var(--accent-tint);color:var(--ink)}
+/* active tab: white text on #0B5FFF = 5.13:1 — passes AA for small text */
+.cc-tab.active{background:var(--electric);color:#fff;box-shadow:0 6px 16px -8px rgba(11,95,255,.5)}
+
+/* App-tile icons (today's pulse tiles) — pastel chip + ink text + ink icon */
+.cc-tile{border-radius:16px;backdrop-filter:none;box-shadow:0 1px 2px rgba(15,26,43,.04),0 10px 20px -16px rgba(15,26,43,.18)}
+.cc-tile-icon{border-radius:12px;box-shadow:none}
+.cc-tile-icon svg{fill:var(--ink)}
+.cc-tile-v,.cc-tile-l{color:var(--ink)}
+.cc-avatar{border-radius:12px;box-shadow:none;color:var(--ink)}
+.cc-tile.t-gold{background:var(--gold-tint);border-color:var(--gold-pastel);color:var(--gold-dark)}
+.cc-tile.t-gold .cc-tile-icon{background:var(--gold-pastel)}
+.cc-tile.t-cyan{background:var(--accent-tint);border-color:var(--accent-pastel);color:var(--electric)}
+.cc-tile.t-cyan .cc-tile-icon{background:var(--accent-pastel)}
+.cc-tile.t-teal{background:var(--teal-tint);border-color:var(--teal-pastel);color:var(--teal)}
+.cc-tile.t-teal .cc-tile-icon{background:var(--teal-pastel)}
+.cc-tile.t-violet{background:var(--violet-tint);border-color:var(--violet-pastel);color:var(--violet)}
+.cc-tile.t-violet .cc-tile-icon{background:var(--violet-pastel)}
+
+/* Owner briefing (Command overview) */
+.cc-greet{font-family:var(--font-display);font-weight:700;font-size:26px;line-height:1.15;color:var(--ink);letter-spacing:-.01em;text-wrap:balance}
+.cc-greet em{font-style:normal;color:var(--electric)}
 .cc-brief-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:14px}
-.cc-brief-item{display:grid;grid-template-columns:3px 1fr auto;gap:12px;align-items:center;padding:10px 12px 10px 0;border-radius:var(--r-sm);background:rgba(2,17,31,.55);border:1px solid var(--b-lo);font-size:13px;color:var(--t-hi)}
-.cc-brief-item::before{content:"";align-self:stretch;border-radius:0 3px 3px 0;background:var(--sev,var(--bright))}
-.cc-brief-item.crit{--sev:var(--error)}.cc-brief-item.warn{--sev:var(--gold)}.cc-brief-item.ok{--sev:var(--success)}
-.cc-brief-item b{color:#fff;font-weight:600}
-.cc-brief-meta{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t-dim);margin-top:14px}
+.cc-brief-item{display:grid;grid-template-columns:3px 1fr auto;gap:12px;align-items:center;padding:10px 12px 10px 0;border-radius:var(--r-sm);background:var(--surface-1);border:1px solid var(--line);font-size:13px;color:var(--ink)}
+.cc-brief-item::before{content:"";align-self:stretch;border-radius:0 3px 3px 0;background:var(--sev,var(--electric))}
+.cc-brief-item.crit{--sev:var(--error)}.cc-brief-item.warn{--sev:var(--warning)}.cc-brief-item.ok{--sev:var(--success)}
+.cc-brief-item b{color:var(--ink);font-weight:600}
+.cc-brief-meta{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-top:14px}
 
-/* Agent hex badges (Staff and agents table) */
+/* Hero row layout (Welcome orb + Future events + Roster) */
+.cc-grid-hero{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:var(--gap)}
+@media (max-width:1280px){.cc-grid-hero{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){.cc-grid-hero{grid-template-columns:1fr}}
+
+/* Welcome orb card — decorative radial glow behind the greeting + chat */
+.cc-orb{position:relative;overflow:hidden;display:flex;flex-direction:column}
+.cc-orb-glow{position:absolute;top:-80px;right:-80px;width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(11,95,255,.16),rgba(47,123,255,.05) 60%,transparent 75%);
+  pointer-events:none;z-index:0}
+.cc-orb>*{position:relative;z-index:1}
+
+/* Live chat box — text-on-background pairs: ink on white 15.9:1,
+   muted on white 7.58:1, white on electric 5.13:1 (all pass AA) */
+.cc-chat-log{display:flex;flex-direction:column;gap:8px;margin-top:14px;max-height:220px;overflow-y:auto}
+.cc-chat-msg{max-width:88%;padding:8px 12px;border-radius:14px;font-size:13px;line-height:1.4;color:var(--ink);background:var(--surface-1);border:1px solid var(--line)}
+.cc-chat-msg.user{align-self:flex-end;background:var(--electric);color:#fff;border-color:transparent}
+.cc-chat-msg.assistant{align-self:flex-start}
+.cc-chat-msg.pending{align-self:flex-start;color:var(--dim);font-style:italic}
+.cc-chat-msg.error{align-self:flex-start;color:var(--error);background:var(--red-tint);border-color:var(--red-pastel)}
+.cc-chat-bar{display:flex;gap:8px;margin-top:12px}
+.cc-chat-input{flex:1;min-width:0;padding:10px 14px;border-radius:var(--pill);border:1px solid var(--line-strong);background:var(--paper-2);color:var(--ink);font-family:var(--font-body);font-size:13px}
+.cc-chat-input:focus{outline:none;border-color:var(--electric);background:var(--surface-0)}
+.cc-chat-send{flex-shrink:0;width:38px;height:38px;border-radius:50%;border:0;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--electric),var(--sky));color:#fff;cursor:pointer;box-shadow:0 8px 18px -10px rgba(11,95,255,.5)}
+.cc-chat-send svg{width:16px;height:16px;fill:#fff}
+.cc-chat-send:disabled{opacity:.5;cursor:default}
+
+/* Agent hex badges (Staff and agents table) — silver stays, ink text */
 .cc-hex{display:inline-grid;place-items:center;width:26px;height:28px;margin-right:8px;vertical-align:middle;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
-  background:linear-gradient(160deg,#E8F1FA 0%,#8FA6BC 38%,#3D5167 52%,#AFC3D6 70%,#5E7489 100%);font:800 9px var(--font-display);color:var(--abyss)}
-.cc-hex.live{box-shadow:none;filter:drop-shadow(0 0 6px var(--success))}
+  background:linear-gradient(160deg,#F4F7FB 0%,#C6D2E0 38%,#8FA2B8 52%,#D7E0EC 70%,#9BABBE 100%);font:700 9px var(--font-display);color:var(--ink)}
+.cc-hex.live{box-shadow:none;filter:drop-shadow(0 0 4px var(--success))}
+
+/* Future events card */
+.cc-event-primary{margin-top:4px}
+.cc-event-next{padding:14px;border-radius:var(--r-sm);background:var(--accent-tint);border:1px solid var(--accent-pastel)}
+.cc-event-when{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--electric);font-weight:700}
+.cc-event-title{font-weight:700;color:var(--ink);font-size:15px;margin-top:4px}
+.cc-event-next small{color:var(--muted);display:block;margin-top:2px}
+.cc-event-rows{list-style:none;display:flex;flex-direction:column;gap:2px;margin-top:10px}
+.cc-event-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.cc-event-row:last-child{border-bottom:0}
+.cc-event-row b{display:block;font-size:13px;font-weight:600;color:var(--ink)}
+.cc-event-row small{color:var(--dim);font-size:11.5px}
+.cc-event-dot{flex-shrink:0;width:7px;height:7px;border-radius:50%;background:var(--electric)}
+
+/* Roster / staff and agents preview card */
+.cc-roster-rows{list-style:none;display:flex;flex-direction:column;gap:4px}
+.cc-roster-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)}
+.cc-roster-row:last-child{border-bottom:0}
+.cc-roster-info{min-width:0}
+.cc-roster-name{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--ink)}
+.cc-roster-row small{color:var(--dim);font-size:11.5px}
+
+/* Weekly activity grid (staff hours + agent runs, last 7 days) */
+.cc-weekact-grid{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.cc-weekact-row{display:grid;grid-template-columns:160px 1fr;align-items:center;gap:14px}
+.cc-weekact-name{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink);min-width:0}
+.cc-weekact-name span.cc-hex{margin-right:0}
+.cc-weekact-cells{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cc-weekact-pill{height:22px;border-radius:7px;background:var(--surface-1);border:1px solid var(--line)}
+.cc-weekact-pill.level-light{background:var(--accent-pastel);border-color:var(--accent-pastel)}
+.cc-weekact-pill.level-mid{background:var(--skyblue-pastel);border-color:var(--skyblue);opacity:.85}
+.cc-weekact-pill.level-full{background:var(--electric);border-color:var(--electric)}
+.cc-weekact-pill.is-today{box-shadow:0 0 0 1.5px var(--ink)}
+@media (max-width:760px){.cc-weekact-row{grid-template-columns:110px 1fr}.cc-weekact-name small{display:none}}
+
+@keyframes cc-in{from{background:rgba(11,95,255,.12);transform:translateX(-6px)}to{background:transparent;transform:none}}
+.cc-table td{border-bottom:1px solid var(--line)}
+.cc-list li{border-bottom:1px solid var(--line)}
+.cc-msg{border-bottom:1px solid var(--line)}
+.cc-task{background:var(--surface-1)}
+.cc-idea{background:var(--accent-tint);border:1px solid var(--accent-pastel)}
+.cc-idea .step{color:var(--ink)}
+.cc-badge{background:var(--accent-pastel);color:var(--electric)}
+.cc-badge.gold{background:var(--gold-pastel);color:var(--gold-dark)}
+.cc-badge.violet{background:var(--violet-pastel);color:var(--violet)}
+.cc-chip[aria-selected="true"]{color:var(--ink);border-color:var(--electric);background:var(--accent-tint)}
+
+/* .cc-sample-banner / .cc-sample-tag / .cc-live.demo use var(--gold) for
+   TEXT in command-center.css — override to the text-safe shade (7.09:1) */
+.cc-sample-banner,.cc-sample-tag,.cc-live.demo{color:var(--gold-dark)}
+.cc-sample-banner{border-color:var(--gold-pastel);background:var(--gold-tint)}
+.cc-sample-tag{border-color:var(--gold-pastel);background:var(--gold-tint)}
+.cc-live.demo .cc-live-dot{background:var(--gold-dark)}
+.cc-kpi .cc-sample-tag{background:var(--surface-1)}
+
+/* Status pills — "pending/open/high/changes" used var(--gold) as text */
+.cc-pill.pending,.cc-pill.open,.cc-pill.high,.cc-pill.changes{color:var(--gold-dark);border-color:var(--gold-pastel)}
+.cc-pill.paid,.cc-pill.approved,.cc-pill.done,.cc-pill.sent{color:var(--success);border-color:var(--green-pastel)}
+.cc-pill.overdue,.cc-pill.rejected,.cc-pill.blocked,.cc-pill.urgent{color:var(--error);border-color:var(--red-pastel)}
+.cc-dot.idle{background:var(--warning)}
+.cc-act.warn{border-color:var(--gold-pastel);color:var(--gold-dark)}
+.cc-act.ok{border-color:var(--green-pastel);color:var(--success)}
+.cc-act.no{border-color:var(--red-pastel);color:var(--error)}
+
+.cc-toast{background:var(--ocean);border:1px solid var(--electric);color:#fff;box-shadow:0 16px 32px -16px rgba(15,26,43,.4)}
 
 @media (max-width:760px){.cc-greet{font-size:22px}}
 .cc-body{overflow-x:clip}
+
+/* Owner profile card — sidebar footer, matches reference design's
+   avatar + name + role block (AA: ink on white 15.8:1, muted on white 5.9:1) */
+.cc-user-id{display:flex;align-items:center;gap:10px}
+.cc-user-avatar{flex-shrink:0;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:13px;color:#fff;background:linear-gradient(135deg,var(--electric),var(--skyblue))}
+.cc-user-meta{display:flex;flex-direction:column;min-width:0}
+.cc-side-foot .cc-user{font-weight:600;color:var(--ink);font-size:13px;line-height:1.3}
+.cc-user-role{font-size:11.5px;color:var(--dim);line-height:1.3}

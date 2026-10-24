@@ -61,4 +61,54 @@
   }
 
   addEventListener('cc:render', renderBrief);
+
+  // ── Live TrueAssist chat, inside the Welcome orb card ──
+  // Local-only history, kept entirely separate from trueassist-widget.js's
+  // sessionStorage keys (mgc_trueassist_history / mgc_trueassist_session) —
+  // this is the admin dashboard, not the public-site widget, and the two
+  // must never read or write each other's state.
+  function initBriefChat() {
+    const form = $('cc-chat-form'), input = $('cc-chat-input'), log = $('cc-chat-log');
+    if (!form || !input || !log) return;
+    const history = [];
+    const sendBtn = form.querySelector('.cc-chat-send');
+
+    function addMsg(role, text) {
+      const div = el('div', { class: 'cc-chat-msg ' + role, text });
+      log.append(div);
+      log.scrollTop = log.scrollHeight;
+      return div;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+      addMsg('user', text);
+      history.push({ role: 'user', content: text });
+      if (sendBtn) sendBtn.disabled = true;
+      const pending = addMsg('pending', 'Thinking...');
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: history }),
+        });
+        const data = await res.json().catch(() => ({}));
+        pending.remove();
+        if (!res.ok || !data.reply) throw new Error('bad response');
+        addMsg('assistant', data.reply);
+        history.push({ role: 'assistant', content: data.reply });
+      } catch (err) {
+        pending.remove();
+        addMsg('error', 'Could not reach TrueAssist. If testing locally with python3 -m http.server, switch to `npx netlify dev` instead — /api/chat is CORS-locked to the production origin.');
+      } finally {
+        if (sendBtn) sendBtn.disabled = false;
+        input.focus();
+      }
+    });
+  }
+
+  initBriefChat();
 })();

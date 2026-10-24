@@ -2,7 +2,9 @@
 
 ## Pickup Summary
 
-Last updated: 2026-06-05
+Last updated: 2026-10-23 — see `CLAUDE.md`'s "Session handoff (2026-10-23)" section for full detail. Short version: the Command Center dashboard's Overview tab was redesigned (icon-rail sidebar, top tab bar, frosted hero cards, live TrueAssist chat, weekly activity grid) across `command-center.html` / `assets/command-center*.{css,js}`. Code is done and syntax-checked but NOT visually verified — no browser/screenshot tool was available in that session. Verify in an actual browser before treating it as finished.
+
+Previously last updated: 2026-06-05
 
 This repo is a static Netlify site served from root. The live client portal is `dashboard.html`, with Supabase auth, database reads/writes, realtime subscriptions, and storage uploads. The AI Operations Front Door is `onboarding-assistant.html`; it posts directly to `/.netlify/functions/lead-intake` and does not call Supabase.
 

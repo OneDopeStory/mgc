@@ -1,0 +1,3595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MGCOS CRM — MGC Global Consulting</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+/* ─── RESET ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ─── TOKENS ─── */
+:root{
+  --abyss:#010C1A;--deep:#020F20;--navy:#041428;--ocean:#061D35;
+  --blue:#0A3A6B;--mid:#0E5494;--sky:#1A8FD1;--cyan:#00D4FF;
+  --gold:#FFB347;--gold-dark:#C9892A;
+  --white:#FFFFFF;--muted:rgba(255,255,255,0.55);--dim:rgba(255,255,255,0.25);
+  --success:#22C55E;--warning:#F59E0B;--error:#EF4444;--info:#3B82F6;
+  --surface:rgba(6,29,53,0.8);--surface-2:rgba(10,58,107,0.35);
+  --border:rgba(0,212,255,0.12);
+  --font-display:'Raleway',sans-serif;
+  --font-body:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --font-data:'Inter',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --sidebar-w:265px;--sidebar-collapsed:64px;
+  --radius:14px;
+  --health-green:#22C55E;--health-amber:#F59E0B;--health-red:#EF4444;
+}
+
+/* ─── BASE ─── */
+html{font-size:15px;height:100%}
+body{
+  font-family:var(--font-body);
+  color:var(--white);
+  background:var(--abyss);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  height:100vh;
+}
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%,rgba(0,212,255,0.05),transparent),
+    radial-gradient(ellipse 60% 50% at 80% 80%,rgba(14,84,148,0.08),transparent);
+  pointer-events:none;z-index:0;
+}
+
+/* ─── ROOT LAYOUT ─── */
+#crm-root{
+  display:flex;
+  flex-direction:row;
+  height:100vh;
+  width:100vw;
+  overflow:hidden;
+  position:relative;
+  z-index:1;
+}
+
+/* ─── SIDEBAR ─── */
+#sidebar{
+  width:var(--sidebar-w);
+  min-width:var(--sidebar-w);
+  height:100vh;
+  background:var(--navy);
+  border-right:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  transition:width 0.3s var(--ease), min-width 0.3s var(--ease);
+  overflow:hidden;
+  z-index:10;
+  flex-shrink:0;
+}
+#sidebar.collapsed{
+  width:var(--sidebar-collapsed);
+  min-width:var(--sidebar-collapsed);
+}
+
+/* Sidebar logo */
+.sidebar-logo{
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+  padding:1.25rem 1rem 1rem;
+  border-bottom:1px solid var(--border);
+  min-height:64px;
+  overflow:hidden;
+  white-space:nowrap;
+}
+.sidebar-logo-mark{
+  width:36px;height:36px;
+  border-radius:9px;
+  background:linear-gradient(135deg,var(--mid),var(--sky));
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 0 14px rgba(0,212,255,0.25);
+}
+.sidebar-logo-mark svg{width:20px;height:20px;stroke:var(--white)}
+.sidebar-logo-text{
+  font-family:var(--font-display);
+  font-size:0.92rem;
+  font-weight:900;
+  letter-spacing:-0.01em;
+  line-height:1.1;
+  transition:opacity 0.2s, width 0.3s;
+}
+.sidebar-logo-text strong{color:var(--cyan)}
+.sidebar-logo-text span{
+  display:block;
+  font-size:0.58rem;
+  font-weight:600;
+  color:rgba(0,212,255,0.6);
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  margin-top:2px;
+}
+#sidebar.collapsed .sidebar-logo-text,
+#sidebar.collapsed .nav-label{
+  opacity:0;
+  width:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+/* Sidebar nav */
+.sidebar-nav{
+  flex:1;
+  padding:0.75rem 0;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+.sidebar-nav::-webkit-scrollbar{width:3px}
+.sidebar-nav::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.15);border-radius:99px}
+
+.nav-section-label{
+  font-size:0.6rem;
+  font-weight:700;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--dim);
+  padding:0.9rem 1rem 0.35rem;
+  white-space:nowrap;
+  overflow:hidden;
+  transition:opacity 0.2s;
+}
+#sidebar.collapsed .nav-section-label{opacity:0}
+
+.nav-item{
+  display:flex;
+  align-items:center;
+  gap:0.7rem;
+  padding:0.65rem 1rem;
+  margin:0.1rem 0.6rem;
+  border-radius:10px;
+  cursor:pointer;
+  transition:all 0.2s var(--ease);
+  border:1px solid transparent;
+  position:relative;
+  white-space:nowrap;
+  text-decoration:none;
+  color:var(--muted);
+  overflow:hidden;
+}
+.nav-item:hover{
+  background:rgba(0,212,255,0.06);
+  color:rgba(255,255,255,0.85);
+  border-color:rgba(0,212,255,0.1);
+}
+.nav-item.active{
+  background:rgba(0,212,255,0.1);
+  color:var(--cyan);
+  border-color:rgba(0,212,255,0.2);
+  border-left:3px solid var(--cyan);
+}
+.nav-item.active .nav-icon{color:var(--cyan)}
+.nav-icon{
+  width:18px;height:18px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.nav-icon i{display:flex}
+.nav-label{
+  font-size:0.82rem;
+  font-weight:600;
+  transition:opacity 0.2s, width 0.3s var(--ease);
+  overflow:hidden;
+}
+.nav-badge{
+  margin-left:auto;
+  padding:0.1rem 0.45rem;
+  border-radius:99px;
+  font-size:0.62rem;
+  font-weight:700;
+  background:rgba(239,68,68,0.15);
+  color:#fca5a5;
+  border:1px solid rgba(239,68,68,0.2);
+  white-space:nowrap;
+  transition:opacity 0.2s;
+}
+#sidebar.collapsed .nav-badge{opacity:0}
+
+/* Sidebar footer */
+.sidebar-footer{
+  border-top:1px solid var(--border);
+  padding:0.85rem 1rem;
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+  overflow:hidden;
+  white-space:nowrap;
+}
+.sidebar-ai-badge{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.45rem 0.75rem;
+  border-radius:99px;
+  background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(0,212,255,0.1));
+  border:1px solid rgba(139,92,246,0.2);
+  font-size:0.68rem;
+  font-weight:700;
+  color:rgba(167,139,250,0.9);
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  cursor:default;
+  flex-shrink:0;
+  transition:opacity 0.2s;
+}
+.sidebar-ai-badge i{color:rgba(167,139,250,0.8);width:12px;height:12px}
+.sidebar-ai-label{transition:opacity 0.2s, width 0.3s}
+#sidebar.collapsed .sidebar-ai-label{opacity:0;width:0;overflow:hidden}
+.sidebar-user-avatar{
+  width:32px;height:32px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--sky),var(--cyan));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);
+  font-size:0.7rem;
+  font-weight:800;
+  color:var(--abyss);
+  flex-shrink:0;
+  cursor:pointer;
+  margin-left:auto;
+}
+
+/* ─── MAIN COLUMN ─── */
+#crm-main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+  overflow:hidden;
+  min-width:0;
+}
+
+/* ─── TOPBAR ─── */
+#topbar{
+  height:64px;
+  min-height:64px;
+  background:var(--deep);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  padding:0 1.5rem;
+  z-index:5;
+  position:relative;
+}
+#sidebar-toggle{
+  width:36px;height:36px;
+  border-radius:9px;
+  background:rgba(0,212,255,0.06);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:all 0.2s;
+  flex-shrink:0;
+  color:var(--muted);
+}
+#sidebar-toggle:hover{
+  background:rgba(0,212,255,0.12);
+  color:var(--cyan);
+  border-color:rgba(0,212,255,0.25);
+}
+.breadcrumb{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  font-size:0.78rem;
+  color:var(--muted);
+  white-space:nowrap;
+}
+.breadcrumb-root{color:rgba(0,212,255,0.6);font-weight:600}
+.breadcrumb-sep{color:var(--dim)}
+#breadcrumb-dept{
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:0.82rem;
+  color:var(--white);
+}
+#topbar-search{
+  flex:1;
+  max-width:380px;
+  margin-left:auto;
+  position:relative;
+}
+#topbar-search input{
+  width:100%;
+  background:rgba(1,12,26,0.7);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:0.55rem 0.9rem 0.55rem 2.4rem;
+  color:var(--white);
+  font-family:var(--font-body);
+  font-size:0.8rem;
+  outline:none;
+  transition:border-color 0.2s;
+}
+#topbar-search input:focus{border-color:rgba(0,212,255,0.35)}
+#topbar-search input::placeholder{color:var(--dim)}
+#topbar-search .search-icon{
+  position:absolute;
+  left:0.75rem;top:50%;transform:translateY(-50%);
+  color:var(--dim);
+  display:flex;
+  pointer-events:none;
+}
+.topbar-actions{
+  display:flex;
+  align-items:center;
+  gap:0.65rem;
+}
+.topbar-icon-btn{
+  width:36px;height:36px;
+  border-radius:9px;
+  background:rgba(0,212,255,0.06);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:all 0.2s;
+  color:var(--muted);
+  position:relative;
+}
+.topbar-icon-btn:hover{
+  background:rgba(0,212,255,0.12);
+  color:var(--cyan);
+  border-color:rgba(0,212,255,0.25);
+}
+.topbar-notif-dot{
+  position:absolute;
+  top:6px;right:6px;
+  width:7px;height:7px;
+  border-radius:50%;
+  background:var(--error);
+  border:1.5px solid var(--deep);
+}
+.topbar-avatar{
+  width:34px;height:34px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--sky),var(--cyan));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);
+  font-size:0.7rem;
+  font-weight:800;
+  color:var(--abyss);
+  cursor:pointer;
+  border:2px solid rgba(0,212,255,0.3);
+}
+
+/* ─── CRM CONTENT AREA ─── */
+#crm-content{
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:1.5rem;
+  scroll-behavior:smooth;
+}
+#crm-content::-webkit-scrollbar{width:5px}
+#crm-content::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.15);border-radius:99px}
+
+/* ─── VIEW SYSTEM ─── */
+.crm-view{
+  display:none;
+  animation:viewFadeIn 0.35s var(--ease);
+}
+.crm-view.view-active{display:block}
+
+@keyframes viewFadeIn{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ─── VIEW HEADER ─── */
+.view-header{
+  margin-bottom:1.5rem;
+}
+.view-header h1{
+  font-family:var(--font-display);
+  font-size:1.7rem;
+  font-weight:900;
+  letter-spacing:-0.03em;
+  background:linear-gradient(135deg,var(--white) 30%,var(--cyan));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  line-height:1.1;
+  margin-bottom:0.25rem;
+}
+.view-header p{
+  font-size:0.82rem;
+  color:var(--muted);
+  font-weight:400;
+}
+
+/* ─── KPI GRID ─── */
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:1rem;
+  margin-bottom:1.5rem;
+}
+.kpi-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1.1rem 1.25rem;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  position:relative;
+  overflow:hidden;
+  transition:border-color 0.2s, transform 0.2s var(--ease);
+}
+.kpi-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+  opacity:0;
+  transition:opacity 0.3s;
+}
+.kpi-card:hover{
+  border-color:rgba(0,212,255,0.22);
+  transform:translateY(-2px);
+}
+.kpi-card:hover::before{opacity:1}
+.kpi-label{
+  font-size:0.68rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.09em;
+  color:var(--muted);
+  margin-bottom:0.55rem;
+}
+.kpi-value{
+  font-family:var(--font-display);
+  font-size:2rem;
+  font-weight:800;
+  line-height:1;
+  color:var(--white);
+  letter-spacing:-0.03em;
+  margin-bottom:0.5rem;
+}
+.kpi-delta{
+  display:inline-flex;
+  align-items:center;
+  gap:0.3rem;
+  font-size:0.72rem;
+  font-weight:600;
+  padding:0.2rem 0.5rem;
+  border-radius:99px;
+}
+.kpi-delta.up{
+  background:rgba(34,197,94,0.12);
+  color:var(--success);
+  border:1px solid rgba(34,197,94,0.2);
+}
+.kpi-delta.down{
+  background:rgba(239,68,68,0.12);
+  color:var(--error);
+  border:1px solid rgba(239,68,68,0.2);
+}
+.kpi-delta.neutral{
+  background:rgba(245,158,11,0.1);
+  color:var(--warning);
+  border:1px solid rgba(245,158,11,0.2);
+}
+.kpi-icon{
+  position:absolute;
+  top:1rem;right:1rem;
+  width:36px;height:36px;
+  border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,212,255,0.08);
+  color:var(--cyan);
+  opacity:0.7;
+}
+
+/* ─── CHARTS ROW ─── */
+.charts-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem;
+  margin-bottom:1.5rem;
+}
+@media(max-width:900px){.charts-row{grid-template-columns:1fr}}
+
+.chart-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1.25rem;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+}
+.chart-card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:1.1rem;
+}
+.chart-card-title{
+  font-family:var(--font-display);
+  font-size:0.88rem;
+  font-weight:800;
+  color:rgba(255,255,255,0.9);
+}
+.chart-card-sub{
+  font-size:0.68rem;
+  color:var(--muted);
+  margin-top:0.15rem;
+}
+.chart-wrap{
+  position:relative;
+  height:220px;
+}
+.chart-wrap canvas{width:100%!important}
+
+/* ─── TWO COL ROW ─── */
+.two-col-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem;
+  margin-bottom:1.5rem;
+}
+@media(max-width:960px){.two-col-row{grid-template-columns:1fr}}
+
+/* ─── SECTION CARDS ─── */
+.section-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1.25rem;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  margin-bottom:1.5rem;
+}
+.section-card:last-child{margin-bottom:0}
+.section-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:1.1rem;
+}
+.section-title{
+  font-family:var(--font-display);
+  font-size:0.92rem;
+  font-weight:800;
+  color:rgba(255,255,255,0.9);
+}
+.section-subtitle{
+  font-size:0.72rem;
+  color:var(--muted);
+  margin-top:0.2rem;
+}
+
+/* ─── DATA TABLES ─── */
+.data-table{
+  width:100%;
+  border-collapse:collapse;
+  font-family:var(--font-data);
+  font-size:0.78rem;
+}
+.data-table thead th{
+  text-align:left;
+  padding:0.65rem 0.75rem;
+  font-size:0.65rem;
+  font-weight:700;
+  letter-spacing:0.09em;
+  text-transform:uppercase;
+  color:var(--muted);
+  border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+.data-table tbody tr{
+  border-bottom:1px solid rgba(0,212,255,0.05);
+  transition:background 0.15s;
+}
+.data-table tbody tr:nth-child(even){
+  background:rgba(0,212,255,0.02);
+}
+.data-table tbody tr:hover{
+  background:rgba(0,212,255,0.06);
+}
+.data-table tbody td{
+  padding:0.7rem 0.75rem;
+  color:rgba(255,255,255,0.8);
+  vertical-align:middle;
+}
+
+/* Badge pills */
+.badge{
+  display:inline-block;
+  padding:0.18rem 0.55rem;
+  border-radius:99px;
+  font-size:0.63rem;
+  font-weight:700;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.badge-success{background:rgba(34,197,94,0.15);color:var(--success);border:1px solid rgba(34,197,94,0.2)}
+.badge-warning{background:rgba(245,158,11,0.15);color:var(--warning);border:1px solid rgba(245,158,11,0.2)}
+.badge-error{background:rgba(239,68,68,0.15);color:var(--error);border:1px solid rgba(239,68,68,0.2)}
+.badge-info{background:rgba(59,130,246,0.15);color:var(--info);border:1px solid rgba(59,130,246,0.2)}
+.badge-cyan{background:rgba(0,212,255,0.12);color:var(--cyan);border:1px solid rgba(0,212,255,0.2)}
+.badge-gold{background:rgba(255,179,71,0.12);color:var(--gold);border:1px solid rgba(255,179,71,0.2)}
+.badge-purple{background:rgba(139,92,246,0.15);color:#c4b5fd;border:1px solid rgba(139,92,246,0.2)}
+.badge-muted{background:rgba(255,255,255,0.06);color:var(--muted);border:1px solid rgba(255,255,255,0.1)}
+
+/* Tier badges */
+.tier-elite{background:linear-gradient(135deg,rgba(255,179,71,0.2),rgba(201,137,42,0.15));color:var(--gold);border:1px solid rgba(255,179,71,0.3)}
+.tier-enterprise{background:rgba(0,212,255,0.1);color:var(--cyan);border:1px solid rgba(0,212,255,0.2)}
+.tier-growth{background:rgba(34,197,94,0.1);color:var(--success);border:1px solid rgba(34,197,94,0.2)}
+.tier-starter{background:rgba(255,255,255,0.06);color:var(--muted);border:1px solid rgba(255,255,255,0.1)}
+
+/* ─── ACTIVITY FEED ─── */
+.activity-feed{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+.activity-item{
+  display:flex;
+  align-items:flex-start;
+  gap:0.85rem;
+  padding:0.8rem 0;
+  border-bottom:1px solid rgba(0,212,255,0.05);
+}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{
+  width:30px;height:30px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  margin-top:0.1rem;
+}
+.activity-dot.deal{background:rgba(34,197,94,0.12);color:var(--success)}
+.activity-dot.email{background:rgba(59,130,246,0.12);color:var(--info)}
+.activity-dot.note{background:rgba(245,158,11,0.12);color:var(--warning)}
+.activity-dot.alert{background:rgba(239,68,68,0.12);color:var(--error)}
+.activity-dot.ai{background:rgba(139,92,246,0.12);color:#c4b5fd}
+.activity-dot.meet{background:rgba(0,212,255,0.1);color:var(--cyan)}
+.activity-body{flex:1;min-width:0}
+.activity-text{
+  font-size:0.78rem;
+  color:rgba(255,255,255,0.8);
+  line-height:1.45;
+}
+.activity-text strong{color:var(--white);font-weight:600}
+.activity-time{
+  font-size:0.65rem;
+  color:var(--dim);
+  margin-top:0.2rem;
+  font-family:var(--font-data);
+}
+
+/* ─── ATTRIBUTION TABLE ─── */
+.attribution-panel .data-table tbody td:last-child{
+  color:var(--gold);
+  font-weight:700;
+  font-family:var(--font-data);
+}
+.attribution-panel .section-header{
+  margin-bottom:0.8rem;
+}
+
+/* ─── KANBAN BOARD ─── */
+#kanban-wrapper{
+  overflow:hidden;
+}
+#kanban-board{
+  display:flex;
+  gap:0.85rem;
+  overflow-x:auto;
+  padding-bottom:0.75rem;
+  min-height:340px;
+}
+#kanban-board::-webkit-scrollbar{height:4px}
+#kanban-board::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.15);border-radius:99px}
+
+.kanban-col{
+  min-width:220px;
+  width:220px;
+  flex-shrink:0;
+  background:rgba(4,20,40,0.7);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.kanban-col-header{
+  padding:0.8rem 1rem;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-shrink:0;
+}
+.kanban-col-name{
+  font-family:var(--font-display);
+  font-size:0.78rem;
+  font-weight:800;
+  color:rgba(255,255,255,0.9);
+}
+.kanban-col-count{
+  width:22px;height:22px;
+  border-radius:50%;
+  background:rgba(0,212,255,0.1);
+  border:1px solid rgba(0,212,255,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.62rem;
+  font-weight:700;
+  color:var(--cyan);
+  font-family:var(--font-data);
+}
+.kanban-cards{
+  flex:1;
+  padding:0.65rem;
+  display:flex;
+  flex-direction:column;
+  gap:0.55rem;
+  overflow-y:auto;
+  min-height:260px;
+}
+.kanban-cards::-webkit-scrollbar{width:3px}
+.kanban-cards::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.1);border-radius:99px}
+
+/* Deal cards (JS renders these, but define style here) */
+.deal-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:0.75rem;
+  cursor:pointer;
+  transition:all 0.2s var(--ease);
+}
+.deal-card:hover{
+  border-color:rgba(0,212,255,0.25);
+  transform:translateY(-2px);
+  box-shadow:0 4px 16px rgba(0,0,0,0.3);
+}
+.deal-card-company{
+  font-size:0.78rem;
+  font-weight:700;
+  color:var(--white);
+  margin-bottom:0.3rem;
+}
+.deal-card-value{
+  font-family:var(--font-data);
+  font-size:0.88rem;
+  font-weight:700;
+  color:var(--cyan);
+  margin-bottom:0.4rem;
+}
+.deal-card-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:0.4rem;
+}
+.deal-card-days{
+  font-size:0.62rem;
+  color:var(--dim);
+  font-family:var(--font-data);
+}
+.deal-card-days.overdue{color:var(--error)}
+
+/* ─── DEAL TABLE CONTROLS ─── */
+.deal-controls{
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+  margin-bottom:0.9rem;
+  flex-wrap:wrap;
+}
+#deal-search{
+  flex:1;
+  min-width:160px;
+  background:rgba(1,12,26,0.7);
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:0.5rem 0.85rem;
+  color:var(--white);
+  font-family:var(--font-body);
+  font-size:0.78rem;
+  outline:none;
+  transition:border-color 0.2s;
+}
+#deal-search:focus{border-color:rgba(0,212,255,0.35)}
+#deal-search::placeholder{color:var(--dim)}
+
+.filter-tabs{
+  display:flex;
+  gap:0.35rem;
+}
+.filter-tab{
+  padding:0.35rem 0.75rem;
+  border-radius:8px;
+  font-size:0.72rem;
+  font-weight:700;
+  color:var(--muted);
+  cursor:pointer;
+  border:1px solid transparent;
+  background:none;
+  transition:all 0.2s;
+}
+.filter-tab:hover{
+  background:rgba(0,212,255,0.06);
+  color:rgba(255,255,255,0.8);
+}
+.filter-tab.active{
+  background:rgba(0,212,255,0.1);
+  color:var(--cyan);
+  border-color:rgba(0,212,255,0.2);
+}
+
+/* Action button in table */
+.btn-table-action{
+  padding:0.28rem 0.65rem;
+  border-radius:7px;
+  font-size:0.68rem;
+  font-weight:700;
+  border:1px solid rgba(0,212,255,0.2);
+  background:rgba(0,212,255,0.08);
+  color:var(--cyan);
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.btn-table-action:hover{background:rgba(0,212,255,0.15)}
+
+/* ─── AI DEAL INTELLIGENCE PANEL ─── */
+#deal-intel-panel{
+  background:var(--surface);
+  border:1px solid rgba(139,92,246,0.2);
+  border-radius:var(--radius);
+  padding:0;
+  overflow:hidden;
+}
+.ai-intel-header{
+  background:linear-gradient(135deg,rgba(139,92,246,0.18),rgba(0,212,255,0.08));
+  border-bottom:1px solid rgba(139,92,246,0.15);
+  padding:1rem 1.25rem;
+}
+.ai-intel-header-row{
+  display:flex;
+  align-items:center;
+  gap:0.65rem;
+  margin-bottom:0.2rem;
+}
+.ai-intel-icon{
+  width:32px;height:32px;
+  border-radius:8px;
+  background:rgba(139,92,246,0.2);
+  border:1px solid rgba(139,92,246,0.3);
+  display:flex;align-items:center;justify-content:center;
+  color:#c4b5fd;
+  animation:aiPulse 3s ease-in-out infinite;
+}
+@keyframes aiPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(139,92,246,0.3)}
+  50%{box-shadow:0 0 0 6px rgba(139,92,246,0)}
+}
+.ai-intel-title{
+  font-family:var(--font-display);
+  font-size:0.92rem;
+  font-weight:900;
+  color:var(--white);
+}
+.ai-intel-sub{
+  font-size:0.68rem;
+  color:rgba(167,139,250,0.7);
+}
+.ai-intel-body{
+  padding:1rem 1.25rem;
+}
+#deal-intel-content{
+  min-height:120px;
+  margin-bottom:1rem;
+}
+.intel-item{
+  background:rgba(139,92,246,0.07);
+  border:1px solid rgba(139,92,246,0.12);
+  border-radius:10px;
+  padding:0.8rem 1rem;
+  margin-bottom:0.6rem;
+}
+.intel-item:last-child{margin-bottom:0}
+.intel-item-company{
+  font-size:0.75rem;
+  font-weight:700;
+  color:rgba(255,255,255,0.9);
+  margin-bottom:0.2rem;
+}
+.intel-item-action{
+  font-size:0.78rem;
+  color:rgba(167,139,250,0.85);
+  line-height:1.45;
+}
+.intel-item-priority{
+  display:inline-flex;
+  align-items:center;
+  gap:0.3rem;
+  font-size:0.62rem;
+  font-weight:700;
+  margin-top:0.4rem;
+}
+.priority-high{color:var(--error)}
+.priority-medium{color:var(--warning)}
+.priority-low{color:var(--success)}
+.intel-placeholder{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:100px;
+  color:var(--dim);
+  text-align:center;
+  gap:0.5rem;
+  font-size:0.78rem;
+}
+
+/* AI ask row */
+.ai-ask-row{
+  display:flex;
+  gap:0.5rem;
+}
+#ai-query{
+  flex:1;
+  background:rgba(1,12,26,0.8);
+  border:1px solid rgba(139,92,246,0.2);
+  border-radius:9px;
+  padding:0.55rem 0.9rem;
+  color:var(--white);
+  font-family:var(--font-body);
+  font-size:0.78rem;
+  outline:none;
+  transition:border-color 0.2s;
+}
+#ai-query:focus{border-color:rgba(139,92,246,0.4)}
+#ai-query::placeholder{color:var(--dim)}
+#ai-ask-btn{
+  padding:0.55rem 1rem;
+  border-radius:9px;
+  background:linear-gradient(135deg,#7c3aed,var(--sky));
+  color:var(--white);
+  font-family:var(--font-display);
+  font-size:0.75rem;
+  font-weight:800;
+  border:none;
+  cursor:pointer;
+  transition:all 0.2s;
+  white-space:nowrap;
+}
+#ai-ask-btn:hover{filter:brightness(1.15);transform:translateY(-1px)}
+#ai-response{
+  display:none;
+  margin-top:0.85rem;
+  padding:0.85rem 1rem;
+  border-radius:10px;
+  background:rgba(139,92,246,0.08);
+  border:1px solid rgba(139,92,246,0.15);
+  font-size:0.78rem;
+  color:rgba(255,255,255,0.85);
+  line-height:1.6;
+  animation:viewFadeIn 0.3s var(--ease);
+}
+#ai-response.visible{display:block}
+
+/* ─── HANDOFF BOARD ─── */
+#handoff-board{
+  overflow-x:auto;
+  padding-bottom:0.5rem;
+}
+#handoff-board::-webkit-scrollbar{height:4px}
+#handoff-board::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.15);border-radius:99px}
+
+.handoff-table{
+  width:100%;
+  min-width:600px;
+  border-collapse:collapse;
+}
+.handoff-table thead th{
+  font-size:0.63rem;
+  font-weight:700;
+  letter-spacing:0.09em;
+  text-transform:uppercase;
+  color:var(--muted);
+  padding:0.5rem 0.75rem;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+}
+.handoff-client-row{
+  border-bottom:1px solid rgba(0,212,255,0.05);
+  transition:background 0.15s;
+}
+.handoff-client-row:hover{background:rgba(0,212,255,0.04)}
+.handoff-client-row td{
+  padding:0.75rem;
+  vertical-align:middle;
+  font-size:0.78rem;
+}
+.handoff-client-name{
+  font-weight:700;
+  color:var(--white);
+  font-size:0.8rem;
+}
+.handoff-client-tier{
+  font-size:0.65rem;
+  color:var(--muted);
+  margin-top:0.15rem;
+}
+.stage-dots{
+  display:flex;
+  align-items:center;
+  gap:0.4rem;
+}
+.stage-dot-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:0.2rem;
+}
+.stage-dot{
+  width:10px;height:10px;
+  border-radius:50%;
+  transition:box-shadow 0.2s;
+}
+.stage-dot.done{background:var(--health-green);box-shadow:0 0 6px rgba(34,197,94,0.4)}
+.stage-dot.active{background:var(--health-amber);box-shadow:0 0 6px rgba(245,158,11,0.5);animation:stagePulse 1.5s ease-in-out infinite}
+.stage-dot.pending{background:rgba(255,255,255,0.15)}
+@keyframes stagePulse{
+  0%,100%{box-shadow:0 0 6px rgba(245,158,11,0.5)}
+  50%{box-shadow:0 0 12px rgba(245,158,11,0.8)}
+}
+.stage-dot-label{
+  font-size:0.58rem;
+  color:var(--dim);
+  text-align:center;
+  white-space:nowrap;
+}
+.stage-connector{
+  width:24px;height:1px;
+  background:rgba(0,212,255,0.15);
+  margin-bottom:1rem;
+}
+.sla-timer{
+  display:inline-flex;
+  align-items:center;
+  gap:0.3rem;
+  padding:0.2rem 0.55rem;
+  border-radius:99px;
+  font-size:0.65rem;
+  font-weight:700;
+  font-family:var(--font-data);
+}
+.sla-timer.ok{
+  background:rgba(34,197,94,0.1);
+  color:var(--success);
+  border:1px solid rgba(34,197,94,0.2);
+}
+.sla-timer.warn{
+  background:rgba(245,158,11,0.1);
+  color:var(--warning);
+  border:1px solid rgba(245,158,11,0.2);
+  animation:slaPulse 2s ease-in-out infinite;
+}
+.sla-timer.breach{
+  background:rgba(239,68,68,0.12);
+  color:var(--error);
+  border:1px solid rgba(239,68,68,0.25);
+  animation:slaPulse 1s ease-in-out infinite;
+}
+@keyframes slaPulse{
+  0%,100%{opacity:1}
+  50%{opacity:0.65}
+}
+
+/* Onboarding cards grid */
+.onboarding-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:1rem;
+}
+.onboarding-card{
+  background:rgba(4,20,40,0.8);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1rem;
+  transition:all 0.2s var(--ease);
+}
+.onboarding-card:hover{
+  border-color:rgba(0,212,255,0.2);
+  transform:translateY(-2px);
+}
+.onboarding-card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:0.65rem;
+}
+.onboarding-company{
+  font-weight:700;
+  font-size:0.85rem;
+  color:var(--white);
+}
+.onboarding-progress-bar{
+  height:5px;
+  border-radius:99px;
+  background:rgba(255,255,255,0.07);
+  margin-bottom:0.6rem;
+  overflow:hidden;
+}
+.onboarding-progress-fill{
+  height:100%;
+  border-radius:99px;
+  background:linear-gradient(90deg,var(--sky),var(--cyan));
+  transition:width 0.5s var(--ease);
+}
+.onboarding-pct{
+  font-size:0.68rem;
+  font-weight:700;
+  color:var(--cyan);
+  font-family:var(--font-data);
+  margin-bottom:0.65rem;
+}
+.milestone-list{
+  display:flex;
+  flex-direction:column;
+  gap:0.35rem;
+}
+.milestone-item{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  font-size:0.72rem;
+  color:var(--muted);
+}
+.milestone-item.done{color:rgba(255,255,255,0.8)}
+.milestone-check{
+  width:14px;height:14px;
+  border-radius:50%;
+  border:1.5px solid rgba(255,255,255,0.2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.milestone-item.done .milestone-check{
+  background:rgba(34,197,94,0.2);
+  border-color:rgba(34,197,94,0.4);
+  color:var(--success);
+}
+
+/* ─── PROJECT CARDS ─── */
+.project-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:1rem;
+  margin-bottom:1.5rem;
+}
+.project-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1rem;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  transition:all 0.2s var(--ease);
+}
+.project-card:hover{
+  border-color:rgba(0,212,255,0.2);
+  transform:translateY(-2px);
+}
+.project-card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:0.65rem;
+}
+.project-name{
+  font-weight:700;
+  font-size:0.85rem;
+  color:var(--white);
+}
+.project-client{
+  font-size:0.68rem;
+  color:var(--muted);
+  margin-top:0.1rem;
+}
+.project-progress-bar{
+  height:5px;
+  border-radius:99px;
+  background:rgba(255,255,255,0.07);
+  margin-bottom:0.4rem;
+  overflow:hidden;
+}
+.project-progress-fill{
+  height:100%;
+  border-radius:99px;
+  background:linear-gradient(90deg,var(--sky),var(--cyan));
+}
+.project-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:0.5rem;
+}
+.project-due{
+  font-size:0.65rem;
+  color:var(--dim);
+  font-family:var(--font-data);
+}
+.project-due.overdue{color:var(--error)}
+
+/* ─── HEALTH LEGEND ─── */
+.health-legend{
+  display:flex;
+  gap:0.75rem;
+  flex-wrap:wrap;
+  margin-bottom:1rem;
+}
+.health-signal{
+  display:flex;
+  align-items:center;
+  gap:0.4rem;
+  font-size:0.7rem;
+  color:var(--muted);
+}
+.health-signal-dot{
+  width:8px;height:8px;
+  border-radius:50%;
+}
+
+/* ─── CHURN GRID ─── */
+#churn-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:1rem;
+}
+.churn-card{
+  background:rgba(4,20,40,0.8);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1rem;
+  transition:all 0.2s var(--ease);
+}
+.churn-card:hover{
+  border-color:rgba(0,212,255,0.18);
+  transform:translateY(-2px);
+}
+.churn-card-header{
+  display:flex;
+  align-items:center;
+  gap:0.85rem;
+  margin-bottom:0.85rem;
+}
+.health-ring{
+  width:48px;height:48px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-data);
+  font-size:0.88rem;
+  font-weight:800;
+  flex-shrink:0;
+  border:3px solid;
+  position:relative;
+}
+.health-ring.green{
+  color:var(--health-green);
+  border-color:var(--health-green);
+  background:rgba(34,197,94,0.08);
+  box-shadow:0 0 12px rgba(34,197,94,0.15);
+}
+.health-ring.amber{
+  color:var(--health-amber);
+  border-color:var(--health-amber);
+  background:rgba(245,158,11,0.08);
+  box-shadow:0 0 12px rgba(245,158,11,0.15);
+}
+.health-ring.red{
+  color:var(--health-red);
+  border-color:var(--health-red);
+  background:rgba(239,68,68,0.08);
+  box-shadow:0 0 12px rgba(239,68,68,0.15);
+}
+.churn-company{
+  font-weight:700;
+  font-size:0.85rem;
+  color:var(--white);
+}
+.churn-tier{
+  font-size:0.65rem;
+  color:var(--muted);
+  margin-top:0.1rem;
+}
+.signal-bars{
+  display:flex;
+  flex-direction:column;
+  gap:0.45rem;
+}
+.signal-bar{
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
+}
+.signal-bar-label{
+  font-size:0.65rem;
+  color:var(--muted);
+  width:110px;
+  flex-shrink:0;
+}
+.signal-bar-track{
+  flex:1;
+  height:4px;
+  border-radius:99px;
+  background:rgba(255,255,255,0.07);
+  overflow:hidden;
+}
+.signal-bar-fill{
+  height:100%;
+  border-radius:99px;
+}
+.signal-bar-fill.high{background:var(--health-green)}
+.signal-bar-fill.medium{background:var(--health-amber)}
+.signal-bar-fill.low{background:var(--health-red)}
+.signal-bar-val{
+  font-size:0.62rem;
+  font-weight:700;
+  font-family:var(--font-data);
+  width:28px;
+  text-align:right;
+  color:var(--muted);
+}
+.churn-predicted{
+  margin-top:0.75rem;
+  font-size:0.68rem;
+  font-family:var(--font-data);
+  color:var(--dim);
+  display:flex;
+  align-items:center;
+  gap:0.35rem;
+}
+.churn-predicted.soon{color:var(--error);font-weight:700}
+
+/* ─── SCROLLBARS ─── */
+.section-card::-webkit-scrollbar{width:4px}
+.section-card::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.12);border-radius:99px}
+
+/* ─── RESPONSIVE HELPERS ─── */
+.table-scroll-wrap{overflow-x:auto}
+.table-scroll-wrap::-webkit-scrollbar{height:4px}
+.table-scroll-wrap::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.12);border-radius:99px}
+
+/* ─── EMPTY STATE ─── */
+.empty-state{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:2.5rem;
+  color:var(--dim);
+  text-align:center;
+  gap:0.65rem;
+}
+.empty-state i{opacity:0.35}
+.empty-state p{font-size:0.8rem}
+
+/* ─── STAT BAR (overview attribution) ─── */
+.roi-cell{
+  color:var(--gold)!important;
+  font-weight:800!important;
+  font-family:var(--font-data)!important;
+}
+
+/* ─── CHART LEGEND PILL ─── */
+.chart-legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.5rem;
+  margin-top:0.75rem;
+}
+.legend-item{
+  display:flex;
+  align-items:center;
+  gap:0.35rem;
+  font-size:0.65rem;
+  color:var(--muted);
+}
+.legend-dot{
+  width:8px;height:8px;
+  border-radius:50%;
+  flex-shrink:0;
+}
+
+/* ─── NOTIFICATION DOT PULSE ─── */
+@keyframes notifPulse{
+  0%,100%{transform:scale(1);opacity:1}
+  50%{transform:scale(1.3);opacity:0.8}
+}
+.topbar-notif-dot{animation:notifPulse 2s ease-in-out infinite}
+
+/* ─── MISC UTILITY ─── */
+.flex-row{display:flex;align-items:center;gap:0.5rem}
+.ml-auto{margin-left:auto}
+.text-muted{color:var(--muted)}
+.text-cyan{color:var(--cyan)}
+.text-gold{color:var(--gold)}
+.text-success{color:var(--success)}
+.text-error{color:var(--error)}
+.text-warning{color:var(--warning)}
+.font-data{font-family:var(--font-data)}
+.font-display{font-family:var(--font-display)}
+.fw-800{font-weight:800}
+
+</style>
+</head>
+<body>
+
+<div id="crm-root">
+
+  <!-- ══════════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════════ -->
+  <aside id="sidebar">
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      </div>
+      <div class="sidebar-logo-text">
+        <strong>MGCOS</strong> CRM
+        <span>Global Consulting</span>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav" role="navigation" aria-label="CRM sections">
+
+      <div class="nav-section-label">Workspace</div>
+
+      <div class="nav-item active" data-view="overview" role="button" tabindex="0" aria-current="page">
+        <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span>
+        <span class="nav-label">Overview</span>
+      </div>
+
+      <div class="nav-item" data-view="marketing" role="button" tabindex="0">
+        <span class="nav-icon"><i data-lucide="megaphone"></i></span>
+        <span class="nav-label">Marketing</span>
+      </div>
+
+      <div class="nav-item" data-view="sales" role="button" tabindex="0">
+        <span class="nav-icon"><i data-lucide="trending-up"></i></span>
+        <span class="nav-label">Sales</span>
+        <span class="nav-badge">7</span>
+      </div>
+
+      <div class="nav-item" data-view="onboarding" role="button" tabindex="0">
+        <span class="nav-icon"><i data-lucide="user-check"></i></span>
+        <span class="nav-label">Onboarding</span>
+        <span class="nav-badge">2</span>
+      </div>
+
+      <div class="nav-item" data-view="delivery" role="button" tabindex="0">
+        <span class="nav-icon"><i data-lucide="package"></i></span>
+        <span class="nav-label">Delivery</span>
+      </div>
+
+      <div class="nav-item" data-view="retention" role="button" tabindex="0">
+        <span class="nav-icon"><i data-lucide="heart-pulse"></i></span>
+        <span class="nav-label">Retention</span>
+        <span class="nav-badge">3</span>
+      </div>
+
+    </nav>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <div class="sidebar-ai-badge">
+        <i data-lucide="bot"></i>
+        <span class="sidebar-ai-label">AI Active</span>
+      </div>
+      <div class="sidebar-user-avatar" title="Mark Cartwright">MC</div>
+    </div>
+
+  </aside>
+  <!-- /sidebar -->
+
+
+  <!-- ══════════════════════════════════════
+       MAIN COLUMN
+  ══════════════════════════════════════ -->
+  <div id="crm-main">
+
+    <!-- Topbar -->
+    <header id="topbar" role="banner">
+      <button id="sidebar-toggle" aria-label="Toggle sidebar">
+        <i data-lucide="menu"></i>
+      </button>
+
+      <div class="breadcrumb">
+        <span class="breadcrumb-root">MGC</span>
+        <span class="breadcrumb-sep">/</span>
+        <span id="breadcrumb-dept">Overview</span>
+      </div>
+
+      <div id="topbar-search">
+        <span class="search-icon"><i data-lucide="search"></i></span>
+        <input type="search" placeholder="Search clients, deals, campaigns…" aria-label="Global search">
+      </div>
+
+      <div class="topbar-actions">
+        <div class="topbar-icon-btn" title="Notifications" role="button" tabindex="0">
+          <i data-lucide="bell"></i>
+          <span class="topbar-notif-dot" aria-hidden="true"></span>
+        </div>
+        <div class="topbar-icon-btn" title="Settings" role="button" tabindex="0">
+          <i data-lucide="settings"></i>
+        </div>
+        <div class="topbar-avatar" title="Mark Cartwright">MC</div>
+      </div>
+    </header>
+    <!-- /topbar -->
+
+
+    <!-- ══════════════════════════════════
+         CRM CONTENT
+    ══════════════════════════════════ -->
+    <main id="crm-content" role="main">
+
+
+      <!-- ══════════════════════════════
+           VIEW: OVERVIEW
+      ══════════════════════════════ -->
+      <section id="view-overview" class="crm-view view-active" aria-label="Command Overview">
+
+        <div class="view-header">
+          <h1>Command Overview</h1>
+          <p>Real-time pulse across every revenue stage — marketing through retention.</p>
+        </div>
+
+        <!-- KPI Row -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="dollar-sign"></i></div>
+            <div class="kpi-label">Total Pipeline Value</div>
+            <div class="kpi-value">$4.2M</div>
+            <span class="kpi-delta up"><i data-lucide="arrow-up"></i> +18% vs last quarter</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="briefcase"></i></div>
+            <div class="kpi-label">Active Deals</div>
+            <div class="kpi-value">34</div>
+            <span class="kpi-delta up"><i data-lucide="arrow-up"></i> +7 this month</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="repeat"></i></div>
+            <div class="kpi-label">MRR</div>
+            <div class="kpi-value">$148K</div>
+            <span class="kpi-delta up"><i data-lucide="arrow-up"></i> +12% MoM</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="clock"></i></div>
+            <div class="kpi-label">Avg Deal Cycle</div>
+            <div class="kpi-value">28d</div>
+            <span class="kpi-delta down"><i data-lucide="arrow-down"></i> −3d vs target</span>
+          </div>
+        </div>
+
+        <!-- Charts row -->
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <div class="chart-card-title">Revenue Trend (6mo)</div>
+                <div class="chart-card-sub">Recognized revenue — monthly</div>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="chart-revenue"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <div class="chart-card-title">Pipeline by Stage</div>
+                <div class="chart-card-sub">Deal count distribution</div>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="chart-pipeline"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two col: activity + attribution -->
+        <div class="two-col-row">
+
+          <!-- Activity Feed -->
+          <div class="section-card">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Recent Activity</div>
+                <div class="section-subtitle">Live event stream across all departments</div>
+              </div>
+              <span class="badge badge-cyan">Live</span>
+            </div>
+            <div class="activity-feed" id="activity-feed">
+              <div class="activity-item">
+                <div class="activity-dot deal"><i data-lucide="check-circle"></i></div>
+                <div class="activity-body">
+                  <div class="activity-text"><strong>Nexcore Industries</strong> moved to Proposal stage — $320,000 deal</div>
+                  <div class="activity-time">2 minutes ago · Sales</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot ai"><i data-lucide="bot"></i></div>
+                <div class="activity-body">
+                  <div class="activity-text">AI flagged <strong>Verilink Corp</strong> as churn risk — health score dropped to 41</div>
+                  <div class="activity-time">14 minutes ago · Retention</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot email"><i data-lucide="mail"></i></div>
+                <div class="activity-body">
+                  <div class="activity-text"><strong>Email campaign</strong> "Q4 Executive Briefing" sent — 847 recipients</div>
+                  <div class="activity-time">1 hour ago · Marketing</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot alert"><i data-lucide="alert-triangle"></i></div>
+                <div class="activity-body">
+                  <div class="activity-text">SLA breach detected — <strong>Arclight Global</strong> onboarding overdue by 2 days</div>
+                  <div class="activity-time">2 hours ago · Onboarding</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot meet"><i data-lucide="video"></i></div>
+                <div class="activity-body">
+                  <div class="activity-text">Discovery call completed with <strong>Strata Capital Partners</strong> — follow-up scheduled</div>
+                  <div class="activity-time">3 hours ago · Sales</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot note"><i data-lucide="file-text"></i></div>
+                <div class="activity-body">
+                  <div class="activity-text"><strong>Project Velocity</strong> delivery milestone reached — Phase 2 complete</div>
+                  <div class="activity-time">Yesterday · Delivery</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Attribution Table — Novel Solution 4 -->
+          <div class="section-card attribution-panel">
+            <div class="section-header">
+              <div>
+                <div class="section-title">Revenue Attribution Loop</div>
+                <div class="section-subtitle">CAC · CLV · ROI by acquisition source</div>
+              </div>
+            </div>
+            <div class="table-scroll-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Source</th>
+                    <th>Leads</th>
+                    <th>Close %</th>
+                    <th>Avg Deal</th>
+                    <th>CAC</th>
+                    <th>CLV</th>
+                    <th>ROI</th>
+                  </tr>
+                </thead>
+                <tbody id="attribution-table">
+                  <!-- JS populates -->
+                  <tr>
+                    <td colspan="7">
+                      <div class="empty-state"><i data-lucide="loader"></i><p>Loading attribution data…</p></div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+      <!-- /view-overview -->
+
+
+      <!-- ══════════════════════════════
+           VIEW: MARKETING
+      ══════════════════════════════ -->
+      <section id="view-marketing" class="crm-view" aria-label="Marketing">
+
+        <div class="view-header">
+          <h1>Marketing</h1>
+          <p>Fuel the top of the funnel. Measure what moves revenue.</p>
+        </div>
+
+        <!-- KPI Row -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="users"></i></div>
+            <div class="kpi-label">Total Leads (MTD)</div>
+            <div class="kpi-value">312</div>
+            <span class="kpi-delta up"><i data-lucide="arrow-up"></i> +24% vs prior month</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="tag"></i></div>
+            <div class="kpi-label">Cost Per Lead</div>
+            <div class="kpi-value">$187</div>
+            <span class="kpi-delta down"><i data-lucide="arrow-down"></i> −$31 vs target</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="arrow-right-left"></i></div>
+            <div class="kpi-label">MQL → SQL Rate</div>
+            <div class="kpi-value">41%</div>
+            <span class="kpi-delta up"><i data-lucide="arrow-up"></i> +6pp this quarter</span>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <div class="chart-card-title">Lead Sources</div>
+                <div class="chart-card-sub">Channel breakdown — last 30 days</div>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="chart-sources"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <div class="chart-card-title">Campaign Performance</div>
+                <div class="chart-card-sub">Leads and conversion by campaign</div>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="chart-campaigns"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Campaigns table -->
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Active Campaigns</div>
+              <div class="section-subtitle">Sorted by revenue impact</div>
+            </div>
+            <button class="btn-table-action">+ New Campaign</button>
+          </div>
+          <div class="table-scroll-wrap">
+            <table class="data-table" id="campaigns-table">
+              <thead>
+                <tr>
+                  <th>Campaign</th>
+                  <th>Status</th>
+                  <th>Leads</th>
+                  <th>Conv%</th>
+                  <th>CPL</th>
+                  <th>Spend</th>
+                  <th>Revenue</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- JS populates -->
+                <tr>
+                  <td colspan="7">
+                    <div class="empty-state"><i data-lucide="loader"></i><p>Loading campaigns…</p></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+      <!-- /view-marketing -->
+
+
+      <!-- ══════════════════════════════
+           VIEW: SALES
+      ══════════════════════════════ -->
+      <section id="view-sales" class="crm-view" aria-label="Sales">
+
+        <div class="view-header">
+          <h1>Sales</h1>
+          <p>Close with precision. Every deal, every stage, every signal.</p>
+        </div>
+
+        <!-- KPI Row -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="briefcase"></i></div>
+            <div class="kpi-label">Open Deals</div>
+            <div class="kpi-value">34</div>
+            <span class="kpi-delta up"><i data-lucide="arrow-up"></i> +7 this month</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="dollar-sign"></i></div>
+            <div class="kpi-label">Pipeline Value</div>
+            <div class="kpi-value">$4.2M</div>
+            <span class="kpi-delta up"><i data-lucide="arrow-up"></i> +18% QoQ</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="target"></i></div>
+            <div class="kpi-label">Win Rate</div>
+            <div class="kpi-value">38%</div>
+            <span class="kpi-delta neutral"><i data-lucide="minus"></i> Flat vs last quarter</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="trending-up"></i></div>
+            <div class="kpi-label">Avg Sale Price</div>
+            <div class="kpi-value">$124K</div>
+            <span class="kpi-delta up"><i data-lucide="arrow-up"></i> +$11K YoY</span>
+          </div>
+        </div>
+
+        <!-- Kanban board -->
+        <div class="section-card" id="kanban-wrapper">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Deal Pipeline</div>
+              <div class="section-subtitle">Drag cards to advance stage · 34 active deals</div>
+            </div>
+            <button class="btn-table-action">+ Add Deal</button>
+          </div>
+          <div id="kanban-board" role="region" aria-label="Deal pipeline kanban">
+            <div class="kanban-col" data-stage="Lead">
+              <div class="kanban-col-header">
+                <span class="kanban-col-name">Lead</span>
+                <span class="kanban-col-count" data-stage-count="Lead">0</span>
+              </div>
+              <div class="kanban-cards" data-stage="Lead"><!-- JS renders --></div>
+            </div>
+            <div class="kanban-col" data-stage="Prospect">
+              <div class="kanban-col-header">
+                <span class="kanban-col-name">Prospect</span>
+                <span class="kanban-col-count" data-stage-count="Prospect">0</span>
+              </div>
+              <div class="kanban-cards" data-stage="Prospect"><!-- JS renders --></div>
+            </div>
+            <div class="kanban-col" data-stage="Proposal">
+              <div class="kanban-col-header">
+                <span class="kanban-col-name">Proposal</span>
+                <span class="kanban-col-count" data-stage-count="Proposal">0</span>
+              </div>
+              <div class="kanban-cards" data-stage="Proposal"><!-- JS renders --></div>
+            </div>
+            <div class="kanban-col" data-stage="Negotiation">
+              <div class="kanban-col-header">
+                <span class="kanban-col-name">Negotiation</span>
+                <span class="kanban-col-count" data-stage-count="Negotiation">0</span>
+              </div>
+              <div class="kanban-cards" data-stage="Negotiation"><!-- JS renders --></div>
+            </div>
+            <div class="kanban-col" data-stage="Won">
+              <div class="kanban-col-header">
+                <span class="kanban-col-name">Won</span>
+                <span class="kanban-col-count" data-stage-count="Won">0</span>
+              </div>
+              <div class="kanban-cards" data-stage="Won"><!-- JS renders --></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Deal win/loss trend chart -->
+        <div class="chart-card" style="margin-bottom:1.5rem">
+          <div class="chart-card-header">
+            <div>
+              <div class="chart-card-title">Deals Won vs Lost (6mo)</div>
+              <div class="chart-card-sub">Monthly close outcomes</div>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chart-deals"></canvas>
+          </div>
+        </div>
+
+        <!-- Deal table + AI intel -->
+        <div class="two-col-row">
+
+          <!-- Deal table -->
+          <div class="section-card">
+            <div class="section-header">
+              <div>
+                <div class="section-title">All Deals</div>
+                <div class="section-subtitle">Filter, search, and act</div>
+              </div>
+            </div>
+            <div class="deal-controls">
+              <input id="deal-search" type="search" placeholder="Search deals…" aria-label="Search deals">
+              <div class="filter-tabs" role="tablist" aria-label="Deal filters">
+                <button class="filter-tab active" data-filter="All" role="tab" aria-selected="true">All</button>
+                <button class="filter-tab" data-filter="Active" role="tab" aria-selected="false">Active</button>
+                <button class="filter-tab" data-filter="Won" role="tab" aria-selected="false">Won</button>
+                <button class="filter-tab" data-filter="Lost" role="tab" aria-selected="false">Lost</button>
+              </div>
+            </div>
+            <div class="table-scroll-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Company</th>
+                    <th>Contact</th>
+                    <th>Tier</th>
+                    <th>Value</th>
+                    <th>Stage</th>
+                    <th>Days</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="deals-table">
+                  <!-- JS populates -->
+                  <tr>
+                    <td colspan="7">
+                      <div class="empty-state"><i data-lucide="loader"></i><p>Loading deals…</p></div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- AI Deal Intelligence — Novel Solution 1 -->
+          <div id="deal-intel-panel">
+            <div class="ai-intel-header">
+              <div class="ai-intel-header-row">
+                <div class="ai-intel-icon">
+                  <i data-lucide="brain"></i>
+                </div>
+                <div>
+                  <div class="ai-intel-title">Next Best Action</div>
+                </div>
+              </div>
+              <div class="ai-intel-sub">AI-powered deal recommendations — updated in real time</div>
+            </div>
+            <div class="ai-intel-body">
+              <div id="deal-intel-content">
+                <div class="intel-placeholder">
+                  <i data-lucide="brain"></i>
+                  <p>Select a deal to see AI recommendations</p>
+                </div>
+              </div>
+              <div class="ai-ask-row">
+                <input id="ai-query" type="text" placeholder="Ask about any deal…" aria-label="AI deal query">
+                <button id="ai-ask-btn" type="button">Ask AI</button>
+              </div>
+              <div id="ai-response" role="status" aria-live="polite"></div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+      <!-- /view-sales -->
+
+
+      <!-- ══════════════════════════════
+           VIEW: ONBOARDING
+      ══════════════════════════════ -->
+      <section id="view-onboarding" class="crm-view" aria-label="Onboarding">
+
+        <div class="view-header">
+          <h1>Onboarding</h1>
+          <p>Zero-friction client activation. From signed to live in days, not weeks.</p>
+        </div>
+
+        <!-- KPI Row -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="user-check"></i></div>
+            <div class="kpi-label">Active Onboardings</div>
+            <div class="kpi-value">9</div>
+            <span class="kpi-delta up"><i data-lucide="arrow-up"></i> +3 this week</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="pie-chart"></i></div>
+            <div class="kpi-label">Avg Completion</div>
+            <div class="kpi-value">67%</div>
+            <span class="kpi-delta up"><i data-lucide="arrow-up"></i> +8pp vs last month</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="alert-triangle"></i></div>
+            <div class="kpi-label">SLA Breaches</div>
+            <div class="kpi-value">2</div>
+            <span class="kpi-delta down"><i data-lucide="arrow-up"></i> +2 this week</span>
+          </div>
+        </div>
+
+        <!-- Cross-dept handoff — Novel Solution 2 -->
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Cross-Department Handoff Protocol</div>
+              <div class="section-subtitle">Live relay status — Sales → Onboarding → Delivery → Retention</div>
+            </div>
+            <span class="badge badge-warning">2 Breaches</span>
+          </div>
+          <div id="handoff-board">
+            <table class="handoff-table">
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>Sales</th>
+                  <th style="width:12px"></th>
+                  <th>Onboarding</th>
+                  <th style="width:12px"></th>
+                  <th>Delivery</th>
+                  <th style="width:12px"></th>
+                  <th>Retention</th>
+                  <th>SLA</th>
+                  <th>Days Active</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- JS renders .handoff-client-row rows -->
+                <tr>
+                  <td colspan="10">
+                    <div class="empty-state"><i data-lucide="loader"></i><p>Loading handoff data…</p></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Active onboardings grid -->
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Active Onboardings</div>
+              <div class="section-subtitle">Milestone progress by client</div>
+            </div>
+          </div>
+          <div class="onboarding-grid" id="onboarding-grid">
+            <!-- JS renders .onboarding-card items -->
+            <div class="empty-state"><i data-lucide="loader"></i><p>Loading onboarding cards…</p></div>
+          </div>
+        </div>
+
+      </section>
+      <!-- /view-onboarding -->
+
+
+      <!-- ══════════════════════════════
+           VIEW: DELIVERY
+      ══════════════════════════════ -->
+      <section id="view-delivery" class="crm-view" aria-label="Delivery">
+
+        <div class="view-header">
+          <h1>Delivery</h1>
+          <p>Execute. Ship. Exceed. Every project tracked to the milestone.</p>
+        </div>
+
+        <!-- KPI Row -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="package"></i></div>
+            <div class="kpi-label">Active Projects</div>
+            <div class="kpi-value">17</div>
+            <span class="kpi-delta up"><i data-lucide="arrow-up"></i> +4 new this month</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="pie-chart"></i></div>
+            <div class="kpi-label">Avg Completion</div>
+            <div class="kpi-value">58%</div>
+            <span class="kpi-delta up"><i data-lucide="arrow-up"></i> On track</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="clock-alert"></i></div>
+            <div class="kpi-label">Overdue Tasks</div>
+            <div class="kpi-value">6</div>
+            <span class="kpi-delta down"><i data-lucide="arrow-up"></i> +2 since last week</span>
+          </div>
+        </div>
+
+        <!-- Project cards -->
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Project Status</div>
+              <div class="section-subtitle">All active engagements</div>
+            </div>
+            <button class="btn-table-action">+ New Project</button>
+          </div>
+          <div class="project-grid" id="project-grid">
+            <!-- JS renders .project-card items -->
+            <div class="empty-state"><i data-lucide="loader"></i><p>Loading projects…</p></div>
+          </div>
+        </div>
+
+        <!-- Capacity chart -->
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Capacity Overview</div>
+              <div class="section-subtitle">Team utilization by workstream</div>
+            </div>
+          </div>
+          <div class="chart-wrap" style="height:240px">
+            <canvas id="chart-capacity"></canvas>
+          </div>
+        </div>
+
+        <!-- Open tasks table -->
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Open Tasks</div>
+              <div class="section-subtitle">Sorted by due date</div>
+            </div>
+          </div>
+          <div class="table-scroll-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Task</th>
+                  <th>Client</th>
+                  <th>Assignee</th>
+                  <th>Due</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="projects-table">
+                <!-- JS populates -->
+                <tr>
+                  <td colspan="5">
+                    <div class="empty-state"><i data-lucide="loader"></i><p>Loading tasks…</p></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+      <!-- /view-delivery -->
+
+
+      <!-- ══════════════════════════════
+           VIEW: RETENTION
+      ══════════════════════════════ -->
+      <section id="view-retention" class="crm-view" aria-label="Retention">
+
+        <div class="view-header">
+          <h1>Retention</h1>
+          <p>Protect the revenue. Grow the relationship. Predict risk before it lands.</p>
+        </div>
+
+        <!-- KPI Row -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="shield-check"></i></div>
+            <div class="kpi-label">Retained Clients</div>
+            <div class="kpi-value">47</div>
+            <span class="kpi-delta up"><i data-lucide="arrow-up"></i> 94% retention rate</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="activity"></i></div>
+            <div class="kpi-label">Avg Health Score</div>
+            <div class="kpi-value">74</div>
+            <span class="kpi-delta neutral"><i data-lucide="minus"></i> −2pts this month</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i data-lucide="alert-circle"></i></div>
+            <div class="kpi-label">At-Risk Accounts</div>
+            <div class="kpi-value">3</div>
+            <span class="kpi-delta down"><i data-lucide="arrow-up"></i> +1 flagged today</span>
+          </div>
+        </div>
+
+        <!-- Predictive Churn Engine — Novel Solution 3 -->
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Predictive Churn Engine</div>
+              <div class="section-subtitle">5-signal health model — updated daily</div>
+            </div>
+            <span class="badge badge-error">3 At Risk</span>
+          </div>
+
+          <!-- Health signal legend -->
+          <div class="health-legend">
+            <div class="health-signal">
+              <span class="health-signal-dot" style="background:#3B82F6"></span>
+              Login Frequency
+            </div>
+            <div class="health-signal">
+              <span class="health-signal-dot" style="background:#F59E0B"></span>
+              Support Volume
+            </div>
+            <div class="health-signal">
+              <span class="health-signal-dot" style="background:#8B5CF6"></span>
+              NPS Trend
+            </div>
+            <div class="health-signal">
+              <span class="health-signal-dot" style="background:#22C55E"></span>
+              Feature Adoption
+            </div>
+            <div class="health-signal">
+              <span class="health-signal-dot" style="background:#00D4FF"></span>
+              Relationship Warmth
+            </div>
+          </div>
+
+          <div id="churn-grid">
+            <!-- JS renders .churn-card items -->
+            <div class="empty-state"><i data-lucide="loader"></i><p>Loading health data…</p></div>
+          </div>
+        </div>
+
+        <!-- Retention charts -->
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <div class="chart-card-title">Retention Health Trend</div>
+                <div class="chart-card-sub">Avg health score — last 6 months</div>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="chart-health"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <div class="chart-card-title">Churn Risk Factors</div>
+                <div class="chart-card-sub">Weighted signal contribution to risk</div>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="chart-churn-radar"></canvas>
+            </div>
+          </div>
+        </div>
+
+      </section>
+      <!-- /view-retention -->
+
+
+    </main>
+    <!-- /crm-content -->
+
+  </div>
+  <!-- /crm-main -->
+
+</div>
+<!-- /crm-root -->
+
+<script>
+/**
+ * MGC Global Consulting — CRM Dashboard
+ * Agent 2 of 2: JavaScript
+ * All DOM IDs/classes are written by Agent 1 (HTML/CSS).
+ */
+
+/* ─────────────────────────────────────────────
+   MOCK DATA
+───────────────────────────────────────────── */
+const CRM = {
+  deals: [
+    { id:'d1', company:'Apex Law Group', contact:'Sarah Chen', tier:'Elite', value:3600, mrr:3600, stage:'Proposal', days:18, source:'LinkedIn', won:false, lost:false },
+    { id:'d2', company:'Meridian Real Estate', contact:'James Torres', tier:'Pro', value:1497, mrr:1497, stage:'Negotiation', days:26, source:'Referral', won:false, lost:false },
+    { id:'d3', company:'Summit Healthcare', contact:'Dr. Amy Park', tier:'Starter', value:199, mrr:199, stage:'Lead', days:3, source:'Google Ads', won:false, lost:false },
+    { id:'d4', company:'Vanguard Logistics', contact:'Mike Okafor', tier:'Elite', value:1299, mrr:1299, stage:'Prospect', days:9, source:'Cold Outreach', won:false, lost:false },
+    { id:'d5', company:'Nexus Financial', contact:'Lisa Wang', tier:'Elite', value:1299, mrr:1299, stage:'Won', days:0, source:'Webinar', won:true, lost:false },
+    { id:'d6', company:'BlueStar Marketing', contact:'Carlos Rivera', tier:'Pro', value:499, mrr:499, stage:'Proposal', days:11, source:'LinkedIn', won:false, lost:false },
+    { id:'d7', company:'Pinnacle Tech Solutions', contact:'David Kim', tier:'Elite', value:3897, mrr:3897, stage:'Negotiation', days:31, source:'Referral', won:false, lost:false },
+    { id:'d8', company:'Heritage Capital Partners', contact:'Rachel Moore', tier:'Pro', value:1996, mrr:1996, stage:'Prospect', days:7, source:'LinkedIn', won:false, lost:false },
+    { id:'d9', company:'Stratos Consulting', contact:'Ben Alvarez', tier:'Starter', value:199, mrr:199, stage:'Lead', days:1, source:'Google Ads', won:false, lost:false },
+    { id:'d10', company:'Olympia Wealth Advisors', contact:'Nina Patel', tier:'Elite', value:1299, mrr:1299, stage:'Won', days:0, source:'Webinar', won:true, lost:false },
+    { id:'d11', company:'Vertex Systems', contact:'Tom Bradley', tier:'Pro', value:499, mrr:499, stage:'Proposal', days:14, source:'Cold Outreach', won:false, lost:false },
+    { id:'d12', company:'Coastal Dental Group', contact:'Dr. Mark Ellis', tier:'Starter', value:199, mrr:199, stage:'Lost', days:0, source:'Google Ads', won:false, lost:true },
+  ],
+
+  onboardings: [
+    { id:'ob1', company:'Nexus Financial', tier:'Elite', contact:'Lisa Wang', startDay:8, totalDays:30, completion:27, slaStatus:'green', milestones:['Kickoff call done','Architecture review done','Tool access granted','Workflow #1 drafted','Workflow #1 approved','Team training pending','Final QA pending'] },
+    { id:'ob2', company:'Olympia Wealth Advisors', tier:'Elite', contact:'Nina Patel', startDay:4, totalDays:30, completion:13, slaStatus:'green', milestones:['Kickoff call done','Architecture review pending','Tool access granted','Workflow #1 pending'] },
+    { id:'ob3', company:'BlueStar Marketing', tier:'Pro', contact:'Carlos Rivera', startDay:3, totalDays:14, completion:21, slaStatus:'green', milestones:['Kickoff call done','Tool access granted','Workflow scoped pending'] },
+    { id:'ob4', company:'Pinnacle Tech Solutions', tier:'Elite', contact:'David Kim', startDay:1, totalDays:30, completion:3, slaStatus:'green', milestones:['Kickoff call done'] },
+    { id:'ob5', company:'Vertex Systems', tier:'Pro', contact:'Tom Bradley', startDay:11, totalDays:14, completion:79, slaStatus:'amber', milestones:['Kickoff call done','Tool access granted','Workflow scoped done','Workflow built pending','Final handoff pending'] },
+  ],
+
+  projects: [
+    { id:'p1', company:'Nexus Financial', name:'AI Workflow Automation Suite', tier:'Elite', completion:40, status:'on-track', dueDate:'2026-12-15', assignee:'Mark C.', tasks:['Define automation triggers','Build Zapier flows','QA testing','Client training'] },
+    { id:'p2', company:'Olympia Wealth Advisors', name:'CRM + Calendar Integration', tier:'Elite', completion:25, status:'on-track', dueDate:'2027-01-10', assignee:'Alex T.', tasks:['API auth setup','Calendar sync build','CRM field mapping','UAT'] },
+    { id:'p3', company:'BlueStar Marketing', name:'Lead Generation System', tier:'Pro', completion:65, status:'on-track', dueDate:'2026-11-30', assignee:'Mark C.', tasks:['Funnel design done','Landing page done','Email sequence done','Analytics setup pending'] },
+    { id:'p4', company:'Heritage Capital Partners', name:'Monthly Automation Build — Nov', tier:'Pro', completion:80, status:'on-track', dueDate:'2026-10-31', assignee:'Alex T.', tasks:['Scope confirmed','Build complete','QA pending','Delivery pending'] },
+    { id:'p5', company:'Vanguard Logistics', name:'Operations Dashboard', tier:'Elite', completion:55, status:'at-risk', dueDate:'2026-11-15', assignee:'Mark C.', tasks:['Data model done','Dashboard shell done','KPI charts pending','Role permissions pending'] },
+    { id:'p6', company:'Apex Law Group', name:'Document Automation — Phase 2', tier:'Elite', completion:90, status:'on-track', dueDate:'2026-10-28', assignee:'Alex T.', tasks:['Templates built done','Workflow built done','Client review done','Final deploy pending'] },
+  ],
+
+  retentionClients: [
+    { id:'r1', company:'Heritage Capital Partners', tier:'Pro', monthsActive:8, mrr:998, contactName:'Rachel Moore', healthScore:94, signals:{ loginFreq:95, supportVol:90, npsTrend:88, featureAdoption:96, relationshipWarmth:98 }, predictedChurnDate:null, lastContact:'2026-10-20', nps:9 },
+    { id:'r2', company:'Vanguard Logistics', tier:'Elite', monthsActive:4, mrr:1299, contactName:'Mike Okafor', healthScore:78, signals:{ loginFreq:70, supportVol:65, npsTrend:80, featureAdoption:82, relationshipWarmth:90 }, predictedChurnDate:null, lastContact:'2026-10-15', nps:8 },
+    { id:'r3', company:'Apex Law Group', tier:'Elite', monthsActive:12, mrr:3600, contactName:'Sarah Chen', healthScore:85, signals:{ loginFreq:88, supportVol:78, npsTrend:85, featureAdoption:90, relationshipWarmth:82 }, predictedChurnDate:null, lastContact:'2026-10-18', nps:8 },
+    { id:'r4', company:'MetroTech Solutions', tier:'Starter', monthsActive:3, mrr:199, contactName:'Greg Hammond', healthScore:62, signals:{ loginFreq:45, supportVol:50, npsTrend:70, featureAdoption:65, relationshipWarmth:72 }, predictedChurnDate:'2027-01-15', lastContact:'2026-10-05', nps:6 },
+    { id:'r5', company:'Crestwood Financial', tier:'Pro', monthsActive:6, mrr:499, contactName:'Diane Foster', healthScore:45, signals:{ loginFreq:30, supportVol:35, npsTrend:55, featureAdoption:40, relationshipWarmth:60 }, predictedChurnDate:'2026-12-01', lastContact:'2026-09-28', nps:5 },
+    { id:'r6', company:'Clearview Healthcare', tier:'Pro', monthsActive:10, mrr:499, contactName:'Dr. James Wu', healthScore:91, signals:{ loginFreq:92, supportVol:88, npsTrend:90, featureAdoption:95, relationshipWarmth:90 }, predictedChurnDate:null, lastContact:'2026-10-21', nps:9 },
+  ],
+
+  campaigns: [
+    { id:'c1', name:'LinkedIn Outreach Q4', status:'active', leads:45, convRate:12.2, cpl:38, spend:1710, revenue:8955 },
+    { id:'c2', name:'Email Newsletter — Oct', status:'active', leads:18, convRate:8.3, cpl:12, spend:216, revenue:2394 },
+    { id:'c3', name:'Webinar: AI for Business', status:'complete', leads:22, convRate:25.0, cpl:28, spend:616, revenue:15298 },
+    { id:'c4', name:'Google Ads — Automation', status:'active', leads:34, convRate:8.8, cpl:42, spend:1428, revenue:5796 },
+    { id:'c5', name:'Referral Program', status:'active', leads:12, convRate:41.7, cpl:0, spend:0, revenue:7792 },
+  ],
+
+  attribution: [
+    { source:'Referral', leads:14, closeRate:42, avgDeal:2648, cac:0, clv:31776, roi:null },
+    { source:'LinkedIn', leads:45, closeRate:18, avgDeal:1199, cac:156, clv:14388, roi:9123 },
+    { source:'Webinar', leads:22, closeRate:27, avgDeal:1299, cac:112, clv:15588, roi:13821 },
+    { source:'Google Ads', leads:34, closeRate:9, avgDeal:399, cac:478, clv:4788, roi:901 },
+    { source:'Cold Outreach', leads:28, closeRate:14, avgDeal:2598, cac:220, clv:31176, roi:14080 },
+  ],
+
+  activities: [
+    { icon:'phone-call', text:'Called Meridian Real Estate — moving to contract', time:'2h ago', type:'sales' },
+    { icon:'user-check', text:'Vertex Systems onboarding — Day 11 milestone hit', time:'4h ago', type:'onboarding' },
+    { icon:'alert-triangle', text:'Crestwood Financial health score dropped to 45 — intervention needed', time:'5h ago', type:'retention' },
+    { icon:'package', text:'Apex Law document automation — 90% complete', time:'6h ago', type:'delivery' },
+    { icon:'trending-up', text:'Pinnacle Tech negotiation advanced — $3,897 MRR deal', time:'Yesterday', type:'sales' },
+    { icon:'heart-pulse', text:'Heritage Capital renewed — Month 8, NPS 9', time:'Yesterday', type:'retention' },
+  ],
+};
+
+/* ─────────────────────────────────────────────
+   HELPERS
+───────────────────────────────────────────── */
+const formatCurrency = (n) => '$' + Number(n).toLocaleString();
+
+function tierColor(tier) {
+  if (tier === 'Elite') return 'gold';
+  if (tier === 'Pro') return 'cyan';
+  return 'sky';
+}
+
+function tierBadge(tier) {
+  const cls = tierColor(tier);
+  return `<span class="badge badge-${cls}">${tier}</span>`;
+}
+
+function statusBadge(status) {
+  const map = {
+    active: 'badge-cyan',
+    complete: 'badge-green',
+    'on-track': 'badge-green',
+    'at-risk': 'badge-amber',
+    paused: 'badge-gray',
+  };
+  const cls = map[status] || 'badge-gray';
+  return `<span class="badge ${cls}">${status.replace('-', ' ')}</span>`;
+}
+
+function healthColor(score) {
+  if (score >= 80) return '#22C55E';
+  if (score >= 60) return '#F59E0B';
+  return '#EF4444';
+}
+
+/* ─────────────────────────────────────────────
+   CHART INSTANCES REGISTRY
+───────────────────────────────────────────── */
+const charts = {};
+
+/* ─────────────────────────────────────────────
+   SHARED CHART DEFAULTS
+───────────────────────────────────────────── */
+const CHART_DEFAULTS = {
+  color: 'rgba(255,255,255,0.45)',
+  font: { family: 'Inter, sans-serif', size: 12 },
+};
+
+function applyDarkDefaults(options = {}) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    color: CHART_DEFAULTS.color,
+    ...options,
+    plugins: {
+      legend: {
+        labels: {
+          color: '#fff',
+          font: CHART_DEFAULTS.font,
+          usePointStyle: true,
+          pointStyleWidth: 8,
+        },
+        ...(options.plugins?.legend || {}),
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0,0,0,0.75)',
+        titleColor: '#fff',
+        bodyColor: 'rgba(255,255,255,0.8)',
+        borderColor: 'rgba(255,255,255,0.1)',
+        borderWidth: 1,
+        ...(options.plugins?.tooltip || {}),
+      },
+      ...(options.plugins || {}),
+    },
+    scales: options.scales || undefined,
+  };
+}
+
+function darkScales(xOpts = {}, yOpts = {}) {
+  return {
+    x: {
+      grid: { color: 'rgba(255,255,255,0.06)' },
+      ticks: { color: 'rgba(255,255,255,0.45)', font: CHART_DEFAULTS.font },
+      ...xOpts,
+    },
+    y: {
+      grid: { color: 'rgba(255,255,255,0.06)' },
+      ticks: { color: 'rgba(255,255,255,0.45)', font: CHART_DEFAULTS.font },
+      ...yOpts,
+    },
+  };
+}
+
+/* ─────────────────────────────────────────────
+   CHART INITIALIZERS (lazy)
+───────────────────────────────────────────── */
+
+function initChartRevenue() {
+  if (charts.revenue) return;
+  const ctx = document.getElementById('chart-revenue');
+  if (!ctx) return;
+
+  const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 280);
+  gradient.addColorStop(0, 'rgba(6,182,212,0.35)');
+  gradient.addColorStop(1, 'rgba(6,182,212,0.00)');
+
+  charts.revenue = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['May','Jun','Jul','Aug','Sep','Oct'],
+      datasets: [
+        {
+          label: 'MRR',
+          data: [4200, 5800, 7100, 8900, 10200, 12847],
+          borderColor: '#06B6D4',
+          backgroundColor: gradient,
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#06B6D4',
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        },
+        {
+          label: 'New Revenue',
+          data: [1200, 2100, 1800, 3100, 2400, 3200],
+          borderColor: '#D4A017',
+          backgroundColor: 'transparent',
+          borderDash: [6, 3],
+          fill: false,
+          tension: 0.4,
+          pointBackgroundColor: '#D4A017',
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        },
+      ],
+    },
+    options: applyDarkDefaults({
+      scales: darkScales(
+        {},
+        { ticks: { color: 'rgba(255,255,255,0.45)', font: CHART_DEFAULTS.font, callback: (v) => '$' + (v/1000).toFixed(0) + 'k' } }
+      ),
+    }),
+  });
+}
+
+function initChartPipeline() {
+  if (charts.pipeline) return;
+  const ctx = document.getElementById('chart-pipeline');
+  if (!ctx) return;
+
+  const stages = ['Lead','Prospect','Proposal','Negotiation','Won'];
+  const counts = stages.map(s => CRM.deals.filter(d => d.stage === s).length);
+
+  charts.pipeline = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: stages,
+      datasets: [{
+        label: 'Deals',
+        data: counts,
+        backgroundColor: 'rgba(6,182,212,0.70)',
+        borderColor: '#06B6D4',
+        borderWidth: 1,
+        borderRadius: 4,
+      }],
+    },
+    options: applyDarkDefaults({
+      scales: darkScales({}, { ticks: { color: 'rgba(255,255,255,0.45)', font: CHART_DEFAULTS.font, stepSize: 1 } }),
+      plugins: { legend: { display: false } },
+    }),
+  });
+}
+
+function initChartSources() {
+  if (charts.sources) return;
+  const ctx = document.getElementById('chart-sources');
+  if (!ctx) return;
+
+  const labels = CRM.attribution.map(a => a.source);
+  const data = CRM.attribution.map(a => a.leads);
+  const colors = ['#06B6D4','#38BDF8','#D4A017','#8B5CF6','#EC4899'];
+
+  charts.sources = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: colors,
+        borderColor: 'rgba(0,0,0,0.4)',
+        borderWidth: 2,
+        hoverOffset: 6,
+      }],
+    },
+    options: applyDarkDefaults({
+      cutout: '65%',
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: {
+            color: '#fff',
+            font: CHART_DEFAULTS.font,
+            usePointStyle: true,
+            pointStyleWidth: 8,
+            padding: 12,
+          },
+        },
+      },
+    }),
+  });
+}
+
+function initChartCampaigns() {
+  if (charts.campaigns) return;
+  const ctx = document.getElementById('chart-campaigns');
+  if (!ctx) return;
+
+  const shortName = (n) => n.length > 22 ? n.slice(0, 22) + '…' : n;
+  const labels = CRM.campaigns.map(c => shortName(c.name));
+  const data = CRM.campaigns.map(c => c.revenue);
+
+  charts.campaigns = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Revenue Generated',
+        data,
+        backgroundColor: 'rgba(34,197,94,0.70)',
+        borderColor: '#22C55E',
+        borderWidth: 1,
+        borderRadius: 4,
+      }],
+    },
+    options: applyDarkDefaults({
+      indexAxis: 'y',
+      scales: darkScales(
+        { ticks: { color: 'rgba(255,255,255,0.45)', font: CHART_DEFAULTS.font, callback: (v) => '$' + v.toLocaleString() } },
+        { ticks: { color: 'rgba(255,255,255,0.45)', font: { ...CHART_DEFAULTS.font, size: 11 } } }
+      ),
+      plugins: { legend: { display: false } },
+    }),
+  });
+}
+
+function initChartDeals() {
+  if (charts.deals) return;
+  const ctx = document.getElementById('chart-deals');
+  if (!ctx) return;
+
+  const active = CRM.deals
+    .filter(d => !d.won && !d.lost)
+    .sort((a, b) => b.mrr - a.mrr);
+
+  const labels = active.map(d => d.company.length > 20 ? d.company.slice(0,20)+'…' : d.company);
+  const data = active.map(d => d.mrr);
+
+  charts.deals = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'MRR',
+        data,
+        backgroundColor: (context) => {
+          const chart = context.chart;
+          const { ctx: c, chartArea } = chart;
+          if (!chartArea) return 'rgba(6,182,212,0.70)';
+          const gradient = c.createLinearGradient(chartArea.right, 0, chartArea.left, 0);
+          gradient.addColorStop(0, 'rgba(6,182,212,0.85)');
+          gradient.addColorStop(1, 'rgba(6,182,212,0.30)');
+          return gradient;
+        },
+        borderColor: '#06B6D4',
+        borderWidth: 1,
+        borderRadius: 3,
+      }],
+    },
+    options: applyDarkDefaults({
+      indexAxis: 'y',
+      scales: darkScales(
+        { ticks: { color: 'rgba(255,255,255,0.45)', font: CHART_DEFAULTS.font, callback: (v) => '$' + v.toLocaleString() } },
+        { ticks: { color: 'rgba(255,255,255,0.45)', font: { ...CHART_DEFAULTS.font, size: 11 } } }
+      ),
+      plugins: { legend: { display: false } },
+    }),
+  });
+}
+
+function initChartCapacity() {
+  if (charts.capacity) return;
+  const ctx = document.getElementById('chart-capacity');
+  if (!ctx) return;
+
+  charts.capacity = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Alex T.','Mark C.'],
+      datasets: [{
+        label: 'Capacity %',
+        data: [72, 88],
+        backgroundColor: ['rgba(6,182,212,0.70)','rgba(212,160,23,0.70)'],
+        borderColor: ['#06B6D4','#D4A017'],
+        borderWidth: 1,
+        borderRadius: 4,
+      }],
+    },
+    options: applyDarkDefaults({
+      scales: darkScales(
+        {},
+        {
+          min: 0, max: 100,
+          ticks: { color: 'rgba(255,255,255,0.45)', font: CHART_DEFAULTS.font, callback: (v) => v + '%' },
+        }
+      ),
+      plugins: { legend: { display: false } },
+    }),
+  });
+}
+
+function initChartHealth() {
+  if (charts.health) return;
+  const ctx = document.getElementById('chart-health');
+  if (!ctx) return;
+
+  const labels = ['May','Jun','Jul','Aug','Sep','Oct'];
+
+  charts.health = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Heritage Capital',
+          data: [88, 90, 91, 93, 92, 94],
+          borderColor: '#22C55E',
+          backgroundColor: 'transparent',
+          tension: 0.4,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+        },
+        {
+          label: 'Crestwood Financial',
+          data: [72, 68, 63, 58, 51, 45],
+          borderColor: '#EF4444',
+          backgroundColor: 'transparent',
+          tension: 0.4,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+        },
+        {
+          label: 'Vanguard Logistics',
+          data: [82, 81, 80, 79, 78, 78],
+          borderColor: '#F59E0B',
+          backgroundColor: 'transparent',
+          tension: 0.4,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+        },
+      ],
+    },
+    options: applyDarkDefaults({
+      scales: darkScales(
+        {},
+        { min: 30, max: 100, ticks: { color: 'rgba(255,255,255,0.45)', font: CHART_DEFAULTS.font } }
+      ),
+    }),
+  });
+}
+
+function initChartChurnRadar() {
+  if (charts.churnRadar) return;
+  const ctx = document.getElementById('chart-churn-radar');
+  if (!ctx) return;
+
+  // Crestwood Financial is index 4 in retentionClients
+  const client = CRM.retentionClients[4];
+  const s = client.signals;
+
+  charts.churnRadar = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['Login Freq','Support Vol','NPS Trend','Feature Adoption','Relationship'],
+      datasets: [{
+        label: client.company,
+        data: [s.loginFreq, s.supportVol, s.npsTrend, s.featureAdoption, s.relationshipWarmth],
+        borderColor: '#EF4444',
+        backgroundColor: 'rgba(239,68,68,0.15)',
+        pointBackgroundColor: '#EF4444',
+        pointRadius: 4,
+      }],
+    },
+    options: applyDarkDefaults({
+      scales: {
+        r: {
+          min: 0,
+          max: 100,
+          grid: { color: 'rgba(255,255,255,0.08)' },
+          angleLines: { color: 'rgba(255,255,255,0.08)' },
+          pointLabels: { color: 'rgba(255,255,255,0.65)', font: CHART_DEFAULTS.font },
+          ticks: { color: 'rgba(255,255,255,0.30)', backdropColor: 'transparent', font: { size: 10 } },
+        },
+      },
+    }),
+  });
+}
+
+/* ─────────────────────────────────────────────
+   CHART LAZY MAP
+───────────────────────────────────────────── */
+const VIEW_CHARTS = {
+  overview:   [initChartRevenue, initChartPipeline],
+  marketing:  [initChartSources, initChartCampaigns],
+  sales:      [initChartDeals],
+  onboarding: [],
+  delivery:   [initChartCapacity],
+  retention:  [initChartHealth, initChartChurnRadar],
+};
+
+/* ─────────────────────────────────────────────
+   SIDEBAR
+───────────────────────────────────────────── */
+function initSidebar() {
+  const toggle = document.getElementById('sidebar-toggle');
+  const sidebar = document.getElementById('sidebar');
+  if (!toggle || !sidebar) return;
+  toggle.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+  });
+}
+
+/* ─────────────────────────────────────────────
+   ROUTER
+───────────────────────────────────────────── */
+const BREADCRUMBS = {
+  overview:   'Overview',
+  marketing:  'Marketing',
+  sales:      'Sales Pipeline',
+  onboarding: 'Client Onboarding',
+  delivery:   'Delivery',
+  retention:  'Retention',
+};
+
+function showView(viewName) {
+  // Hide all views
+  document.querySelectorAll('[id^="view-"]').forEach(el => {
+    el.style.display = 'none';
+    el.classList.remove('active-view');
+  });
+
+  // Show target view
+  const target = document.getElementById(`view-${viewName}`);
+  if (target) {
+    target.style.display = '';
+    target.classList.add('active-view');
+  }
+
+  // Mark nav item active
+  document.querySelectorAll('.nav-item[data-view]').forEach(el => {
+    el.classList.toggle('active', el.dataset.view === viewName);
+  });
+
+  // Update breadcrumb
+  const bc = document.getElementById('breadcrumb-dept');
+  if (bc) bc.textContent = BREADCRUMBS[viewName] || viewName;
+
+  // Lazy-init charts
+  const inits = VIEW_CHARTS[viewName] || [];
+  inits.forEach(fn => fn());
+
+  // Render data
+  renderViewData(viewName);
+}
+
+function renderViewData(viewName) {
+  switch (viewName) {
+    case 'overview':   renderOverview();   break;
+    case 'marketing':  renderMarketing();  break;
+    case 'sales':      renderSales();      break;
+    case 'onboarding': renderOnboarding(); break;
+    case 'delivery':   renderDelivery();   break;
+    case 'retention':  renderRetention();  break;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   KPI CARD HELPER
+───────────────────────────────────────────── */
+function setKpi(selector, value, sub = '') {
+  const el = document.querySelector(selector);
+  if (!el) return;
+  const valEl = el.querySelector('.kpi-value');
+  const subEl = el.querySelector('.kpi-sub');
+  if (valEl) valEl.textContent = value;
+  if (subEl && sub) subEl.textContent = sub;
+}
+
+/* ─────────────────────────────────────────────
+   RENDER: OVERVIEW
+───────────────────────────────────────────── */
+function renderOverview() {
+  const active = CRM.deals.filter(d => !d.won && !d.lost);
+  const pipelineValue = active.reduce((s, d) => s + d.mrr, 0);
+  const wonDeals = CRM.deals.filter(d => d.won);
+  const wonMRR = wonDeals.reduce((s, d) => s + d.mrr, 0);
+  const retentionMRR = CRM.retentionClients.reduce((s, c) => s + c.mrr, 0);
+  const totalMRR = wonMRR + retentionMRR;
+
+  // KPI cards — target by order within #view-overview .kpi-grid .kpi-card
+  const kpiCards = document.querySelectorAll('#view-overview .kpi-card');
+  if (kpiCards[0]) {
+    const v = kpiCards[0].querySelector('.kpi-value');
+    const s = kpiCards[0].querySelector('.kpi-sub');
+    if (v) v.textContent = formatCurrency(pipelineValue);
+    if (s) s.textContent = `${active.length} active deals`;
+  }
+  if (kpiCards[1]) {
+    const v = kpiCards[1].querySelector('.kpi-value');
+    const s = kpiCards[1].querySelector('.kpi-sub');
+    if (v) v.textContent = active.length;
+    if (s) s.textContent = `${wonDeals.length} closed this month`;
+  }
+  if (kpiCards[2]) {
+    const v = kpiCards[2].querySelector('.kpi-value');
+    const s = kpiCards[2].querySelector('.kpi-sub');
+    if (v) v.textContent = formatCurrency(totalMRR);
+    if (s) s.textContent = `+${formatCurrency(wonMRR)} new MRR`;
+  }
+  if (kpiCards[3]) {
+    const v = kpiCards[3].querySelector('.kpi-value');
+    const s = kpiCards[3].querySelector('.kpi-sub');
+    if (v) v.textContent = '18 days';
+    if (s) s.textContent = 'across all deal stages';
+  }
+
+  // Attribution table
+  const tbody = document.querySelector('#attribution-table');
+  if (tbody) {
+    tbody.innerHTML = CRM.attribution.map(a => {
+      const roiColor = a.roi !== null && a.roi > 10000 ? 'style="color:#D4A017;font-weight:600"' : '';
+      const roiDisplay = a.roi !== null ? `<span ${roiColor}>${formatCurrency(a.roi)}</span>` : '<span style="color:rgba(255,255,255,0.35)">Organic</span>';
+      return `<tr>
+        <td>${a.source}</td>
+        <td>${a.leads}</td>
+        <td>${a.closeRate}%</td>
+        <td>${formatCurrency(a.avgDeal)}</td>
+        <td>${a.cac === 0 ? '<span style="color:rgba(255,255,255,0.35)">—</span>' : formatCurrency(a.cac)}</td>
+        <td>${formatCurrency(a.clv)}</td>
+        <td>${roiDisplay}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Activity feed
+  const feed = document.querySelector('#view-overview .activity-feed');
+  if (feed) {
+    feed.innerHTML = CRM.activities.map(a => `
+      <div class="activity-item activity-${a.type}">
+        <div class="activity-icon"><i data-lucide="${a.icon}"></i></div>
+        <div class="activity-content">
+          <p class="activity-text">${a.text}</p>
+          <span class="activity-time">${a.time}</span>
+        </div>
+      </div>
+    `).join('');
+    lucide.createIcons();
+  }
+}
+
+/* ─────────────────────────────────────────────
+   RENDER: MARKETING
+───────────────────────────────────────────── */
+function renderMarketing() {
+  const totalLeads = CRM.campaigns.reduce((s, c) => s + c.leads, 0);
+  const avgCPL = Math.round(CRM.campaigns.filter(c => c.cpl > 0).reduce((s, c) => s + c.cpl, 0) / CRM.campaigns.filter(c => c.cpl > 0).length);
+  const bestConv = Math.max(...CRM.campaigns.map(c => c.convRate));
+
+  const kpiCards = document.querySelectorAll('#view-marketing .kpi-card');
+  if (kpiCards[0]) {
+    const v = kpiCards[0].querySelector('.kpi-value');
+    const s = kpiCards[0].querySelector('.kpi-sub');
+    if (v) v.textContent = totalLeads;
+    if (s) s.textContent = 'across all campaigns';
+  }
+  if (kpiCards[1]) {
+    const v = kpiCards[1].querySelector('.kpi-value');
+    const s = kpiCards[1].querySelector('.kpi-sub');
+    if (v) v.textContent = `$${avgCPL}`;
+    if (s) s.textContent = 'avg cost per lead';
+  }
+  if (kpiCards[2]) {
+    const v = kpiCards[2].querySelector('.kpi-value');
+    const s = kpiCards[2].querySelector('.kpi-sub');
+    if (v) v.textContent = `${bestConv}%`;
+    if (s) s.textContent = 'Referral Program';
+  }
+
+  // Campaigns table
+  const tbody = document.querySelector('#campaigns-table tbody');
+  if (tbody) {
+    tbody.innerHTML = CRM.campaigns.map(c => `<tr>
+      <td>${c.name}</td>
+      <td>${statusBadge(c.status)}</td>
+      <td>${c.leads}</td>
+      <td>${c.convRate}%</td>
+      <td>${c.cpl === 0 ? '—' : formatCurrency(c.cpl)}</td>
+      <td>${c.spend === 0 ? '—' : formatCurrency(c.spend)}</td>
+      <td style="color:#22C55E;font-weight:600">${formatCurrency(c.revenue)}</td>
+    </tr>`).join('');
+  }
+}
+
+/* ─────────────────────────────────────────────
+   RENDER: SALES
+───────────────────────────────────────────── */
+function renderSales() {
+  const active = CRM.deals.filter(d => !d.won && !d.lost);
+  const won = CRM.deals.filter(d => d.won);
+  const pipelineValue = active.reduce((s, d) => s + d.mrr, 0);
+  const total = CRM.deals.filter(d => d.won || d.lost);
+  const winRate = total.length ? Math.round((won.length / total.length) * 100) : 0;
+  const avgSale = won.length ? Math.round(won.reduce((s, d) => s + d.mrr, 0) / won.length) : 0;
+
+  const kpiCards = document.querySelectorAll('#view-sales .kpi-card');
+  if (kpiCards[0]) {
+    const v = kpiCards[0].querySelector('.kpi-value');
+    const s = kpiCards[0].querySelector('.kpi-sub');
+    if (v) v.textContent = active.length;
+    if (s) s.textContent = 'in active pipeline';
+  }
+  if (kpiCards[1]) {
+    const v = kpiCards[1].querySelector('.kpi-value');
+    const s = kpiCards[1].querySelector('.kpi-sub');
+    if (v) v.textContent = formatCurrency(pipelineValue);
+    if (s) s.textContent = 'total pipeline MRR';
+  }
+  if (kpiCards[2]) {
+    const v = kpiCards[2].querySelector('.kpi-value');
+    const s = kpiCards[2].querySelector('.kpi-sub');
+    if (v) v.textContent = `${winRate}%`;
+    if (s) s.textContent = `${won.length} won of ${total.length} closed`;
+  }
+  if (kpiCards[3]) {
+    const v = kpiCards[3].querySelector('.kpi-value');
+    const s = kpiCards[3].querySelector('.kpi-sub');
+    if (v) v.textContent = formatCurrency(avgSale);
+    if (s) s.textContent = 'avg MRR per closed deal';
+  }
+
+  // Kanban board
+  renderKanban();
+
+  // Deals table
+  renderDealsTable(CRM.deals);
+
+  // AI Deal Intel
+  renderDealIntel();
+}
+
+function renderKanban() {
+  const board = document.getElementById('kanban-board');
+  if (!board) return;
+
+  const cols = board.querySelectorAll('.kanban-col[data-stage]');
+  cols.forEach(col => {
+    const stage = col.dataset.stage;
+    const cardsContainer = col.querySelector('.kanban-cards');
+    if (!cardsContainer) return;
+
+    const stageDeals = CRM.deals.filter(d => d.stage === stage);
+    cardsContainer.innerHTML = stageDeals.map(d => {
+      const warning = d.days > 14 ? ' deal-card-warning' : '';
+      return `
+        <div class="deal-card${warning}" data-id="${d.id}">
+          <div class="deal-card-header">
+            <span class="deal-company">${d.company}</span>
+            ${tierBadge(d.tier)}
+          </div>
+          <div class="deal-card-contact">${d.contact}</div>
+          <div class="deal-card-footer">
+            <span class="deal-mrr">${formatCurrency(d.mrr)}/mo</span>
+            <span class="deal-days ${d.days > 14 ? 'deal-days-warn' : ''}">${d.days > 0 ? `${d.days}d` : '—'}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  });
+}
+
+function renderDealsTable(deals) {
+  const tbody = document.querySelector('#deals-table tbody');
+  if (!tbody) return;
+  tbody.innerHTML = deals.map(d => {
+    const rowClass = d.won ? 'row-won' : d.lost ? 'row-lost' : '';
+    const stageDisplay = d.won ? '<span class="badge badge-green">Won</span>' :
+                         d.lost ? '<span class="badge badge-red">Lost</span>' :
+                         `<span class="badge badge-gray">${d.stage}</span>`;
+    return `<tr class="${rowClass}">
+      <td>${d.company}</td>
+      <td>${d.contact}</td>
+      ${tierBadge(d.tier).replace('<span', '<td><span').replace('</span>', '</span></td>')}
+      <td>${formatCurrency(d.mrr)}</td>
+      <td>${stageDisplay}</td>
+      <td>${d.days > 0 ? d.days + 'd' : '—'}</td>
+      <td>${d.source}</td>
+    </tr>`;
+  }).join('');
+}
+
+const DEAL_INTEL = [
+  {
+    id: 'd1',
+    stageTransition: 'Proposal → Negotiation',
+    action: 'Send a custom ROI calculator showing workflow hours saved and projected time-to-payback. Offer a 30-day milestone-based pilot clause.',
+    reason: 'Similar profile to Nexus Financial (won at day 21 with Elite/legal compliance framing). Sarah Chen has opened the proposal PDF three times this week — decision is near.',
+  },
+  {
+    id: 'd7',
+    stageTransition: 'Negotiation → Close',
+    action: 'Schedule an executive alignment call with David Kim and one technical stakeholder. Present a phased implementation roadmap to de-risk the commitment.',
+    reason: 'At day 31 with $3,897 MRR on the table — longest negotiation in the pipeline. Referral source indicates strong internal champion but legal approval is the bottleneck.',
+  },
+  {
+    id: 'd2',
+    stageTransition: 'Negotiation → Contract',
+    action: 'Issue a one-page contract summary with a 48-hour e-sign link. Include a month-1 quick-win deliverable to accelerate internal approval.',
+    reason: 'James Torres has been in negotiation 26 days — Meridian matches the Vanguard Logistics profile that stalled without a concrete first deliverable. Urgency trigger available.',
+  },
+];
+
+function renderDealIntel() {
+  const container = document.getElementById('deal-intel-content');
+  if (!container) return;
+
+  const stuckDeals = CRM.deals.filter(d => d.days > 10 && !d.won && !d.lost);
+
+  container.innerHTML = stuckDeals.map(deal => {
+    const intel = DEAL_INTEL.find(i => i.id === deal.id) || {
+      stageTransition: `${deal.stage} → Next`,
+      action: `Follow up with ${deal.contact} to confirm decision timeline and address any outstanding objections.`,
+      reason: `Deal has been in ${deal.stage} for ${deal.days} days — a targeted touchpoint can re-activate momentum.`,
+    };
+    return `
+      <div class="intel-item">
+        <div class="intel-company">${deal.company}</div>
+        <div class="intel-stage">${intel.stageTransition}</div>
+        <div class="intel-rec"><span class="intel-label">Recommended Action:</span> ${intel.action}</div>
+        <div class="intel-reason">${intel.reason}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ─────────────────────────────────────────────
+   RENDER: ONBOARDING
+───────────────────────────────────────────── */
+function renderOnboarding() {
+  const active = CRM.onboardings;
+  const onTime = active.filter(o => o.slaStatus === 'green').length;
+  const atRisk = active.filter(o => o.slaStatus === 'amber').length;
+
+  const kpiCards = document.querySelectorAll('#view-onboarding .kpi-card');
+  if (kpiCards[0]) {
+    const v = kpiCards[0].querySelector('.kpi-value');
+    const s = kpiCards[0].querySelector('.kpi-sub');
+    if (v) v.textContent = active.length;
+    if (s) s.textContent = 'clients in onboarding';
+  }
+  if (kpiCards[1]) {
+    const v = kpiCards[1].querySelector('.kpi-value');
+    const s = kpiCards[1].querySelector('.kpi-sub');
+    if (v) v.textContent = onTime;
+    if (s) s.textContent = 'on schedule';
+  }
+  if (kpiCards[2]) {
+    const v = kpiCards[2].querySelector('.kpi-value');
+    const s = kpiCards[2].querySelector('.kpi-sub');
+    if (v) v.textContent = atRisk;
+    if (s) s.textContent = 'at-risk SLA';
+  }
+
+  // Handoff board
+  const handoffBoard = document.getElementById('handoff-board');
+  if (handoffBoard) {
+    // Combine onboardings with first 2 retention clients for post-onboarding rows
+    const rows = [
+      ...CRM.onboardings.map(o => ({ ...o, phase: 'onboarding' })),
+      ...CRM.retentionClients.slice(0, 2).map(r => ({
+        id: r.id,
+        company: r.company,
+        tier: r.tier,
+        contact: r.contactName,
+        startDay: r.monthsActive * 30,
+        totalDays: r.monthsActive * 30,
+        completion: 100,
+        slaStatus: 'complete',
+        phase: 'retention',
+      })),
+    ];
+
+    handoffBoard.innerHTML = rows.map(r => {
+      const slaColor = r.slaStatus === 'green' ? '#22C55E' :
+                       r.slaStatus === 'amber' ? '#F59E0B' :
+                       r.slaStatus === 'complete' ? '#06B6D4' : '#EF4444';
+      const slaLabel = r.slaStatus === 'complete'
+        ? `Month ${Math.floor(r.startDay / 30)}`
+        : `Day ${r.startDay} of ${r.totalDays}`;
+
+      const dots = [
+        { label: 'Sales', done: true, color: '#06B6D4' },
+        { label: 'Onboard', done: r.phase !== 'retention', active: r.phase === 'onboarding', color: r.phase === 'onboarding' ? '#F59E0B' : '#06B6D4' },
+        { label: 'Deliver', done: r.phase === 'retention', color: '#06B6D4' },
+        { label: 'Retain', done: r.phase === 'retention', active: r.phase === 'retention', color: '#8B5CF6' },
+      ];
+
+      const dotsHtml = dots.map(d => `
+        <div class="handoff-dept">
+          <div class="handoff-dot" style="background:${d.done || d.active ? d.color : 'rgba(255,255,255,0.12)'}"></div>
+          <span class="handoff-dept-label">${d.label}</span>
+        </div>
+      `).join('');
+
+      return `
+        <div class="handoff-row">
+          <div class="handoff-company">
+            <div class="handoff-name">${r.company}</div>
+            <div class="handoff-contact">${r.contact} · ${tierBadge(r.tier)}</div>
+          </div>
+          <div class="handoff-depts">${dotsHtml}</div>
+          <div class="handoff-sla-badge" style="color:${slaColor};border-color:${slaColor}">${slaLabel}</div>
+          <div class="handoff-bar-wrap">
+            <div class="handoff-bar-track">
+              <div class="handoff-bar-fill" style="width:${Math.min(r.completion, 100)}%;background:${slaColor}"></div>
+            </div>
+            <span class="handoff-pct">${r.completion}%</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Onboarding cards grid
+  const grid = document.querySelector('#view-onboarding .onboarding-grid');
+  if (grid) {
+    grid.innerHTML = CRM.onboardings.map(o => {
+      const slaColor = o.slaStatus === 'amber' ? '#F59E0B' : '#22C55E';
+      const milestonesHtml = o.milestones.map(m => {
+        const done = m.includes('done');
+        return `<div class="milestone-item ${done ? 'milestone-done' : 'milestone-pending'}">
+          <span class="milestone-dot"></span>
+          <span class="milestone-text">${m.replace(' done','').replace(' pending','')}</span>
+        </div>`;
+      }).join('');
+
+      return `
+        <div class="onboarding-card">
+          <div class="onboarding-card-header">
+            <div>
+              <div class="onboarding-company">${o.company}</div>
+              <div class="onboarding-meta">${o.contact} · ${tierBadge(o.tier)}</div>
+            </div>
+            <span class="sla-badge" style="color:${slaColor};border-color:${slaColor}">Day ${o.startDay}/${o.totalDays}</span>
+          </div>
+          <div class="onboarding-progress-bar">
+            <div class="progress-fill" style="width:${o.completion}%;background:${slaColor}"></div>
+          </div>
+          <div class="milestone-list">${milestonesHtml}</div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+/* ─────────────────────────────────────────────
+   RENDER: DELIVERY
+───────────────────────────────────────────── */
+function renderDelivery() {
+  const onTrack = CRM.projects.filter(p => p.status === 'on-track').length;
+  const atRisk = CRM.projects.filter(p => p.status === 'at-risk').length;
+  const avgCompletion = Math.round(CRM.projects.reduce((s, p) => s + p.completion, 0) / CRM.projects.length);
+
+  const kpiCards = document.querySelectorAll('#view-delivery .kpi-card');
+  if (kpiCards[0]) {
+    const v = kpiCards[0].querySelector('.kpi-value');
+    const s = kpiCards[0].querySelector('.kpi-sub');
+    if (v) v.textContent = CRM.projects.length;
+    if (s) s.textContent = 'active projects';
+  }
+  if (kpiCards[1]) {
+    const v = kpiCards[1].querySelector('.kpi-value');
+    const s = kpiCards[1].querySelector('.kpi-sub');
+    if (v) v.textContent = onTrack;
+    if (s) s.textContent = 'on track';
+  }
+  if (kpiCards[2]) {
+    const v = kpiCards[2].querySelector('.kpi-value');
+    const s = kpiCards[2].querySelector('.kpi-sub');
+    if (v) v.textContent = atRisk;
+    if (s) s.textContent = 'at-risk delivery';
+  }
+  if (kpiCards[3]) {
+    const v = kpiCards[3].querySelector('.kpi-value');
+    const s = kpiCards[3].querySelector('.kpi-sub');
+    if (v) v.textContent = `${avgCompletion}%`;
+    if (s) s.textContent = 'avg project completion';
+  }
+
+  // Project cards grid
+  const grid = document.querySelector('#view-delivery .project-grid');
+  if (grid) {
+    grid.innerHTML = CRM.projects.map(p => {
+      const statusColor = p.status === 'at-risk' ? '#EF4444' : '#22C55E';
+      const tasksHtml = p.tasks.map(t => {
+        const done = t.includes('done');
+        return `<div class="task-item ${done ? 'task-done' : ''}">
+          <span class="task-check">${done ? '✓' : '○'}</span>
+          <span>${t.replace(' done','').replace(' pending','')}</span>
+        </div>`;
+      }).join('');
+
+      return `
+        <div class="project-card ${p.status === 'at-risk' ? 'project-at-risk' : ''}">
+          <div class="project-card-header">
+            <div>
+              <div class="project-name">${p.name}</div>
+              <div class="project-meta">${p.company} · ${tierBadge(p.tier)}</div>
+            </div>
+            ${statusBadge(p.status)}
+          </div>
+          <div class="project-progress-row">
+            <div class="project-progress-bar">
+              <div class="project-progress-fill" style="width:${p.completion}%;background:${statusColor}"></div>
+            </div>
+            <span class="project-pct">${p.completion}%</span>
+          </div>
+          <div class="project-footer">
+            <span class="project-assignee"><i data-lucide="user" style="width:12px;height:12px"></i> ${p.assignee}</span>
+            <span class="project-due"><i data-lucide="calendar" style="width:12px;height:12px"></i> ${p.dueDate}</span>
+          </div>
+          <div class="task-list">${tasksHtml}</div>
+        </div>
+      `;
+    }).join('');
+    lucide.createIcons();
+  }
+
+  // Projects table (flattened tasks)
+  const tbody = document.querySelector('#projects-table tbody');
+  if (tbody) {
+    const rows = [];
+    CRM.projects.forEach(p => {
+      p.tasks.forEach(t => {
+        const done = t.includes('done');
+        rows.push(`<tr>
+          <td>${p.company}</td>
+          <td>${p.name}</td>
+          <td>${t.replace(' done','').replace(' pending','')}</td>
+          <td>${p.assignee}</td>
+          <td>${done ? '<span class="badge badge-green">Done</span>' : '<span class="badge badge-gray">Pending</span>'}</td>
+          <td>${p.dueDate}</td>
+        </tr>`);
+      });
+    });
+    tbody.innerHTML = rows.join('');
+  }
+}
+
+/* ─────────────────────────────────────────────
+   RENDER: RETENTION
+───────────────────────────────────────────── */
+function renderRetention() {
+  const clients = CRM.retentionClients;
+  const avgHealth = Math.round(clients.reduce((s, c) => s + c.healthScore, 0) / clients.length);
+  const atRisk = clients.filter(c => c.healthScore < 70).length;
+  const totalMRR = clients.reduce((s, c) => s + c.mrr, 0);
+
+  const kpiCards = document.querySelectorAll('#view-retention .kpi-card');
+  if (kpiCards[0]) {
+    const v = kpiCards[0].querySelector('.kpi-value');
+    const s = kpiCards[0].querySelector('.kpi-sub');
+    if (v) v.textContent = clients.length;
+    if (s) s.textContent = 'active retained clients';
+  }
+  if (kpiCards[1]) {
+    const v = kpiCards[1].querySelector('.kpi-value');
+    const s = kpiCards[1].querySelector('.kpi-sub');
+    if (v) v.textContent = avgHealth;
+    if (s) s.textContent = 'avg health score';
+  }
+  if (kpiCards[2]) {
+    const v = kpiCards[2].querySelector('.kpi-value');
+    const s = kpiCards[2].querySelector('.kpi-sub');
+    if (v) v.textContent = atRisk;
+    if (s) s.textContent = 'clients below 70 health';
+  }
+  if (kpiCards[3]) {
+    const v = kpiCards[3].querySelector('.kpi-value');
+    const s = kpiCards[3].querySelector('.kpi-sub');
+    if (v) v.textContent = formatCurrency(totalMRR);
+    if (s) s.textContent = 'retained MRR at risk';
+  }
+
+  // Churn grid
+  const churnGrid = document.getElementById('churn-grid');
+  if (churnGrid) {
+    churnGrid.innerHTML = clients.map(c => {
+      const hColor = healthColor(c.healthScore);
+      const signals = [
+        { label: 'Login Freq', value: c.signals.loginFreq },
+        { label: 'Support Vol', value: c.signals.supportVol },
+        { label: 'NPS Trend', value: c.signals.npsTrend },
+        { label: 'Feature Adopt', value: c.signals.featureAdoption },
+        { label: 'Relationship', value: c.signals.relationshipWarmth },
+      ];
+
+      const signalBarsHtml = signals.map(sig => {
+        const barColor = sig.value >= 80 ? '#22C55E' : sig.value >= 60 ? '#F59E0B' : '#EF4444';
+        return `
+          <div class="signal-bar-row">
+            <span class="signal-bar-label">${sig.label}</span>
+            <div class="signal-bar-track">
+              <div class="signal-bar-fill" style="width:${sig.value}%;background:${barColor}"></div>
+            </div>
+            <span class="signal-bar-pct">${sig.value}</span>
+          </div>
+        `;
+      }).join('');
+
+      const churnFooter = c.predictedChurnDate
+        ? `<span class="churn-predicted churn-predicted-warn">Predicted churn: ${new Date(c.predictedChurnDate).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span>`
+        : `<span class="churn-predicted">Healthy ✓</span>`;
+
+      return `
+        <div class="churn-card" data-health="${c.healthScore}">
+          <div class="churn-header">
+            <div class="health-ring" style="--score:${c.healthScore};--color:${hColor}">
+              <svg viewBox="0 0 36 36" class="health-ring-svg">
+                <path class="health-ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                <path class="health-ring-fill" stroke="${hColor}" stroke-dasharray="${c.healthScore}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              </svg>
+              <span class="health-ring-num" style="color:${hColor}">${c.healthScore}</span>
+            </div>
+            <div class="churn-info">
+              <div class="churn-company">${c.company}</div>
+              <div class="churn-tier">${c.tier} · Month ${c.monthsActive}</div>
+            </div>
+            <div class="churn-mrr">${formatCurrency(c.mrr)}/mo</div>
+          </div>
+          <div class="signal-bars">${signalBarsHtml}</div>
+          <div class="churn-footer">
+            <span>NPS: ${c.nps}</span>
+            ${churnFooter}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+/* ─────────────────────────────────────────────
+   AI DEAL INTELLIGENCE — REAL API
+───────────────────────────────────────────── */
+async function askDealIntel(query) {
+  const responseEl = document.getElementById('ai-response');
+  if (!responseEl) return;
+
+  if (!query || !query.trim()) return;
+
+  responseEl.innerHTML = `<div class="ai-loading"><span class="ai-loading-dot"></span><span class="ai-loading-dot"></span><span class="ai-loading-dot"></span> Thinking…</div>`;
+
+  const topDeals = CRM.deals
+    .filter(d => !d.won && !d.lost)
+    .sort((a, b) => b.mrr - a.mrr)
+    .slice(0, 5)
+    .map(d => `${d.company} (${d.tier}, ${d.stage}, Day ${d.days}, ${formatCurrency(d.mrr)}/mo)`)
+    .join('; ');
+
+  const systemMsg = `You are an AI sales coach for MGC Global Consulting, an AI consulting and automation firm specializing in MGCOS memberships (Starter $199, Pro $499-$1,497, Elite $1,299-$3,897/mo). Current pipeline: ${topDeals}. Answer deal questions concisely, specifically, and in plain text without markdown headers.`;
+
+  try {
+    const res = await fetch('/.netlify/functions/trueassist', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [
+          { role: 'system', content: systemMsg },
+          { role: 'user', content: query },
+        ],
+      }),
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const reply = data.reply || data.message || data.content || 'No response received.';
+    responseEl.innerHTML = `<div class="ai-reply">${reply.replace(/\n/g, '<br>')}</div>`;
+  } catch (err) {
+    responseEl.innerHTML = `<div class="ai-error">Unable to reach AI assistant. Check your connection or Netlify function status.<br><small>${err.message}</small></div>`;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   DEAL SEARCH + FILTER TABS
+───────────────────────────────────────────── */
+let activeFilter = 'all';
+
+function initDealSearch() {
+  const searchInput = document.getElementById('deal-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', () => applyDealFilter());
+  }
+
+  document.querySelectorAll('.filter-tab[data-filter]').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tab[data-filter]').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      activeFilter = tab.dataset.filter;
+      applyDealFilter();
+    });
+  });
+}
+
+function applyDealFilter() {
+  const searchInput = document.getElementById('deal-search');
+  const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+  let filtered = CRM.deals;
+
+  switch (activeFilter) {
+    case 'active':
+      filtered = filtered.filter(d => !d.won && !d.lost);
+      break;
+    case 'won':
+      filtered = filtered.filter(d => d.won);
+      break;
+    case 'lost':
+      filtered = filtered.filter(d => d.lost);
+      break;
+    default:
+      // 'all' — no filter
+      break;
+  }
+
+  if (query) {
+    filtered = filtered.filter(d =>
+      d.company.toLowerCase().includes(query) ||
+      d.contact.toLowerCase().includes(query) ||
+      d.stage.toLowerCase().includes(query) ||
+      d.source.toLowerCase().includes(query)
+    );
+  }
+
+  renderDealsTable(filtered);
+}
+
+/* ─────────────────────────────────────────────
+   TOPBAR SEARCH (global)
+───────────────────────────────────────────── */
+function initTopbarSearch() {
+  const input = document.getElementById('topbar-search');
+  if (!input) return;
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const q = input.value.trim();
+      if (!q) return;
+      // Navigate to sales view and search
+      showView('sales');
+      const dealSearch = document.getElementById('deal-search');
+      if (dealSearch) {
+        dealSearch.value = q;
+        applyDealFilter();
+      }
+      input.value = '';
+    }
+  });
+}
+
+/* ─────────────────────────────────────────────
+   NAV WIRE-UP
+───────────────────────────────────────────── */
+function initNav() {
+  document.querySelectorAll('.nav-item[data-view]').forEach(item => {
+    item.addEventListener('click', () => {
+      showView(item.dataset.view);
+    });
+  });
+}
+
+/* ─────────────────────────────────────────────
+   AI CHAT WIRE-UP
+───────────────────────────────────────────── */
+function initAIChat() {
+  const btn = document.getElementById('ai-ask-btn');
+  const input = document.getElementById('ai-query');
+
+  if (btn) {
+    btn.addEventListener('click', () => {
+      if (input) askDealIntel(input.value);
+    });
+  }
+
+  if (input) {
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        askDealIntel(input.value);
+      }
+    });
+  }
+}
+
+/* ─────────────────────────────────────────────
+   BOOTSTRAP
+───────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  // Render Lucide icons declared in static HTML
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
+
+  initSidebar();
+  initNav();
+  initDealSearch();
+  initTopbarSearch();
+  initAIChat();
+
+  // Default view
+  showView('overview');
+});
+
+</script>
+</body>
+</html>

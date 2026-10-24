@@ -206,7 +206,13 @@
 
 [[redirects]]
   from   = "/membership-v2.html"
-  to     = "/membership-v2"
+  to     = "/membership"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/membership-v2"
+  to     = "/membership"
   status = 301
   force  = true
 
@@ -230,7 +236,7 @@
 
 [[redirects]]
   from   = "/services.html"
-  to     = "/services"
+  to     = "/membership"
   status = 301
   force  = true
 
@@ -416,13 +422,13 @@
 
 [[redirects]]
   from   = "/public/services"
-  to     = "/services"
+  to     = "/membership"
   status = 301
   force  = true
 
 [[redirects]]
   from   = "/public/services.html"
-  to     = "/services"
+  to     = "/membership"
   status = 301
   force  = true
 
@@ -488,8 +494,9 @@
 
 [[redirects]]
   from   = "/services"
-  to     = "/services.html"
-  status = 200
+  to     = "/membership"
+  status = 301
+  force  = true
 
 [[redirects]]
   from   = "/dashboard"

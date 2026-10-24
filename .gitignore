@@ -19,3 +19,7 @@ ruvector.db
 
 # Local Netlify folder
 .netlify
+
+# Raw design source files — not deployed, too large for git
+mgc-stationary/
+public/Untitled 3.txt
