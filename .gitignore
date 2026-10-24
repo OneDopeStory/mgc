@@ -23,3 +23,4 @@ ruvector.db
 # Raw design source files — not deployed, too large for git
 mgc-stationary/
 public/Untitled 3.txt
+.vercel
