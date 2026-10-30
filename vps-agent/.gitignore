@@ -1,0 +1,4 @@
+# Generated audio artifacts — regenerate with generate-voicemail-greeting.js, don't commit binaries.
+output/*.mp3
+node_modules/
+.env

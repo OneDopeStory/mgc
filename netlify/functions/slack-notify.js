@@ -13,10 +13,13 @@
  *   SLACK_CHANNEL_MAP            JSON {"inquiries","clients","billing","outreach","approvals","ops"} → channel ID
  *   SLACK_INQUIRIES_CHANNEL_ID   fallback channel when the map has no entry
  *   SLACK_INQUIRIES_WEBHOOK_URL  fallback incoming webhook when there is no bot token (then SLACK_WEBHOOK_URL)
+ *   TELEGRAM_BOT_TOKEN, TELEGRAM_OWNER_CHAT_ID   optional — same six tables also post a plain-text
+ *     copy to Telegram in parallel, non-blocking. Unset means skipped, never a failed webhook.
  */
 
 const crypto = require('crypto');
 const { AGENTS, channelFor, logSlackActivity } = require('../lib/slack-routing');
+const { postToTelegram } = require('../lib/leads');
 
 // Table → card title and the fields shown, in order. Anything not listed is never sent to Slack.
 const TABLES = {
@@ -79,6 +82,15 @@ function buildCard(table, record) {
   return { text: `${title} from ${who}`, blocks, unfurl_links: false };
 }
 
+// Plain-text equivalent of buildCard — Telegram has no Block Kit, so this is a flat list.
+function buildTelegramText(table, record) {
+  const { title, fields } = TABLES[table];
+  const shown = fields.filter(k => record[k] !== undefined && record[k] !== null && record[k] !== '');
+  const lines = [title, ...shown.map(k => `${label(k)}: ${formatValue(k, record[k])}`)];
+  return lines.join('\n')
+    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>'); // formatValue escapes for Slack; undo for plain text
+}
+
 // Bot token + routed channel (chat.postMessage) when set, otherwise an incoming webhook.
 async function postToSlack(message, route = 'inquiries') {
   const token = process.env.SLACK_BOT_TOKEN;
@@ -122,15 +134,16 @@ exports.handler = async (event) => {
     return { statusCode: 200, body: JSON.stringify({ skipped: true }) };
   }
 
-  try {
-    const posted = await postToSlack(buildCard(table, record), TABLES[table].route);
-    if (!posted) console.error('[Slack Notify] No Slack destination configured');
-    return { statusCode: 200, body: JSON.stringify({ posted }) };
-  } catch (err) {
-    console.error('[Slack Notify] Post failed:', err.message);
-    // 200 so Supabase does not retry-storm; the row is already saved.
-    return { statusCode: 200, body: JSON.stringify({ posted: false }) };
-  }
+  const [slackResult, telegramResult] = await Promise.allSettled([
+    postToSlack(buildCard(table, record), TABLES[table].route),
+    postToTelegram(buildTelegramText(table, record)),
+  ]);
+  const posted = slackResult.status === 'fulfilled' && slackResult.value;
+  if (slackResult.status === 'rejected') console.error('[Slack Notify] Slack post failed:', slackResult.reason.message);
+  else if (!posted) console.error('[Slack Notify] No Slack destination configured');
+  if (telegramResult.status === 'rejected') console.error('[Slack Notify] Telegram post failed:', telegramResult.reason.message);
+  // 200 regardless — the row is already saved; Supabase must not retry-storm on a downstream notify failure.
+  return { statusCode: 200, body: JSON.stringify({ posted, telegram: telegramResult.status === 'fulfilled' && !telegramResult.value?.skipped }) };
 };
 
 exports.buildCard = buildCard;

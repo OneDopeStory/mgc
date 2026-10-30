@@ -78,6 +78,14 @@ a{color:inherit}
 .cc-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap)}
 .cc-kpi{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px 12px;overflow:hidden;transition:box-shadow .6s var(--ease),border-color .6s var(--ease)}
 .cc-kpi.blip{box-shadow:var(--glow);border-color:rgba(0,212,255,.45)}
+/* Live-data tick — fires only when a KPI's real underlying value changes
+   between renders (set in command-center.js renderKpis). Data-grounded,
+   one-shot, no idle/ambient motion — see the 2026-10-16 note in
+   command-center-fx.js on why decorative-only motion was removed. */
+.cc-kpi.tick{animation:cc-tick-ring .9s var(--ease)}
+.cc-kpi.tick .cc-kpi-value{animation:cc-tick-val .9s var(--ease)}
+@keyframes cc-tick-ring{0%{box-shadow:0 0 0 0 rgba(0,212,255,.5)}100%{box-shadow:0 0 0 14px rgba(0,212,255,0)}}
+@keyframes cc-tick-val{0%,100%{transform:translateY(0);opacity:1}35%{transform:translateY(-4px);opacity:.45}}
 .cc-kpi-label{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .cc-kpi-value{font-family:var(--font-display);font-weight:800;font-size:30px;letter-spacing:-.02em;margin-top:6px;line-height:1.1}
 .cc-kpi-sub{font-size:12px;color:var(--muted);margin-top:4px;min-height:16px}

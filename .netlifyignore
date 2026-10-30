@@ -28,6 +28,13 @@ data
 integrations
 utils
 tests
+test
 .mgc-audit
 .vercel.stale-backup
 supabase
+.github
+vps-agent
+playwright.config.ts
+
+# Staff instructions and private email drafts
+agentic-staffing

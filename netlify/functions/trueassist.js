@@ -28,7 +28,7 @@
 const crypto = require('crypto');
 const {
   SUPABASE_URL, SUPABASE_ANON, clean, sha256, hasServiceRole, db,
-  getServicePricing, pricingForPrompt, slackApi, escapeSlack, recordLead,
+  getServicePricing, pricingForPrompt, slackApi, escapeSlack, recordLead, postToTelegram,
 } = require('../lib/leads');
 
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
@@ -76,7 +76,7 @@ Site pages — point visitors to the right one by name and path when it helps (y
 - /book — book a 60-minute strategy call
 - /dashboard — client portal (sign-in required; project status, deliverables, invoices)
 - /checkout — pay an invoice or existing order
-- Contact: info@mgcglobalconsulting.com, or 1.443.208.8178 (direct line, answered 24/7 for MGC clients), or the booking calendar on the home page at #booking.
+- Contact: info@mgcglobalconsulting.com, or 1.240.962.9982 (direct line, answered 24/7 for MGC clients), or the booking calendar on the home page at #booking.
 
 Keep responses concise (2–4 paragraphs max unless a longer answer is clearly needed). Use plain language. No emojis.`;
 
@@ -234,6 +234,10 @@ async function escalate(session, reason, convo, ctx) {
     .map(m => `>${m.role === 'user' ? 'Visitor' : 'TrueAssist'}: ${escapeSlack(m.content.slice(0, 400)).replace(/\n/g, ' ')}`)
     .join('\n');
   const who = ctx ? `${escapeSlack(ctx.name)}${ctx.company ? ` (${escapeSlack(ctx.company)})` : ''}, signed-in client` : 'Website visitor';
+  // Non-blocking — the owner gets a real-time heads-up even away from Slack; the Slack
+  // thread (awaited below) is still the one source of truth the visitor's reply relays through.
+  postToTelegram(`TrueAssist handoff — ${who}\nReason: ${clean(reason, 300)}\n\n${transcript || 'No transcript'}`)
+    .catch(err => console.error('Telegram escalate notify failed:', err.message));
   const root = await slackApi('chat.postMessage', {
     channel,
     text: `TrueAssist handoff: ${clean(reason, 200)}`,

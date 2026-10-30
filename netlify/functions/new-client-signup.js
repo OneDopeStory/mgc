@@ -6,6 +6,7 @@
  *
  * Triggered by: Supabase Database Webhook on mgc_client_profiles INSERT
  * Writes to:    Notion CRM (Contact + Company + Lead Deal)
+ *               Slack "Client onboarding" workflow (fail-soft, see slack-workflow-trigger.js)
  *
  * Setup in Supabase Dashboard:
  *   Database > Webhooks > Create webhook
@@ -13,6 +14,8 @@
  *   URL: https://mgcglobalconsulting.com/.netlify/functions/new-client-signup
  *   HTTP Headers: Authorization: Bearer {SUPABASE_WEBHOOK_SECRET}
  */
+
+const { triggerClientOnboardingWorkflow } = require('./slack-workflow-trigger');
 
 /* -- Notion helper ---------------------------------------------------- */
 function notion(path, method = 'GET', data) {
@@ -132,14 +135,31 @@ exports.handler = async (event) => {
   const profile = payload.record;
   console.log('[Signup] New client profile:', profile.id, profile.email);
 
-  try {
-    const companyId = await findOrCreateCompany(profile.company);
-    const contactId = await findOrCreateContact(profile, companyId);
-    await createLeadDeal(profile, companyId, contactId);
-    console.log('[Signup] Notion sync complete for', profile.email);
-  } catch (err) {
-    console.error('[Signup] Notion sync failed:', err.message);
+  // Non-blocking — webhook ack succeeds even if the CRM write or the Slack notification fails
+  const [notionResult, slackResult] = await Promise.allSettled([
+    (async () => {
+      const companyId = await findOrCreateCompany(profile.company);
+      const contactId = await findOrCreateContact(profile, companyId);
+      await createLeadDeal(profile, companyId, contactId);
+    })(),
+    triggerClientOnboardingWorkflow({
+      name: profile.full_name,
+      email: profile.email,
+      company: profile.company,
+      phone: profile.phone,
+      membershipTier: profile.membership_tier,
+      onboardingStatus: profile.onboarding_status,
+    }),
+  ]);
+
+  if (notionResult.status === 'rejected') {
+    console.error('[Signup] Notion sync failed:', notionResult.reason?.message);
     // Return 200 so Supabase does not retry on Notion errors
+  } else {
+    console.log('[Signup] Notion sync complete for', profile.email);
+  }
+  if (slackResult.status === 'rejected') {
+    console.error('[Signup] Slack onboarding workflow trigger failed:', slackResult.reason?.message);
   }
 
   return { statusCode: 200, body: JSON.stringify({ received: true }) };

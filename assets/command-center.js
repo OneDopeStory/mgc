@@ -97,23 +97,22 @@
     const S = {};
 
     const humans = [
-      ['Founder', 'Strategy and sales', 17500], ['Strategy Lead', 'AI consulting', 12500],
-      ['Automation Engineer', 'Build and integrations', 9500], ['Ops Coordinator', 'Client success', 5500],
+      ['Mark Cartwright', 'Founder & Principal', 17500],
     ];
     const agents = [
-      ['Intake Agent', 'Qualifies leads, writes intake ideas'], ['Client Success Agent', 'Onboarding and check-ins'],
-      ['Billing Agent', 'Invoices and payment follow-up'], ['Outreach Agent', 'Email outreach drafts'],
-      ['Ops Monitor', 'Watches functions and webhooks'],
+      ['Alex Romero', 'Dispatch / Orchestrator'], ['Marcus Vance', 'CTO & Backend Architect'],
+      ['Elena Restora', 'Business Development & Sales'], ['Jordan Hayes', 'Customer Operations & Dispatch'],
+      ['Julian Vance', 'Accounting & Financial Systems'], ['David Ken', 'Technical Support'],
     ];
     S.mgc_staff = humans.map((h, i) => ({ id: id('h', i), kind: 'human', name: h[0], role: h[1], hourly_rate_cents: h[2], status: 'active', created_at: iso(T - 90 * DAY) }))
-      .concat(agents.map((a, i) => ({ id: id('a', i), kind: 'agent', name: a[0], role: a[1], default_model: i === 0 ? 'claude-sonnet-5-5' : 'claude-haiku-4-5', status: i === 4 ? 'paused' : 'active', last_heartbeat_at: iso(T - (i === 4 ? 3 * 3600e3 : r() * 90e3)), created_at: iso(T - 30 * DAY) })));
+      .concat(agents.map((a, i) => ({ id: id('a', i), kind: 'agent', name: a[0], role: a[1], default_model: i === 0 ? 'claude-sonnet-5-5' : 'claude-haiku-4-5', status: 'active', last_heartbeat_at: iso(T - r() * 90e3), created_at: iso(T - 30 * DAY) })));
 
     S.mgc_time_entries = [];
     humans.forEach((h, i) => { for (let d = 0; d < 14; d++) { if (new Date(T - d * DAY).getDay() % 6 === 0) continue; const hrs = 3 + Math.round(r() * 10) / 2; S.mgc_time_entries.push({ id: id('t', i + '-' + d), staff_id: id('h', i), entry_date: iso(T - d * DAY).slice(0, 10), hours: hrs, billable: r() < 0.78 - i * 0.05, created_at: iso(T - d * DAY) }); } });
 
     const models = [['claude-haiku-4-5', 0.6], ['claude-sonnet-5-5', 0.3], ['claude-opus-5-5', 0.1]];
     const price = { 'claude-haiku-4-5': [1, 5], 'claude-sonnet-5-5': [3, 15], 'claude-opus-5-5': [5, 25] };
-    const sources = [['trueassist', null], ['booking-assistant', null], ['intake-ideas', 'a-0'], ['Client Success Agent', 'a-1'], ['Billing Agent', 'a-2'], ['Outreach Agent', 'a-3'], ['Ops Monitor', 'a-4'], ['research', 'h-0'], ['drafting', 'h-1'], ['build', 'h-2']];
+    const sources = [['trueassist', null], ['booking-assistant', null], ['intake-ideas', 'a-0'], ['Jordan Hayes', 'a-3'], ['Julian Vance', 'a-4'], ['Elena Restora', 'a-2'], ['Marcus Vance', 'a-1'], ['research', 'h-0'], ['drafting', 'a-2'], ['build', 'a-1']];
     S.mgc_model_usage = [];
     for (let i = 0; i < 420; i++) {
       const x = r(); const m = x < models[0][1] ? models[0][0] : x < 0.9 ? models[1][0] : models[2][0];
@@ -131,17 +130,17 @@
       ['CRM rebuild', 'Harbor Dental Group', 72], ['Lead-routing automation', 'Chesapeake Freight', 45], ['AI readiness workshop', 'Bay Ridge Law', 90],
       ['Ops systems design', 'Patapsco Realty', 28], ['Retainer: monthly support', 'Severn Fitness Studio', 60],
     ].map((p, i) => ({ id: id('p', i), title: p[0], company: p[1], progress: p[2], status: 'active', due_date: iso(T + (7 + i * 6) * DAY).slice(0, 10), created_at: iso(T - 40 * DAY) }));
-    const taskTitles = ['Send kickoff deck', 'Map HubSpot pipeline stages', 'Write Zapier fallback', 'Review intake ideas', 'Chase overdue invoice', 'Draft outreach sequence', 'QA booking webhook', 'Record workshop recap', 'Approve Billing Agent email', 'Set up client Slack channel', 'Prep QBR slides', 'Audit Supabase RLS', 'Price retainer renewal', 'Update case study'];
+    const taskTitles = ['Send kickoff deck', 'Map HubSpot pipeline stages', 'Write Zapier fallback', 'Review intake ideas', 'Chase overdue invoice', 'Draft outreach sequence', 'QA booking webhook', 'Record workshop recap', 'Approve Julian Vance invoice email', 'Set up client Slack channel', 'Prep QBR slides', 'Audit Supabase RLS', 'Price retainer renewal', 'Update case study'];
     S.mgc_tasks = taskTitles.map((t, i) => ({ id: id('k', i), title: t, status: ['todo', 'todo', 'doing', 'blocked', 'done'][i % 5], priority: ['normal', 'high', 'normal', 'urgent', 'low'][i % 5], assignee_id: pick(S.mgc_staff).id, due_date: iso(T + (r() * 10 - 3) * DAY).slice(0, 10), created_at: iso(T - r() * 10 * DAY) }));
     S.mgc_approvals = [
-      ['Billing Agent', 'invoice_email', 'pending'], ['Outreach Agent', 'outreach_email', 'pending'], ['Client Success Agent', 'check_in', 'approved'],
-      ['Intake Agent', 'ideas_send', 'pending'], ['Billing Agent', 'payment_reminder', 'sent'],
+      ['Julian Vance', 'invoice_email', 'pending'], ['Elena Restora', 'outreach_email', 'pending'], ['Jordan Hayes', 'check_in', 'approved'],
+      ['Alex Romero', 'ideas_send', 'pending'], ['Julian Vance', 'payment_reminder', 'sent'],
     ].map((a, i) => ({ id: id('ap', i), agent: a[0], kind: a[1], status: a[2], payload: { summary: pick(cos) }, created_at: iso(T - (i + 1) * 2.3 * 3600e3) }));
     const evs = ['run', 'run', 'run', 'handoff', 'approval_requested', 'heartbeat'];
-    S.mgc_agent_events = Array.from({ length: 48 }, (_, i) => { const a = pick(agents.slice(0, 4)); return { id: i, agent: a[0], event: pick(evs), detail: a[1], created_at: iso(T - r() * 24 * 3600e3) }; });
+    S.mgc_agent_events = Array.from({ length: 48 }, (_, i) => { const a = pick(agents); return { id: i, agent: a[0], event: pick(evs), detail: a[1], created_at: iso(T - r() * 24 * 3600e3) }; });
     S.mgc_questionnaires = [['Annapolis Marine Supply', 'Marine parts retailer, 2 stores plus online', 'Online orders get lost between Shopify and the warehouse'], ['Towson Pediatrics', 'Pediatric practice, 6 providers', 'Phones are swamped every morning with scheduling calls']]
       .map((q, i) => ({ id: id('q', i), company: q[0], client_name: 'Sample client', q1: q[1], q2: q[2], reviewed: false, created_at: iso(T - (i * 5 + 1.5) * 3600e3) }));
-    const slack = [['Mark', '#site-inquiries: Harbor Dental wants the after-hours booking idea scoped this week'], ['Strategy Lead', '#client-chesapeake: carrier scorecard export is ready for review'], ['Billing Agent', '#payments: reminder drafted for Linthicum HVAC, waiting for approval'], ['Ops Coordinator', '#client-severn: trial follow-up sequence copy approved by the owner'], ['Intake Agent', '#site-inquiries: 4 ideas posted for Bay Ridge Law']];
+    const slack = [['Mark', '#site-inquiries: Harbor Dental wants the after-hours booking idea scoped this week'], ['Elena Restora', '#client-chesapeake: carrier scorecard export is ready for review'], ['Julian Vance', '#payments: reminder drafted for Linthicum HVAC, waiting for approval'], ['Jordan Hayes', '#client-severn: trial follow-up sequence copy approved by the owner'], ['Alex Romero', '#site-inquiries: 4 ideas posted for Bay Ridge Law'], ['David Ken', '#support: walked Towson Pediatrics through the booking widget after a client question']];
     S.mgc_agent_events.push(...Array.from({ length: 22 }, (_, i) => { const m = slack[i % slack.length]; return { id: 's' + i, agent: m[0], event: i % 3 ? 'slack_message' : 'slack_reply', detail: m[1], created_at: iso(T - r() * (i % 2 ? 20 * 3600e3 : 14 * DAY)) }; }));
     S.mgc_intake_ideas = [
       ['Harbor Dental Group', [['After-hours booking agent', 'Patients call after 6 pm and hit voicemail; a chat agent books them into open slots.', 'Connect the scheduling system to a booking assistant.', 'automation'], ['Recall reminders by SMS', 'Lapsed patients are the cheapest revenue to win back.', 'Pull a 12-month lapsed list from the PMS.', 'crm-optimization'], ['Insurance FAQ assistant', 'Front desk spends hours on coverage questions.', 'Collect the top 20 coverage questions.', 'ai-consulting'], ['Review request loop', 'More Google reviews lift new-patient calls.', 'Trigger a review ask 2 hours after each visit.', 'automation']]],
@@ -191,6 +190,7 @@
     return el('span', { class: p >= 0 ? 'up' : 'down', text: (p >= 0 ? '+' : '') + p + '%' });
   }
 
+  const lastKpiValues = {};
   function renderKpis() {
     const T = now();
     const inv = state.mgc_invoices, leads = state.mgc_leads, book = state.mgc_bookings;
@@ -228,7 +228,10 @@
     ];
     const wrap = $('cc-kpis');
     wrap.replaceChildren(...kpis.map((k) => {
-      const n = el('div', { class: 'cc-kpi' + (k.gold ? ' gold' : ''), 'data-src': k.src.join(' ') }, [
+      const prev = lastKpiValues[k.label];
+      const changed = prev !== undefined && prev !== k.value;
+      lastKpiValues[k.label] = k.value;
+      const n = el('div', { class: 'cc-kpi' + (k.gold ? ' gold' : '') + (changed ? ' tick' : ''), 'data-src': k.src.join(' ') }, [
         el('div', { class: 'cc-kpi-label', text: k.label }),
         el('div', { class: 'cc-kpi-value', text: k.value }),
         el('div', { class: 'cc-kpi-sub' }, k.sub.map((s) => (typeof s === 'string' ? document.createTextNode(s) : s))),
@@ -623,6 +626,49 @@
     if (v === 'overview') dispatchEvent(new Event('resize'));
   }
   function setSide(open) { $('cc-side').classList.toggle('open', open); $('cc-scrim').hidden = !open; }
+  // ── Profile photo (header, upper-right) ──
+  // Client/device-scoped preview only: stored as a data URL in localStorage,
+  // not a Supabase-backed per-account photo. Good enough for "where would
+  // my photo go" today; upgrading to a real Storage-bucket upload (synced
+  // across devices, admin-only RLS) is a separate, bigger task.
+  const AVATAR_KEY = 'mgc_cc_avatar_v1';
+  function setAvatarImg(dataUrl) {
+    const headerImg = $('cc-avatar-img'), headerFallback = $('cc-avatar-fallback'), removeBtn = $('cc-avatar-remove');
+    const sideImg = $('cc-side-avatar-img'), sideFallback = $('cc-side-avatar-fallback');
+    if (dataUrl) {
+      headerImg.src = dataUrl; headerImg.hidden = false; headerFallback.hidden = true; removeBtn.hidden = false;
+      sideImg.src = dataUrl; sideImg.hidden = false; sideFallback.hidden = true;
+    } else {
+      headerImg.hidden = true; headerImg.removeAttribute('src'); headerFallback.hidden = false; removeBtn.hidden = true;
+      sideImg.hidden = true; sideImg.removeAttribute('src'); sideFallback.hidden = false;
+    }
+  }
+  function initAvatar() {
+    let saved = null;
+    try { saved = localStorage.getItem(AVATAR_KEY); } catch {}
+    if (saved) setAvatarImg(saved);
+    $('cc-avatar-btn').addEventListener('click', () => $('cc-avatar-input').click());
+    $('cc-avatar-input').addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      e.target.value = '';
+      if (!file) return;
+      if (!/^image\//.test(file.type)) return;
+      if (file.size > 2.5e6) { alert('Photo is too large — please use an image under 2.5MB.'); return; }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const url = String(reader.result || '');
+        try { localStorage.setItem(AVATAR_KEY, url); } catch { alert('Could not save photo locally (storage full).'); return; }
+        setAvatarImg(url);
+      };
+      reader.readAsDataURL(file);
+    });
+    $('cc-avatar-remove').addEventListener('click', (e) => {
+      e.stopPropagation();
+      try { localStorage.removeItem(AVATAR_KEY); } catch {}
+      setAvatarImg(null);
+    });
+  }
+
   function initUi() {
     document.querySelectorAll('#cc-nav button, .cc-tab, [data-go]').forEach((b) => b.addEventListener('click', () => showView(b.dataset.view || b.dataset.go)));
     $('cc-burger').addEventListener('click', () => setSide(true));
@@ -710,7 +756,7 @@
       case 'mgc_approvals': return [`${r.agent || 'Agent'} ${lc(r.status) === 'pending' ? 'asks for approval' : lc(r.status)}`, String(r.kind || '').replace(/_/g, ' ')];
       case 'mgc_agent_events': return lc(r.event).includes('slack') ? [`Slack: ${r.agent || 'message'}`, r.detail || ''] : [`${r.agent || 'Agent'}: ${String(r.event || '').replace(/_/g, ' ')}`, r.detail || ''];
       case 'mgc_questionnaires': return [`New questionnaire: ${r.company || r.client_name || ''}`, r.q1 || ''];
-      case 'mgc_intake_ideas': return [`4 ideas ready for ${r.company || 'new intake'}`, 'Intake Agent'];
+      case 'mgc_intake_ideas': return [`4 ideas ready for ${r.company || 'new intake'}`, 'Alex Romero'];
       case 'mgc_model_usage': return [`Model call: ${(r.model || '').replace('claude-', '')}`, (r.source || '') + ' · ' + compact((r.input_tokens || 0) + (r.output_tokens || 0)) + ' tokens'];
       case 'mgc_tasks': return [`Task ${lc(r.status) === 'done' ? 'done' : verb}: ${r.title || ''}`, r.priority || ''];
       case 'mgc_client_profiles': return [`Client ${verb}: ${r.company || r.full_name || ''}`, stage(r)];
@@ -762,11 +808,11 @@
   function simulate() {
     const r = rng(7); const T = () => new Date().toISOString();
     const make = [
-      () => ['mgc_agent_events', { id: 'sim' + Math.random(), agent: 'Intake Agent', event: 'run', detail: 'Scored a new lead', created_at: T() }],
-      () => ['mgc_agent_events', { id: 'sim' + Math.random(), agent: 'Billing Agent', event: 'approval_requested', detail: 'Payment reminder draft', created_at: T() }],
+      () => ['mgc_agent_events', { id: 'sim' + Math.random(), agent: 'Alex Romero', event: 'run', detail: 'Scored a new lead', created_at: T() }],
+      () => ['mgc_agent_events', { id: 'sim' + Math.random(), agent: 'Julian Vance', event: 'approval_requested', detail: 'Payment reminder draft', created_at: T() }],
       () => ['mgc_leads', { id: 'sim' + Math.random(), company: 'Sample: Glen Burnie Auto', interest: 'Automation', source: 'trueassist', status: 'new', created_at: T() }],
       () => ['mgc_model_usage', { id: 'sim' + Math.random(), source: 'trueassist', model: 'claude-haiku-4-5', input_tokens: 1800, output_tokens: 420, cost_cents: 0.39, created_at: T() }],
-      () => ['mgc_agent_events', { id: 'sim' + Math.random(), agent: 'Strategy Lead', event: 'slack_message', detail: '#site-inquiries: new TrueAssist lead looks like a fit for the CRM rebuild', created_at: T() }],
+      () => ['mgc_agent_events', { id: 'sim' + Math.random(), agent: 'Elena Restora', event: 'slack_message', detail: '#site-inquiries: new TrueAssist lead looks like a fit for the CRM rebuild', created_at: T() }],
       () => ['mgc_questionnaires', { id: 'sim' + Math.random(), company: 'Sample: Ellicott City Florist', q1: 'Two-location florist', q2: 'Wedding inquiries pile up in three inboxes', created_at: T() }],
       () => ['mgc_tasks', { id: 'sim' + Math.random(), title: 'Follow up on intake ideas', status: 'todo', priority: 'high', created_at: T() }],
     ];
@@ -787,6 +833,7 @@
     $('cc-user-role').textContent = 'Admin Dashboard';
     clock(); setInterval(clock, 15000);
     initUi();
+    initAvatar();
     await loadAll();
     renderAll(); seedFeed();
     setInterval(renderFeed, 30000);

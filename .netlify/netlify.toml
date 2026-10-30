@@ -65,6 +65,18 @@ Access-Control-Allow-Methods = "POST, OPTIONS"
 Access-Control-Allow-Headers = "Content-Type"
 
 [[redirects]]
+from = "/agentic-staffing/*"
+to = "/404"
+status = 404.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
 from = "/CLAUDE.md"
 to = "/404"
 status = 404.0
@@ -498,7 +510,19 @@ force = true
 
 [[redirects]]
 from = "/membership-v2.html"
-to = "/membership-v2"
+to = "/membership"
+status = 301.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/membership-v2"
+to = "/membership"
 status = 301.0
 force = true
 
@@ -546,7 +570,7 @@ force = true
 
 [[redirects]]
 from = "/services.html"
-to = "/services"
+to = "/membership"
 status = 301.0
 force = true
 
@@ -918,7 +942,7 @@ force = true
 
 [[redirects]]
 from = "/public/services"
-to = "/services"
+to = "/membership"
 status = 301.0
 force = true
 
@@ -930,7 +954,7 @@ force = true
 
 [[redirects]]
 from = "/public/services.html"
-to = "/services"
+to = "/membership"
 status = 301.0
 force = true
 
@@ -1062,9 +1086,9 @@ force = false
 
 [[redirects]]
 from = "/services"
-to = "/services.html"
-status = 200.0
-force = false
+to = "/membership"
+status = 301.0
+force = true
 
 [redirects.query]
 

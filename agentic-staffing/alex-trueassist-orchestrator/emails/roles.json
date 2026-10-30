@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "path_base": "directory containing this file",
+  "roles": [
+    {
+      "role_id": "marcus-vance-cto",
+      "display_name": "Marcus Vance",
+      "title": "CTO & Principal Backend Architect",
+      "templates": {
+        "welcome": "../../marcus-vance-cto/emails/templates/welcome.md",
+        "newsletter": "../../marcus-vance-cto/emails/templates/newsletter.md",
+        "update": "../../marcus-vance-cto/emails/templates/update.md",
+        "terms-policy": "../../marcus-vance-cto/emails/templates/terms-policy.md",
+        "architecture-decision": "../../marcus-vance-cto/emails/templates/architecture-decision.md"
+      },
+      "draft_directory": "../../marcus-vance-cto/emails/drafts",
+      "starter": "architecture-decision"
+    },
+    {
+      "role_id": "elena-rostova-bizdev",
+      "display_name": "Elena Restora",
+      "title": "Business Development & Sales",
+      "templates": {
+        "welcome": "../../elena-rostova-bizdev/emails/templates/welcome.md",
+        "newsletter": "../../elena-rostova-bizdev/emails/templates/newsletter.md",
+        "update": "../../elena-rostova-bizdev/emails/templates/update.md",
+        "terms-policy": "../../elena-rostova-bizdev/emails/templates/terms-policy.md",
+        "crm-promotion": "../../elena-rostova-bizdev/emails/templates/crm-promotion.md"
+      },
+      "draft_directory": "../../elena-rostova-bizdev/emails/drafts",
+      "starter": "crm-promotion"
+    },
+    {
+      "role_id": "jordan-hayes-custops",
+      "display_name": "Jordan Hayes",
+      "title": "Customer Operations & Dispatch",
+      "templates": {
+        "welcome": "../../jordan-hayes-custops/emails/templates/welcome.md",
+        "newsletter": "../../jordan-hayes-custops/emails/templates/newsletter.md",
+        "update": "../../jordan-hayes-custops/emails/templates/update.md",
+        "terms-policy": "../../jordan-hayes-custops/emails/templates/terms-policy.md",
+        "client-checkin": "../../jordan-hayes-custops/emails/templates/client-checkin.md"
+      },
+      "draft_directory": "../../jordan-hayes-custops/emails/drafts",
+      "starter": "welcome"
+    },
+    {
+      "role_id": "julian-vance-accounting",
+      "display_name": "Julian Vance",
+      "title": "Accounting & Financial Systems",
+      "templates": {
+        "welcome": "../../julian-vance-accounting/emails/templates/welcome.md",
+        "newsletter": "../../julian-vance-accounting/emails/templates/newsletter.md",
+        "update": "../../julian-vance-accounting/emails/templates/update.md",
+        "terms-policy": "../../julian-vance-accounting/emails/templates/terms-policy.md",
+        "invoice-cover": "../../julian-vance-accounting/emails/templates/invoice-cover.md"
+      },
+      "draft_directory": "../../julian-vance-accounting/emails/drafts",
+      "starter": "invoice-cover"
+    },
+    {
+      "role_id": "david-kim-techsupport",
+      "display_name": "David Ken",
+      "title": "Technical Support",
+      "templates": {
+        "welcome": "../../david-kim-techsupport/emails/templates/welcome.md",
+        "newsletter": "../../david-kim-techsupport/emails/templates/newsletter.md",
+        "update": "../../david-kim-techsupport/emails/templates/update.md",
+        "terms-policy": "../../david-kim-techsupport/emails/templates/terms-policy.md",
+        "support-acknowledgment": "../../david-kim-techsupport/emails/templates/support-acknowledgment.md"
+      },
+      "draft_directory": "../../david-kim-techsupport/emails/drafts",
+      "starter": "support-acknowledgment"
+    }
+  ]
+}

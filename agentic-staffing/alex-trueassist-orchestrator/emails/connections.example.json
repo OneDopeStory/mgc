@@ -1,0 +1,29 @@
+{
+  "status": "NOT_CONFIGURED",
+  "cloud_runtime": null,
+  "private_draft_storage": null,
+  "gmail": {
+    "account": null,
+    "authorized_sender": null,
+    "reply_to": null,
+    "owner_email": null,
+    "connection_reference": null
+  },
+  "slack": {
+    "private_owner_destination_id": null,
+    "newsletter_destination_id": null,
+    "connection_reference": null
+  },
+  "telegram": {
+    "private_owner_chat_id": null,
+    "newsletter_chat_id": null,
+    "connection_reference": null
+  },
+  "customer_email_mode": "draft_only",
+  "owner_notification_policy": "notify_on_verified_relevant_updates_after_destination_setup",
+  "primary_owner_channel": "slack",
+  "additional_owner_channels": [],
+  "quiet_hours": null,
+  "routine_digest_cadence": null,
+  "note": "No secrets here. Paths and IDs must be verified before activation. This example is not read by any running service."
+}

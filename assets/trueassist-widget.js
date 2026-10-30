@@ -307,3 +307,71 @@
     });
   });
 })();
+
+/* Voice dictation for the TrueAssist message box, via the browser-native Web
+ * Speech API. No audio is recorded or sent anywhere — speech is transcribed
+ * locally by the browser into the textarea. The visitor still reviews and
+ * presses Send (or Enter) themselves; this never auto-submits. Mirrors the
+ * same pattern used by membership.html's hero "ask anything" mic. */
+(function () {
+  'use strict';
+
+  var input = document.getElementById('ta-input');
+  var mic = document.getElementById('ta-mic');
+  var status = document.getElementById('ta-status');
+  if (!input || !mic) return;
+
+  var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    mic.disabled = true;
+    mic.title = 'Voice input isn\u2019t supported in this browser \u2014 try typing instead';
+    return;
+  }
+
+  var recognition = new SpeechRecognition();
+  recognition.lang = 'en-US';
+  recognition.interimResults = true;
+  recognition.continuous = false;
+  var listening = false;
+
+  function fireInputEvent() {
+    var evt;
+    try {
+      evt = new Event('input', { bubbles: true });
+    } catch (err) {
+      evt = document.createEvent('Event');
+      evt.initEvent('input', true, true);
+    }
+    input.dispatchEvent(evt);
+  }
+
+  recognition.addEventListener('result', function (e) {
+    var transcript = '';
+    for (var i = 0; i < e.results.length; i++) transcript += e.results[i][0].transcript;
+    input.value = transcript.slice(0, 1000);
+    fireInputEvent();
+  });
+
+  recognition.addEventListener('start', function () {
+    listening = true;
+    mic.classList.add('listening');
+    mic.setAttribute('aria-pressed', 'true');
+    if (status) status.textContent = 'Listening\u2026 speak now.';
+  });
+
+  function stopListening() {
+    listening = false;
+    mic.classList.remove('listening');
+    mic.setAttribute('aria-pressed', 'false');
+    if (status && status.textContent === 'Listening\u2026 speak now.') status.textContent = '';
+  }
+  recognition.addEventListener('end', stopListening);
+  recognition.addEventListener('error', stopListening);
+
+  mic.addEventListener('click', function () {
+    if (input.disabled) return;
+    if (listening) { recognition.stop(); return; }
+    input.focus();
+    recognition.start();
+  });
+})();

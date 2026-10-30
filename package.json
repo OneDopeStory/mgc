@@ -5,9 +5,15 @@
   "dependencies": {
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.101.1",
+    "standardwebhooks": "^1.1.1",
     "stripe": "^17.7.0"
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.5"
+  },
+  "scripts": {}
 }

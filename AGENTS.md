@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This file provides guidance to WARP (warp.dev) when working with code in this repository.
+This file provides guidance to AI coding tools working in this repository. As of 2026-10-27, the owner's primary IDE/tool is **Orca** (mobile + desktop) — Warp is no longer in use. Gemini may still spawn under Antigravity's own rules for specific tasks, but Orca is the default working surface for edits and review.
 
 ## Project shape at a glance
 - Production site is a **static Netlify site** served from repository root (`netlify.toml` has `publish="."` and no build command).
@@ -102,3 +102,19 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 ## Existing guidance files worth checking first
 - `README.md` (local dev, deploy, env var inventory, function contracts)
 - `CLAUDE.md` (project-specific conventions and integration behavior)
+
+## MGC staff email reference
+
+For MGC email drafting, read [Alex’s shared email instructions](agentic-staffing/alex-trueassist-orchestrator/emails/AGENTS.md) and [email workspace index](agentic-staffing/alex-trueassist-orchestrator/emails/README.md). Customized templates and drafts live inside each staff member’s `emails/` folder. Use the display names in `roles.json`; preserve existing folder slugs. Automatic cloud triggers and Gmail/Slack/Telegram delivery remain unconfigured; local drafts are not sent messages.
+
+## TrueAssist communications and Telegram reference
+
+For Codex work involving TrueAssist/Alex, incoming client, prospect or partnership requests, website portal communications, Telegram, Slack, WhatsApp, or Grok voice translation:
+
+- Read [the TDLib and communications reference](agentic-staffing/alex-trueassist-orchestrator/reference/telegram-tdlib-communications.md) and [the implementation follow-up](agentic-staffing/alex-trueassist-orchestrator/COMMUNICATIONS-FOLLOW-UP.md) before choosing an integration or extending message storage.
+- For Hermes installation, cloud connection points, or admin feedback/KPIs, also read [the Hermes source guide](agentic-staffing/alex-trueassist-orchestrator/reference/hermes-agent.md), [the connectivity and feedback brief](agentic-staffing/alex-trueassist-orchestrator/CLOUD-CONNECTIVITY-AND-FEEDBACK.md), and `cloud.md`. Preserve the recorded Hostinger VPS and Telegram Bot API direction; TDLib remains a reference unless a concrete client capability requires reconsideration.
+- Owner-reported context (2026-10-27): Tizen Kitchen is on a Cloudflare domain; Slack and WhatsApp connections exist. The exact hostname, Tizen Kitchen's relationship to MGC, and Hermes wiring are unverified. Keep engagement data separate until ownership is established; a domain is not evidence of a deployed backend.
+- TDLib provides authorized Telegram client access and a local Telegram cache. Retrieve through its documented API; it is not a shared Slack/WhatsApp/CRM database. Keep channel adapters separate and use MGC's authorized application records for shared client context.
+- Distinguish Telegram Bot API workflows from TDLib account/client workflows. Recheck official Telegram and xAI documentation and the installed versions before implementation; “Grok 3.0” alone is not a voice API identifier.
+- Preserve conversation ownership, verified identity links, human handoff, and original versus translated text. Do not infer a client's identity across channels from a matching display name.
+- This reference does not activate integrations or authorize message delivery. Record implementation and verification evidence in the follow-up; preserve the existing deployment and external-action rules.

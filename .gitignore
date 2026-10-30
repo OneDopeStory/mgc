@@ -24,3 +24,14 @@ ruvector.db
 mgc-stationary/
 public/Untitled 3.txt
 .vercel
+
+# Generated customer drafts stay private; generic starter copy is versionable.
+agentic-staffing/*/emails/drafts/*
+!agentic-staffing/*/emails/drafts/starter-draft.md
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

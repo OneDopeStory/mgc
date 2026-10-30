@@ -1,0 +1,39 @@
+# /etc/systemd/system/alex-dispatch.service
+#
+# Alex Dispatch Webhook Server — systemd unit
+# Deploy to: /etc/systemd/system/alex-dispatch.service
+#
+# Setup:
+#   sudo cp alex-dispatch.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable alex-dispatch
+#   sudo systemctl start alex-dispatch
+#
+# Check logs:
+#   sudo journalctl -u alex-dispatch -f
+
+[Unit]
+Description=Alex Dispatch Webhook Server (MGC Global Consulting)
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=hermes
+Group=hermes
+WorkingDirectory=/opt/hermes-agent/dispatch
+EnvironmentFile=/data/.env
+ExecStart=/usr/bin/python3 /opt/hermes-agent/dispatch/webhook_server.py
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=alex-dispatch
+
+# Harden the process
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

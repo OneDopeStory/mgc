@@ -6,7 +6,9 @@
  *
  * Env (names only): SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY,
  *   RESEND_API_KEY, LEAD_EMAIL_FROM, LEAD_EMAIL_REPLY_TO,
- *   SLACK_WEBHOOK_URL, SLACK_BOT_TOKEN, SLACK_RELAY_CHANNEL_ID, SITE_URL.
+ *   SLACK_WEBHOOK_URL, SLACK_BOT_TOKEN, SLACK_RELAY_CHANNEL_ID, SITE_URL,
+ *   TELEGRAM_BOT_TOKEN, TELEGRAM_OWNER_CHAT_ID (new — real-time owner notifications,
+ *   parallel to Slack; both optional, fail soft when unset, see postToTelegram below).
  */
 
 const crypto = require('crypto');
@@ -185,6 +187,39 @@ async function slackApi(method, payload) {
   return data;
 }
 
+// ── Telegram ───────────────────────────────────────────────────────────────────
+// Bot API sendMessage to a single configured chat (currently the owner's personal
+// Telegram ID, kept in env, never in a file — see channel-accounts-review-2026-10-27.md).
+// Mirrors Slack's graceful-degradation pattern: no token/chat id configured means
+// "skipped", never a thrown error that blocks the caller (email/Slack/Notion still run).
+async function postToTelegram(text) {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_OWNER_CHAT_ID;
+  if (!token || !chatId) return { skipped: 'TELEGRAM_BOT_TOKEN or TELEGRAM_OWNER_CHAT_ID not set' };
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: chatId, text: String(text).slice(0, 4000), disable_web_page_preview: true }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!data.ok) throw new Error(`Telegram sendMessage: ${data.description || res.status}`);
+  return { ok: true };
+}
+
+function telegramLeadText(lead) {
+  const lines = [
+    lead.booking ? 'New booking' : 'New TrueAssist lead',
+    `Name: ${lead.name || '—'}`,
+    `Email: ${lead.email}`,
+    lead.company && `Company: ${lead.company}`,
+    `Interest: ${lead.booking ? `${lead.booking.service} — ${lead.booking.label}` : (lead.interest || '—')}`,
+    lead.phone && `Phone: ${lead.phone}`,
+    `Source: ${lead.source}`,
+    lead.message && `Summary: ${lead.message.slice(0, 500)}`,
+  ].filter(Boolean);
+  return lines.join('\n');
+}
+
 // ── Lead capture ───────────────────────────────────────────────────────────────
 /**
  * Store a lead, then send the welcome email and Slack card. Downstream failures are
@@ -225,9 +260,14 @@ async function recordLead(input) {
     console.error('Lead insert failed:', err.message);
   }
 
-  const [email, slack] = await Promise.allSettled([sendWelcomeEmail(lead), postLeadToSlack(lead)]);
+  const [email, slack, telegram] = await Promise.allSettled([
+    sendWelcomeEmail(lead),
+    postLeadToSlack(lead),
+    postToTelegram(telegramLeadText(lead)),
+  ]);
   if (email.status === 'rejected') console.error('Welcome email failed:', email.reason.message);
   if (slack.status === 'rejected') console.error('Slack lead card failed:', slack.reason.message);
+  if (telegram.status === 'rejected') console.error('Telegram lead message failed:', telegram.reason.message);
 
   const emailed = email.status === 'fulfilled' && !email.value?.skipped;
   const notified = slack.status === 'fulfilled' && !slack.value?.skipped;
@@ -256,5 +296,6 @@ module.exports = {
   sendWelcomeEmail,
   postLeadToSlack,
   slackApi,
+  postToTelegram,
   recordLead,
 };

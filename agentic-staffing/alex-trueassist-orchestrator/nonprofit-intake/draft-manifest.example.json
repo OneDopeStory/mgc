@@ -1,0 +1,62 @@
+{
+  "prospect_slug": null,
+  "org_name": null,
+  "contact_name": null,
+  "contact_email": null,
+  "source_transcript_ref": null,
+  "extracted_at": null,
+  "extracted_fields": {
+    "org_name": null,
+    "mission_statement": null,
+    "programs": [],
+    "population_served": null,
+    "geographic_scope": null,
+    "founders": [],
+    "funding_sources": [],
+    "estimated_year1_budget": null,
+    "state_of_incorporation": "Maryland",
+    "formation_stage": null,
+    "principal_address": null,
+    "resident_agent": null
+  },
+  "documents": {
+    "form_1023_narrative": {
+      "content_path": null,
+      "content_sha256": null,
+      "missing_fields": [],
+      "review_status": "BLOCKED_MISSING_FACTS",
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    "sdat_registration_profile": {
+      "content_path": null,
+      "content_sha256": null,
+      "missing_fields": [],
+      "review_status": "BLOCKED_MISSING_FACTS",
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    "business_plan_summary": {
+      "content_path": null,
+      "content_sha256": null,
+      "missing_fields": [],
+      "review_status": "BLOCKED_MISSING_FACTS",
+      "reviewed_by": null,
+      "reviewed_at": null
+    }
+  },
+  "idempotency_key": null,
+  "consulting_vertical": "nonprofit_capacity",
+  "supabase_sync": {
+    "state": "not_configured",
+    "lead_id": null,
+    "deal_id": null,
+    "synced_at": null
+  },
+  "hermes_sync": {
+    "state": "not_configured",
+    "note": "Blocked on Hostinger VPS reaching Hermes setup Level 2+; see AUTOMATION.md"
+  },
+  "created_at": null,
+  "updated_at": null
+}

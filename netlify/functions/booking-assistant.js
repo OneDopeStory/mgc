@@ -7,6 +7,9 @@
  *   { action: 'slots', days? }                               -> open session times
  *   { action: 'book', start, name, email, service, notes? }  -> books one exact slot
  *   { action: 'chat', messages: [{ role, content }] }        -> AI assistant (uses the tools below)
+ *   { action: 'upcoming', days? }  + Authorization: Bearer <supabase token>, admin-only
+ *                                                             -> real upcoming Google Calendar events,
+ *                                                                for the CRM Overview "Calendar" widget
  *
  * Source of truth: Google Calendar (GOOGLE_CALENDAR_ID). Apple Calendar and Notion Calendar
  * read from that Google account. If Google is not configured, bookings are saved as requests
@@ -26,6 +29,11 @@ const MODEL = process.env.BOOKING_MODEL || 'claude-sonnet-5-5';
 const SERVICES = ['Strategy Session', 'AI Consulting', 'AI Workshop', 'Automation', 'CRM Optimization', 'Systems Design', 'Retainer Support'];
 const SESSION_PRICE_USD = Number(process.env.BOOKING_PRICE_USD || 160);
 const WEEKDAYS = [1, 2, 3, 4, 5]; // Monday–Friday (0 = Sunday)
+
+// Same whitelist admin.html / crm.html already gate on client-side. The 'upcoming'
+// action returns real client names/times off the calendar, so unlike 'slots' (public
+// open-time data) it needs this server-side check — a Supabase session alone isn't enough.
+const ADMIN_EMAILS = ['markatmgc@gmail.com', 'admin@mgcglobalconsulting.com', 'mgcglobalconsulting@gmail.com'];
 
 function config() {
   return {
@@ -186,6 +194,36 @@ async function getSlots(days) {
   return { mode: 'live', slots: openSlots(await busyIntervals(d), d) };
 }
 
+// Real event titles/times for the CRM "Calendar" widget — distinct from busyIntervals(),
+// which only returns free/busy ranges with no event data. Admin-gated (see handler).
+async function listUpcoming(days) {
+  const d = Math.min(Math.max(Number(days) || 14, 1), 30);
+  if (!googleConfigured()) return { mode: 'requested', events: [] };
+  const calId = process.env.GOOGLE_CALENDAR_ID;
+  const now = Date.now();
+  const data = await googleFetch(
+    `/calendars/${encodeURIComponent(calId)}/events?` + new URLSearchParams({
+      timeMin: new Date(now).toISOString(),
+      timeMax: new Date(now + (d + 1) * 864e5).toISOString(),
+      singleEvents: 'true',
+      orderBy: 'startTime',
+      maxResults: '8',
+    })
+  );
+  const c = config();
+  const events = (data.items || [])
+    .filter(e => e.start?.dateTime) // skip all-day events, not bookable sessions
+    .map(e => ({
+      id: e.id,
+      summary: e.summary || 'Untitled session',
+      start: e.start.dateTime,
+      end: e.end?.dateTime || null,
+      label: labelFor(Date.parse(e.start.dateTime), c.tz),
+      link: e.htmlLink || null,
+    }));
+  return { mode: 'live', events };
+}
+
 // ── Booking ────────────────────────────────────────────────────────────────────
 function clean(value, max) {
   return typeof value === 'string' ? value.trim().slice(0, max) : '';
@@ -215,6 +253,19 @@ async function clientIdFromToken(token) {
     return typeof user.id === 'string' ? user.id : null;
   } catch {
     return null;
+  }
+}
+
+// Same Supabase session, checked against ADMIN_EMAILS instead of returning a client id.
+async function isAdminToken(token) {
+  if (!token) return false;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${token}` } });
+    if (!res.ok) return false;
+    const user = await res.json();
+    return typeof user.email === 'string' && ADMIN_EMAILS.includes(user.email.toLowerCase());
+  } catch {
+    return false;
   }
 }
 
@@ -455,6 +506,11 @@ exports.handler = async (event) => {
     if (body.action === 'chat') {
       return respond(200, origin, await chat(Array.isArray(body.messages) ? body.messages : []));
     }
+    if (body.action === 'upcoming') {
+      const token = (event.headers.authorization || event.headers.Authorization || '').replace(/^Bearer\s+/i, '');
+      if (!(await isAdminToken(token))) return respond(403, origin, { error: 'Admin access required' });
+      return respond(200, origin, await listUpcoming(body.days));
+    }
     return respond(400, origin, { error: 'Unknown action' });
   } catch (err) {
     const status = err.status || 500;
@@ -464,3 +520,11 @@ exports.handler = async (event) => {
     });
   }
 };
+
+// Exposed for grok-voice-tools.js, so the voice-call tool bridge can reuse the same Google
+// Calendar + Supabase booking logic instead of reimplementing it. Additive only — exports.handler
+// above is unchanged and remains the HTTP entry point for the existing booking widget/chat.
+module.exports.getSlots = getSlots;
+module.exports.bookSession = bookSession;
+module.exports.SESSION_PRICE_USD = SESSION_PRICE_USD;
+module.exports.SERVICES = SERVICES;

@@ -1,0 +1,50 @@
+{
+  "draft_id": null,
+  "owner_role_id": null,
+  "template_id": null,
+  "event_id": null,
+  "source_system": null,
+  "engagement_id": null,
+  "contact_id": null,
+  "idempotency_key": null,
+  "business_transition_key": null,
+  "recipient_email": null,
+  "sender_mailbox": null,
+  "reply_to": null,
+  "source_records": [],
+  "verified_at": null,
+  "missing_fields": [],
+  "content_path": null,
+  "content_sha256": null,
+  "review_status": "NEEDS_PERSONALIZATION",
+  "approved_by": null,
+  "approved_at": null,
+  "approved_content_sha256": null,
+  "gmail_account": null,
+  "gmail_draft_id": null,
+  "gmail_draft_state": "not_configured",
+  "sent_message_id": null,
+  "sent_at": null,
+  "notifications": {
+    "slack": {
+      "state": "not_configured",
+      "destination_id": null,
+      "provider_message_id": null,
+      "attempts": 0
+    },
+    "telegram": {
+      "state": "not_configured",
+      "destination_id": null,
+      "provider_message_id": null,
+      "attempts": 0
+    },
+    "owner_gmail": {
+      "state": "not_configured",
+      "destination_id": null,
+      "provider_message_id": null,
+      "attempts": 0
+    }
+  },
+  "created_at": null,
+  "updated_at": null
+}

@@ -3,3 +3,6 @@
 # Vercel auto-treats every .js under /api as a Serverless Function, and this
 # folder's 18 files exceed the Hobby plan's 12-function-per-deployment limit.
 api/
+
+# Staff instructions and private email drafts
+agentic-staffing/

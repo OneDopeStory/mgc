@@ -18,7 +18,7 @@
 <!-- ── AUTH ── -->
 <div id="cc-auth" class="cc-auth">
   <form class="cc-auth-card" id="cc-auth-form">
-    <img src="assets/mgc-logo-transparent.png" alt="MGC Global Consulting" class="cc-auth-logo">
+    <a href="index.html"><img src="assets/mgc-logo-transparent.png" alt="MGC Global Consulting" class="cc-auth-logo"></a>
     <div class="cc-eyebrow">Admin only</div>
     <h1 class="cc-auth-title">Command Center</h1>
     <label class="cc-label" for="cc-email">Email</label>
@@ -34,7 +34,7 @@
 <div id="cc-app" class="cc-app" hidden>
   <aside class="cc-side" id="cc-side" aria-label="Sections">
     <div class="cc-brand">
-      <img src="assets/mgc-logo-transparent.png" alt="" class="cc-brand-logo">
+      <a href="index.html"><img src="assets/mgc-logo-transparent.png" alt="" class="cc-brand-logo"></a>
       <div><div class="cc-eyebrow">MGC Global</div><div class="cc-brand-name">Command Center</div></div>
     </div>
     <nav class="cc-nav cc-rail" id="cc-nav" aria-label="Sections">
@@ -48,7 +48,7 @@
     </nav>
     <div class="cc-side-foot">
       <div class="cc-user-id">
-        <span class="cc-user-avatar" aria-hidden="true">MC</span>
+        <span class="cc-user-avatar" id="cc-side-avatar" aria-hidden="true"><span id="cc-side-avatar-fallback">MC</span><img id="cc-side-avatar-img" alt="" hidden></span>
         <span class="cc-user-meta"><span class="cc-user" id="cc-user">Mark G. Cartwright</span><span class="cc-user-role" id="cc-user-role">Admin Dashboard</span></span>
       </div>
       <div class="cc-side-links"><a class="cc-ghost" href="admin.html">Admin portal</a><button class="cc-ghost" id="cc-signout" type="button">Sign out</button></div>
@@ -72,6 +72,14 @@
       <div class="cc-top-meta">
         <span class="cc-live" id="cc-live"><span class="cc-live-dot"></span><span id="cc-live-label">Connecting</span></span>
         <span class="cc-clock" id="cc-clock">--:--</span>
+        <div class="cc-profile-wrap">
+          <input type="file" id="cc-avatar-input" accept="image/png,image/jpeg,image/webp" hidden>
+          <button type="button" class="cc-profile-btn" id="cc-avatar-btn" title="Upload profile photo" aria-label="Upload profile photo">
+            <span class="cc-profile-fallback" id="cc-avatar-fallback">MC</span>
+            <img class="cc-profile-img" id="cc-avatar-img" alt="" hidden>
+          </button>
+          <button type="button" class="cc-profile-remove" id="cc-avatar-remove" aria-label="Remove profile photo" hidden>&times;</button>
+        </div>
       </div>
     </header>
 
@@ -206,7 +214,7 @@
       <!-- ═══ IDEAS ═══ -->
       <section class="cc-view" data-view="ideas" hidden>
         <section class="cc-card cc-ideas-card" data-src="mgc_intake_ideas">
-          <div class="cc-card-head"><div><div class="cc-eyebrow">Intake Agent</div><h2 class="cc-h2">4 ideas for every new intake</h2><p class="cc-sub">Written for each client's own business. Turn any idea into a to-do, or dismiss it.</p></div></div>
+          <div class="cc-card-head"><div><div class="cc-eyebrow">Alex Romero</div><h2 class="cc-h2">4 ideas for every new intake</h2><p class="cc-sub">Written for each client's own business. Turn any idea into a to-do, or dismiss it.</p></div></div>
           <div class="cc-ideas" id="cc-ideas"></div>
         </section>
       </section>

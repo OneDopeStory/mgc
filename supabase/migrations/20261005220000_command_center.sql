@@ -6,6 +6,32 @@
 -- heartbeat events, and the 4 ideas generated per intake. Gives MGC admins read
 -- access (via the existing public.mgc_is_admin()) and turns on realtime.
 
+-- ── Dependency guard: mgc_time_entries/mgc_tasks below and mgc_roi_metrics (separate
+-- migration) reference mgc_projects. It was defined in the pre-migrations-folder
+-- data/schema_core_tables.sql and is presumed already live, but that was never tracked
+-- here — this block makes the dependency safe either way instead of assuming.
+create table if not exists public.mgc_projects (
+  id             uuid primary key default gen_random_uuid(),
+  client_id      uuid references auth.users(id) on delete cascade,
+  title          text not null,
+  description    text,
+  status         text check (status in ('active','completed','paused','pending')) default 'active',
+  phase          text,
+  progress_pct   integer default 0 check (progress_pct between 0 and 100),
+  service_type   text,
+  start_date     date,
+  target_date    date,
+  created_at     timestamptz default now(),
+  updated_at     timestamptz default now()
+);
+alter table public.mgc_projects enable row level security;
+drop policy if exists "Clients can view own projects" on public.mgc_projects;
+create policy "Clients can view own projects"
+  on public.mgc_projects for select
+  using (auth.uid() = client_id);
+create index if not exists idx_mgc_projects_client_id on public.mgc_projects(client_id);
+create index if not exists idx_mgc_projects_status on public.mgc_projects(status);
+
 -- ── Staff roster: humans and AI agents in one table ──
 create table if not exists public.mgc_staff (
   id uuid primary key default gen_random_uuid(),
@@ -118,7 +144,10 @@ begin
     'mgc_questionnaires', 'mgc_approvals', 'mgc_staff', 'mgc_time_entries',
     'mgc_model_usage', 'mgc_tasks', 'mgc_agent_events', 'mgc_intake_ideas'
   ] loop
-    if not exists (
+    if exists (
+      select 1 from information_schema.tables
+      where table_schema = 'public' and table_name = t
+    ) and not exists (
       select 1 from pg_publication_tables
       where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = t
     ) then
@@ -178,19 +207,24 @@ do $$
 declare t text;
 begin
   -- Every new inquiry, booking and portal action → Slack card (slack-notify.js).
+  -- Table-existence checked first so a not-yet-created table never breaks the migration.
   foreach t in array array[
     'mgc_leads', 'mgc_bookings', 'mgc_client_profiles', 'mgc_messages', 'mgc_uploads', 'mgc_questionnaires'
   ] loop
-    execute format('drop trigger if exists mgc_slack_notify on public.%I', t);
-    execute format(
-      'create trigger mgc_slack_notify after insert on public.%I for each row execute function public.mgc_forward_insert(%L, %L)',
-      t, 'https://mgcglobalconsulting.com/.netlify/functions/slack-notify', '5000');
+    if exists (select 1 from information_schema.tables where table_schema = 'public' and table_name = t) then
+      execute format('drop trigger if exists mgc_slack_notify on public.%I', t);
+      execute format(
+        'create trigger mgc_slack_notify after insert on public.%I for each row execute function public.mgc_forward_insert(%L, %L)',
+        t, 'https://mgcglobalconsulting.com/.netlify/functions/slack-notify', '5000');
+    end if;
   end loop;
   -- New leads and questionnaires → 4 tailored ideas (intake-ideas.js). The model call takes a few seconds.
   foreach t in array array['mgc_leads', 'mgc_questionnaires'] loop
-    execute format('drop trigger if exists mgc_intake_ideas on public.%I', t);
-    execute format(
-      'create trigger mgc_intake_ideas after insert on public.%I for each row execute function public.mgc_forward_insert(%L, %L)',
-      t, 'https://mgcglobalconsulting.com/.netlify/functions/intake-ideas', '15000');
+    if exists (select 1 from information_schema.tables where table_schema = 'public' and table_name = t) then
+      execute format('drop trigger if exists mgc_intake_ideas on public.%I', t);
+      execute format(
+        'create trigger mgc_intake_ideas after insert on public.%I for each row execute function public.mgc_forward_insert(%L, %L)',
+        t, 'https://mgcglobalconsulting.com/.netlify/functions/intake-ideas', '15000');
+    end if;
   end loop;
 end $$;

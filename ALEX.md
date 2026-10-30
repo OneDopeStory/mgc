@@ -425,3 +425,7 @@ INSPECT SECRETS  → names only, never values
 
 *Maintained for Alex. Facts verified 2026-10-05 against the live repository, Vercel API, and
 deployment configuration. Items marked `UNVERIFIED` require re-confirmation.*
+
+## Staff email routing (2026-10-26)
+
+For email requests, start with [the staff email index](agentic-staffing/alex-trueassist-orchestrator/emails/README.md) and follow [the shared email instructions](agentic-staffing/alex-trueassist-orchestrator/emails/AGENTS.md). Each specialist owns an `emails/` folder. The shared `roles.json` maps current email display names to existing staff directories. Hermes cloud triggers and delivery are future integration work; see `AUTOMATION.md` for draft preparation, review, deduplication, and owner notifications.

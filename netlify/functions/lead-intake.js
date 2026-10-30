@@ -117,6 +117,9 @@ function escapeSlack(text) {
 
 // Shared with the database-insert alerts so routing and agent names stay in one place.
 const { postToSlack } = require('./slack-notify');
+const { postToTelegram } = require('../lib/leads');
+const { dispatchEvent } = require('./agent-dispatch');
+const { triggerNewLeadWorkflow } = require('./slack-workflow-trigger');
 
 async function notifySlack({ name, email, company, service, message, requestedDate, extras }) {
   const field = (label, value) => ({ type: 'mrkdwn', text: `*${label}:*\n${value ? escapeSlack(String(value).slice(0, 300)) : '—'}` });
@@ -140,6 +143,23 @@ async function notifySlack({ name, email, company, service, message, requestedDa
       { type: 'context', elements: [{ type: 'mrkdwn', text: `lead-intake · ${new Date().toUTCString()}` }] },
     ],
   });
+}
+
+async function notifyTelegram({ name, email, company, service, message, requestedDate, extras }) {
+  const lines = [
+    'New website inquiry',
+    `Name: ${name}`,
+    `Email: ${email}`,
+    company && `Company: ${company}`,
+    `Service: ${service}`,
+    requestedDate && `Requested date: ${requestedDate}`,
+    extras.source && `Source: ${extras.source}`,
+    extras.readinessScore !== undefined && `Readiness: ${extras.readinessScore}/100 ${extras.readinessCategory || ''}`,
+    extras.timeline && `Timeline: ${extras.timeline}`,
+    extras.budgetRange && `Budget: ${extras.budgetRange}`,
+    message && `Message: ${String(message).slice(0, 1000)}`,
+  ].filter(Boolean);
+  await postToTelegram(lines.join('\n'));
 }
 
 async function syncNotion(name, email, company, service, message, requestedDate, extras) {
@@ -193,14 +213,33 @@ exports.handler = async (event) => {
     source: source || 'Website Form',
   };
 
-  // Non-blocking — form UX succeeds even if the CRM write or Slack post fails
-  const [notionResult, slackResult] = await Promise.allSettled([
+  // Non-blocking — form UX succeeds even if the CRM write or a notification post fails
+  const [notionResult, slackResult, slackWorkflowResult, telegramResult, dispatchResult] = await Promise.allSettled([
     syncNotion(name, email, company, service, challenge || message, requested_date, extras),
     notifySlack({ name, email, company, service, message: challenge || message, requestedDate: requested_date, extras }),
+    triggerNewLeadWorkflow({ name, email, company, service, message: challenge || message, source: extras.source }),
+    notifyTelegram({ name, email, company, service, message: challenge || message, requestedDate: requested_date, extras }),
+    dispatchEvent('lead.submitted', {
+      name, email, company, service,
+      message: challenge || message,
+      requested_date,
+      readiness_score: extras.readinessScore,
+      readiness_category: extras.readinessCategory,
+      timeline: extras.timeline,
+      budget_range: extras.budgetRange,
+      source: extras.source,
+      visitor_type: extras.visitorType,
+      assigned_sub_agent: extras.assignedSubAgent,
+      recommended_next_step: extras.recommendedNextStep,
+    }),
   ]);
   if (notionResult.status === 'fulfilled') console.log('[Lead Intake] Notion sync complete for', email);
   else console.error('[Lead Intake] Notion sync failed:', notionResult.reason?.message);
   if (slackResult.status === 'rejected') console.error('[Lead Intake] Slack post failed:', slackResult.reason?.message);
+  if (slackWorkflowResult.status === 'rejected') console.error('[Lead Intake] Slack workflow trigger failed:', slackWorkflowResult.reason?.message);
+  if (telegramResult.status === 'rejected') console.error('[Lead Intake] Telegram post failed:', telegramResult.reason?.message);
+  if (dispatchResult.status === 'fulfilled') console.log('[Lead Intake] Alex dispatch:', dispatchResult.value?.dispatched ? 'forwarded' : 'skipped', dispatchResult.value?.error || '');
+  else console.error('[Lead Intake] Alex dispatch failed:', dispatchResult.reason?.message);
 
   return {
     statusCode: 200,

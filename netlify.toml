@@ -10,6 +10,13 @@
 # Repo docs, config, and dev-tool folders live at the publish root (".") alongside
 # the site. Without these, anything that slips past .netlifyignore (or a future
 # `netlify deploy --dir .` from a clean checkout) is publicly fetchable by name.
+# Staff workspaces and customer email drafts must never be website content.
+[[redirects]]
+  from   = "/agentic-staffing/*"
+  to     = "/404"
+  status = 404
+  force  = true
+
 [[redirects]]
   from   = "/CLAUDE.md"
   to     = "/404"
