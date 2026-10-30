@@ -1,0 +1,21 @@
+[Unit]
+Description=Grok Voice Realtime Bridge (MGC Global Consulting — Alex Romero)
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/grok-voice-bridge
+EnvironmentFile=/data/grok-voice-bridge/.env
+ExecStart=/usr/bin/node /opt/grok-voice-bridge/grok-voice-bridge.js
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=grok-voice-bridge
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

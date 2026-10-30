@@ -31,7 +31,7 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const XAI_API_KEY = process.env.XAI_API_KEY;
 const OUTPUT_DIR = path.join(__dirname, 'output');
-const OUTPUT_FILE = path.join(OUTPUT_DIR, 'alex-romero-greeting.wav');
+const OUTPUT_FILE = path.join(OUTPUT_DIR, process.env.OUTPUT_FILENAME || 'alex-romero-greeting.wav');
 
 // Confirmed 2026-10-27: setting session.output_audio_format to 'mp3' had no effect on the
 // realtime delta stream — byte count was identical with and without it, and the raw bytes are
@@ -66,7 +66,7 @@ function wrapPcmAsWav(pcmBuffer) {
   return Buffer.concat([header, pcmBuffer]);
 }
 
-const GREETING_SCRIPT =
+const GREETING_SCRIPT = process.env.GREETING_SCRIPT ||
   "Thanks for calling MGC Global Consulting, this is Alex. " +
   "I can help you book a session, check pricing, or connect you with our team — " +
   "go ahead and tell me what you need.";
